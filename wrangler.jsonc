@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developers.cloudflare.com/schemas/wrangler.json",
+  "name": "isspf-landing-pages",
+  "compatibility_date": "2026-04-25",
+  "compatibility_flags": ["nodejs_compat"],
+
+  // Tells Cloudflare Pages to deploy from the repo root, not a subdirectory.
+  // This makes _worker.js at the root active for all paths, and lets each
+  // campaign live in its own slug folder (e.g. /gk-report/, /<next>/).
+  "pages_build_output_dir": "./"
+}

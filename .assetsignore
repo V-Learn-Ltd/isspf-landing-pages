@@ -1,0 +1,7 @@
+# Files the Cloudflare Pages Worker uses internally —
+# must NOT be served as public static assets at /_worker.js etc.
+_worker.js
+wrangler.jsonc
+.gitignore
+README.md
+.assetsignore
