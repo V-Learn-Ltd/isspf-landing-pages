@@ -1,0 +1,25 @@
+# macOS
+.DS_Store
+**/.DS_Store
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*~
+
+# Env
+.env
+.env.local
+*.local
+
+# Logs
+*.log
+npm-debug.log*
+
+# Node (in case scripts get added later)
+node_modules/
+
+# Cloudflare / Wrangler
+.wrangler/
+.dev.vars
