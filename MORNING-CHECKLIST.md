@@ -1,22 +1,27 @@
 # Morning Checklist — ISSPF Landing Page Launch
 
-Three things to verify in the morning. Each takes <2 minutes. Once these are done, you can run paid traffic.
+Three things to do in the morning. Once these are done, you can run paid traffic.
+
+**⚠ Heads-up:** As of last night's push, the deploy verifies as **NOT yet live** at the new URL. Step 1 below is mandatory — it's a Cloudflare dashboard fix only you can do (requires the `neil@digitalsea.io` Cloudflare account). The OLD deployment (at `go.isspf.com/`) is still up — site is not down — but the new `/gk-report/` slug + A/B routing won't activate until you do step 1.
 
 ---
 
-## 1. Verify the new URL is live (10 seconds)
+## 1. ⚠ MANDATORY — Fix Cloudflare Pages build output directory (60 seconds)
 
-Visit **https://go.isspf.com/gk-report/** in a browser.
+Last night the repo was restructured: `goalkeeper-science-report/` was renamed to `gk-report/`, the build output now declared via `wrangler.jsonc` to be the repo root. But the Cloudflare Pages dashboard still has "Build output directory" set to the old folder name, which is breaking the new deploy.
 
-**Expected:** The Goalkeeper Science Report landing page loads. Could be either variant A (headline: "The Goalkeeper Science Report") or variant B (headline: "76% Of Goals Are Unsaveable.") — that's the A/B test working.
+**Fix:**
+1. Log into Cloudflare as `neil@digitalsea.io`
+2. Workers & Pages → `isspf-landing-pages` project → **Settings** → **Builds & deployments**
+3. Find **"Build output directory"**
+4. **Clear the field completely** (leave empty) — `wrangler.jsonc` will take over
+5. Click **Save**
+6. Go to **Deployments** tab → click **"Retry deployment"** on the latest commit (or push any small change to trigger a rebuild)
+7. Wait ~60 seconds for build to complete
 
-**If it 404s:** Cloudflare Pages may still have the old "Build output directory" set to `goalkeeper-science-report/` in the dashboard. Fix:
-1. Cloudflare → `isspf-landing-pages` Pages project → **Settings** → **Builds & deployments**
-2. Find **"Build output directory"**
-3. Either **clear it** (leave empty) or set it to `/`
-4. Click **Save**, then trigger a redeploy from the Deployments tab
-
-The repo's `wrangler.jsonc` declares `pages_build_output_dir: "./"` so the dashboard setting may be ignored — but if there's a conflict, the dashboard wins. Clearing it is the safest move.
+**Verify it worked:**
+- Open https://go.isspf.com/gk-report/ — should load the GK page
+- `/` should now 404 (no root index.html exists in the new structure)
 
 ---
 
