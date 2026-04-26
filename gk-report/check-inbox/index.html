@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Your Goalkeeper Science Report Is Ready | ISSPF</title>
-<meta name="description" content="Your free 23-page Goalkeeper Science Report is ready to download. Read it before Tuesday's training." />
+<title>Almost There — Check Your Inbox | ISSPF</title>
+<meta name="description" content="Your Goalkeeper Science Report is on its way. Check your inbox to download." />
 <meta name="robots" content="noindex" />
 
 <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -69,11 +69,11 @@
     color: var(--accent-red);
   }
 
-  /* HERO — confirmation + download */
+  /* HERO */
   .hero {
     background: var(--bg-dark);
     color: var(--text-cream);
-    padding: 72px 0 96px;
+    padding: 60px 0 72px;
     text-align: center;
   }
   .eyebrow {
@@ -102,49 +102,27 @@
     font-size: clamp(17px, 2.4vw, 20px);
     line-height: 1.45;
     color: var(--text-muted-light);
-    margin: 0 auto 40px;
+    margin: 0 auto 36px;
     max-width: 540px;
   }
   .descriptive strong { color: var(--text-cream); font-weight: 600; }
 
-  /* Download button — large, brand red */
-  .download-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    background: var(--accent-red);
-    color: var(--text-cream);
-    font-family: 'Inter', sans-serif;
-    font-weight: 800;
-    font-size: 16px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    text-decoration: none;
-    padding: 22px 40px;
-    border-radius: 5px;
-    transition: background 0.15s ease, transform 0.1s ease;
-    box-shadow: 0 12px 28px rgba(237, 28, 36, 0.35);
-  }
-  .download-btn:hover {
-    background: var(--accent-red-hover);
-    transform: translateY(-1px);
-  }
-  .download-btn:active { transform: translateY(0); }
-  .download-icon {
-    width: 18px;
-    height: 18px;
-    flex-shrink: 0;
+  /* Report cover preview — tilted, with shadow */
+  .cover-preview {
+    display: block;
+    width: auto;
+    max-width: 220px;
+    height: auto;
+    margin: 0 auto;
+    border-radius: 4px;
+    transform: rotate(-4deg);
+    box-shadow:
+      0 24px 48px rgba(0, 0, 0, 0.55),
+      0 8px 16px rgba(0, 0, 0, 0.4);
   }
 
-  .file-meta {
-    margin-top: 18px;
-    font-size: 13px;
-    color: var(--text-muted-light);
-  }
-
-  /* WHAT HAPPENS NEXT */
-  .next {
+  /* INSTRUCTIONS BLOCK */
+  .instructions {
     background: var(--bg-white);
     padding: 72px 0 88px;
   }
@@ -155,41 +133,76 @@
     line-height: 1;
     letter-spacing: 0.005em;
     text-transform: uppercase;
-    margin: 0 0 28px;
+    margin: 0 0 36px;
     color: var(--text-dark);
-  }
-  .next ul {
-    list-style: none;
-    padding: 0;
-    margin: 0 0 28px;
-  }
-  .next li {
-    padding: 18px 0 18px 32px;
-    position: relative;
-    font-size: 16px;
-    line-height: 1.65;
-    border-bottom: 1px solid var(--rule-light);
-  }
-  .next li:last-child { border-bottom: none; }
-  .next li::before {
-    content: "";
-    position: absolute;
-    left: 0;
-    top: 30px;
-    width: 18px;
-    height: 3px;
-    background: var(--accent-red);
-  }
-  .next li strong { color: var(--text-dark); font-weight: 700; }
-  .closer {
-    font-family: 'Inter', sans-serif;
-    font-weight: 600;
-    font-size: 17px;
-    color: var(--accent-red);
-    margin: 28px 0 0;
+    text-align: center;
   }
 
-  /* FOOTER (mirrors main LP) */
+  .step-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 32px;
+    counter-reset: step;
+  }
+  .step-list li {
+    display: grid;
+    grid-template-columns: 56px 1fr;
+    gap: 22px;
+    align-items: start;
+    padding: 22px 0;
+    border-bottom: 1px solid var(--rule-light);
+    counter-increment: step;
+  }
+  .step-list li:last-child { border-bottom: none; }
+  .step-list li::before {
+    content: counter(step);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    background: var(--accent-red);
+    color: #fff;
+    border-radius: 50%;
+    font-family: 'Anton', sans-serif;
+    font-size: 28px;
+    line-height: 1;
+  }
+  .step-body strong {
+    display: block;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 4px;
+    line-height: 1.3;
+  }
+  .step-body p {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--text-muted-dark);
+  }
+  .step-body em {
+    font-style: normal;
+    font-weight: 600;
+    color: var(--text-dark);
+    background: rgba(237, 28, 36, 0.08);
+    padding: 1px 6px;
+    border-radius: 3px;
+  }
+
+  .why-note {
+    margin-top: 32px;
+    padding: 22px 24px;
+    background: var(--bg-stone);
+    border-left: 4px solid var(--accent-red);
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--text-muted-dark);
+  }
+  .why-note strong { color: var(--text-dark); }
+
+  /* FOOTER */
   footer {
     background: var(--bg-dark-2);
     color: var(--text-muted-light);
@@ -211,9 +224,11 @@
   footer .copy { font-size: 11px; opacity: 0.7; }
 
   @media (max-width: 600px) {
-    .hero { padding: 48px 0 64px; }
-    .next { padding: 48px 0 64px; }
-    .download-btn { padding: 20px 28px; font-size: 14px; width: 100%; }
+    .hero { padding: 40px 0 56px; }
+    .instructions { padding: 48px 0 64px; }
+    .cover-preview { max-width: 160px; }
+    .step-list li { grid-template-columns: 44px 1fr; gap: 16px; }
+    .step-list li::before { width: 44px; height: 44px; font-size: 22px; }
   }
 </style>
 </head>
@@ -239,44 +254,51 @@
 <!-- HERO -->
 <section class="hero">
   <div class="wrap">
-    <div class="eyebrow">You're In</div>
+    <div class="eyebrow">Almost There</div>
 
-    <h1 class="hammer">Your Report Is Ready.</h1>
+    <h1 class="hammer">Check Your Inbox.</h1>
 
     <p class="descriptive">
-      The <strong>Goalkeeper Science Report</strong> is one click away. 23 pages. Read it before Tuesday's training.
+      We've just sent <strong>The Goalkeeper Science Report</strong> download link to your email. Confirm your address and the report is yours.
     </p>
 
-    <a
-      class="download-btn"
-      href="https://www.isspf.com/wp-content/uploads/2026/04/GK_Science_Report.pdf"
-      download="GK_Science_Report.pdf"
-      target="_blank"
-      rel="noopener"
-    >
-      <svg class="download-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg">
-        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-        <polyline points="7 10 12 15 17 10"/>
-        <line x1="12" y1="15" x2="12" y2="3"/>
-      </svg>
-      Download The Report
-    </a>
-
-    <div class="file-meta">PDF · 24 MB · Opens in a new tab</div>
+    <img
+      class="cover-preview"
+      src="../report-cover.png"
+      alt="The Goalkeeper Science Report — cover"
+    />
   </div>
 </section>
 
-<!-- WHAT HAPPENS NEXT -->
-<section class="next">
+<!-- INSTRUCTIONS -->
+<section class="instructions">
   <div class="wrap">
-    <h2>What happens next</h2>
-    <ul>
-      <li><strong>Read the report.</strong> Don't skim. The 15-question diagnostic on page 14 is the bit that lands hardest. Be honest with your scoring.</li>
-      <li><strong>Check your inbox.</strong> A confirmation email is on its way. Add <em>support@isspf.com</em> to your contacts so the science doesn't end up in spam.</li>
-      <li><strong>Watch for the follow-up series.</strong> Over the next week we'll send a few short emails with more of the science — the four stages of a save, the Tuesday peak, why elite GKs make 56% more decisions per match.</li>
-      <li><strong>No fluff. No spam.</strong> Just the WHY behind the WHAT, sent the way we coach: short, direct, evidence-based.</li>
-    </ul>
-    <p class="closer">Drills fill a session. Science develops the goalkeeper.</p>
+    <h2>Three quick steps</h2>
+
+    <ol class="step-list">
+      <li>
+        <div class="step-body">
+          <strong>Open your inbox.</strong>
+          <p>Look for an email from <em>support@isspf.com</em> with the subject line about your Goalkeeper Science Report. The download link is inside.</p>
+        </div>
+      </li>
+      <li>
+        <div class="step-body">
+          <strong>Can't see it? Check spam and junk.</strong>
+          <p>First-time emails from new senders sometimes get filtered. If you can't find it in your inbox after 2 minutes, check your <em>spam</em> or <em>junk</em> folder and mark it as "Not spam."</p>
+        </div>
+      </li>
+      <li>
+        <div class="step-body">
+          <strong>Gmail users — move it to your Primary tab.</strong>
+          <p>If the email landed in your <em>Promotions</em> tab, drag it into the <em>Primary</em> tab. Future emails from us will come straight through, so you don't miss the science.</p>
+        </div>
+      </li>
+    </ol>
+
+    <div class="why-note">
+      <strong>Why we do it this way:</strong> Bots and fake signups can't confirm a real email address. Asking you to click the link in your inbox keeps our list clean and means the science only goes to coaches who actually want it.
+    </div>
   </div>
 </section>
 
@@ -295,7 +317,6 @@
 </footer>
 
 <script>
-  // Auto-update footer copyright year
   document.getElementById('copyright-year').textContent = new Date().getFullYear();
 </script>
 
