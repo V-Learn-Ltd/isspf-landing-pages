@@ -295,7 +295,7 @@
     background: var(--accent-red);
   }
 
-  /* ---------- WHAT'S INSIDE / CURRICULUM ---------- */
+  /* ---------- WHAT'S INSIDE / CURRICULUM (accordion) ---------- */
   .inside { background: var(--bg-stone); padding: 88px 0; }
   .inside .sub {
     font-size: 17px;
@@ -316,32 +316,72 @@
     border-top: 2px solid var(--accent-red);
   }
   .inside .part-label:first-of-type { margin-top: 0; padding-top: 0; border-top: none; }
-  .inside ul.modules { list-style: none; padding: 0; margin: 0; }
-  .inside li.module {
-    padding: 22px 0;
-    border-top: 1px solid var(--rule-light);
-    font-size: 16px;
-    line-height: 1.65;
+
+  /* Module accordion using native <details>/<summary> */
+  .module {
+    background: var(--bg-white);
+    border: 1px solid var(--rule-light);
+    border-radius: 4px;
+    margin-bottom: 8px;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
   }
-  .inside li.module:first-child { border-top: none; padding-top: 12px; }
-  .inside li.module .mod-title {
+  .module[open] {
+    border-color: rgba(237, 28, 36, 0.35);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+  }
+  .module summary {
+    list-style: none;
+    cursor: pointer;
+    padding: 18px 22px 18px 22px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 12px;
+    align-items: center;
+    user-select: none;
+  }
+  .module summary::-webkit-details-marker { display: none; }
+  .module summary::after {
+    content: "+";
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+    font-size: 24px;
+    line-height: 1;
+    color: var(--accent-red);
+    transition: transform 0.2s ease;
+    width: 24px;
+    text-align: center;
+  }
+  .module[open] summary::after {
+    content: "−";
+  }
+  .module summary:hover { background: rgba(237, 28, 36, 0.03); }
+  .module .mod-title {
     display: block;
     font-family: 'Inter', sans-serif;
     font-weight: 700;
     color: var(--text-dark);
-    margin-bottom: 4px;
-    font-size: 17px;
+    font-size: 16px;
     line-height: 1.3;
+    margin-bottom: 4px;
   }
-  .inside li.module .mod-lecturer {
+  .module .mod-lecturer {
     display: block;
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 600;
     color: var(--accent-red);
-    margin-bottom: 8px;
     letter-spacing: 0.04em;
     text-transform: uppercase;
   }
+  .module .mod-body {
+    padding: 0 22px 22px 22px;
+    font-size: 15px;
+    line-height: 1.65;
+    color: var(--text-dark);
+    border-top: 1px solid var(--rule-light);
+    margin-top: 4px;
+    padding-top: 18px;
+  }
+  .module .mod-body em { color: var(--accent-red); font-style: normal; font-weight: 600; }
 
   /* ---------- MID-CTA ---------- */
   .mid-cta {
@@ -535,28 +575,47 @@
   }
   .pricing-cta-row { margin-top: 32px; text-align: center; }
 
-  /* ---------- FAQ ---------- */
+  /* ---------- FAQ (accordion) ---------- */
   .faq { padding: 88px 0; background: var(--bg-white); }
-  .faq dl { margin: 0; }
-  .faq dt {
+  .faq-item {
+    border-bottom: 1px solid var(--rule-light);
+  }
+  .faq-item:first-of-type { border-top: 1px solid var(--rule-light); }
+  .faq-item[open] { background: rgba(237, 28, 36, 0.02); }
+  .faq-item summary {
+    list-style: none;
+    cursor: pointer;
+    padding: 22px 0;
     font-family: 'Inter', sans-serif;
     font-weight: 700;
-    font-size: 18px;
+    font-size: 17px;
     line-height: 1.4;
     color: var(--text-dark);
-    margin: 32px 0 12px;
-    padding-top: 24px;
-    border-top: 1px solid var(--rule-light);
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 16px;
+    align-items: start;
+    user-select: none;
   }
-  .faq dt:first-of-type { padding-top: 0; border-top: none; margin-top: 0; }
-  .faq dd {
-    margin: 0;
+  .faq-item summary::-webkit-details-marker { display: none; }
+  .faq-item summary::after {
+    content: "+";
+    font-weight: 400;
+    font-size: 24px;
+    line-height: 1;
+    color: var(--accent-red);
+    flex-shrink: 0;
+  }
+  .faq-item[open] summary::after { content: "−"; }
+  .faq-item summary:hover { color: var(--accent-red); }
+  .faq-item .faq-body {
+    padding: 0 0 24px 0;
     font-size: 16px;
     line-height: 1.65;
     color: var(--text-dark);
   }
-  .faq dd strong { font-weight: 700; }
-  .faq .placeholder-flag { color: var(--text-muted-dark); font-style: italic; }
+  .faq-item .faq-body strong { font-weight: 700; }
+  .faq-item .placeholder-flag { color: var(--text-muted-dark); font-style: italic; }
 
   /* ---------- FINAL CTA ---------- */
   .final-cta { background: var(--bg-dark); color: var(--text-cream); padding: 96px 0; text-align: center; border-top: 4px solid var(--accent-red); }
@@ -600,6 +659,45 @@
   footer .links { display: flex; gap: 18px; }
   footer .copy { font-size: 11px; opacity: 0.7; }
 
+  /* ---------- STICKY BOTTOM CTA BAR ---------- */
+  .sticky-cta {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: var(--bg-dark);
+    border-top: 4px solid var(--accent-red);
+    padding: 14px 24px;
+    z-index: 100;
+    transform: translateY(110%);
+    transition: transform 0.25s ease;
+    box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.35);
+  }
+  .sticky-cta.visible { transform: translateY(0); }
+  .sticky-cta-inner {
+    max-width: 1180px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .sticky-cta-text {
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    color: var(--text-cream);
+    font-size: 14px;
+    letter-spacing: 0.005em;
+  }
+  .sticky-cta-text .price {
+    color: var(--accent-red);
+    font-weight: 800;
+  }
+  .sticky-cta .cta-button {
+    padding: 12px 22px;
+    font-size: 13px;
+  }
+  /* Add bottom padding to body when sticky CTA is visible to prevent footer cutoff */
+  body.sticky-active { padding-bottom: 72px; }
+
   /* ---------- MOBILE TUNING ---------- */
   @media (max-width: 600px) {
     .hero { padding: 40px 0 60px; }
@@ -608,6 +706,10 @@
     .proof-beat, .final-cta { padding: 64px 0; }
     .logo-img { height: 36px; }
     .header-meta { font-size: 12px; }
+    .sticky-cta { padding: 10px 16px; }
+    .sticky-cta-text { font-size: 12px; }
+    .sticky-cta .cta-button { padding: 10px 16px; font-size: 12px; }
+    body.sticky-active { padding-bottom: 64px; }
   }
 </style>
 </head>
@@ -741,107 +843,84 @@
     <p class="sub">The course is structured the way elite goalkeeper coaches actually think about the position. First the training environment they build during the week. Then the game environment they prepare goalkeepers to win in on Saturday. Each module taught by the lecturer who lives that work for a living.</p>
 
     <h3 class="part-label">Part A — Training Environment (10 Modules)</h3>
-    <ul class="modules">
-      <li class="module">
-        <span class="mod-title">A1. The Role Of The Goalkeeper Coach</span>
-        <span class="mod-lecturer">Fraser Stewart</span>
-        The person-centred coaching philosophy that sits underneath everything else. Coach to player to environment to game. Establishes the mindset before the methods.
-      </li>
-      <li class="module">
-        <span class="mod-title">A2. Individual Development Inside A Team Environment</span>
-        <span class="mod-lecturer">Ivan Kovčić</span>
-        The research that quietly upended a generation of coaching. Players coached implicitly outperform players coached by direct instruction. You'll see the studies. You'll also see when explicit instruction still wins, and how to know which one a goalkeeper in front of you actually needs.
-      </li>
-      <li class="module">
-        <span class="mod-title">A3. Youth Goalkeeper Long-Term Development</span>
-        <span class="mod-lecturer">Eduardo Cachulo · FC Barcelona academy heritage</span>
-        Cachulo's four foundational pillars: Patience, Coherence, Confidence, Sensitivity. Plus the Albert Puig principle that lands like a punch the first time you hear it. <em>Protect a young goalkeeper from failure and you protect them from growth.</em>
-      </li>
-      <li class="module">
-        <span class="mod-title">A4. Skill Acquisition: Technical Proficiency For Situational Effectiveness</span>
-        <span class="mod-lecturer">Daniel Tumelty-Bevan</span>
-        The Matryoshka doll framework. Situation, then position, then decision, then action. Fitts and Posner's cognitive stages. Bernstein's constraints. Why isolated technical work, however clean it looks on Tuesday, fails to transfer to Saturday.
-      </li>
-      <li class="module">
-        <span class="mod-title">A5. Managing Pressure: Emotion, Anxiety And Coping</span>
-        <span class="mod-lecturer">Jeff Richardson</span>
-        Anxiety is not one thing. It's at least seven different things, each with a different intervention. Threat appraisal versus challenge appraisal. The Game Face protocol. The toolkit you'd never piece together on your own.
-      </li>
-      <li class="module">
-        <span class="mod-title">A6. Training Design For Youth Development (LTAD)</span>
-        <span class="mod-lecturer">Alex Segovia Vilchez</span>
-        Mechanical qualities versus functional qualities. The Load on Dysfunction principle as a working diagnostic. The development model that scales from U9 all the way to senior. You'll never read a youth player's collapse the same way again.
-      </li>
-      <li class="module">
-        <span class="mod-title">A7. Nutritional Support For The Youth Player</span>
-        <span class="mod-lecturer">Jack Christopher</span>
-        Maturation-stage nutrition. Calcium loading. The bone remodelling science behind it. The spiral curriculum. Engage, Grow, Perform, Expertise. Plus the parent conversation, which most coaches dread and most courses skip.
-      </li>
-      <li class="module">
-        <span class="mod-title">A8. Goalkeeping Expectations: The Four Functions Of The Game</span>
-        <span class="mod-lecturer">Jeff Richardson</span>
-        The goalkeeper's job across attacking, defending, transition, and set-play phases. Communication frameworks. The match situations you can name and prepare for instead of hoping you handle them when they arrive.
-      </li>
-      <li class="module">
-        <span class="mod-title">A9. Goalkeeper Coaching Analysis: A Developmental Approach</span>
-        <span class="mod-lecturer">Graeme Smith</span>
-        Four types of analysis. Opposition. In-match. Post-match. Training. The risk of premature professionalisation. How to use video without forcing technical conclusions on a goalkeeper whose body isn't ready to hold them yet.
-      </li>
-      <li class="module">
-        <span class="mod-title">A10. Elite Youth Academy Methodology: Case Study</span>
-        <span class="mod-lecturer">Dani Ortiz · FC Barcelona</span>
-        The "light of the ball" methodology. Distribution as a function of teammate inputs and spatial roles. Fractal task design. The traffic-light self-evaluation system FC Barcelona academy uses to teach goalkeepers to coach themselves.
-      </li>
-    </ul>
+    <details class="module">
+      <summary><span><span class="mod-title">A1. The Role Of The Goalkeeper Coach</span><span class="mod-lecturer">Fraser Stewart</span></span></summary>
+      <div class="mod-body">The person-centred coaching philosophy that sits underneath everything else. Coach to player to environment to game. Establishes the mindset before the methods.</div>
+    </details>
+    <details class="module">
+      <summary><span><span class="mod-title">A2. Individual Development Inside A Team Environment</span><span class="mod-lecturer">Ivan Kovčić</span></span></summary>
+      <div class="mod-body">The research that quietly upended a generation of coaching. Players coached implicitly outperform players coached by direct instruction. You'll see the studies. You'll also see when explicit instruction still wins, and how to know which one a goalkeeper in front of you actually needs.</div>
+    </details>
+    <details class="module">
+      <summary><span><span class="mod-title">A3. Youth Goalkeeper Long-Term Development</span><span class="mod-lecturer">Eduardo Cachulo · FC Barcelona academy heritage</span></span></summary>
+      <div class="mod-body">Cachulo's four foundational pillars: Patience, Coherence, Confidence, Sensitivity. Plus the Albert Puig principle that lands like a punch the first time you hear it. <em>Protect a young goalkeeper from failure and you protect them from growth.</em></div>
+    </details>
+    <details class="module">
+      <summary><span><span class="mod-title">A4. Skill Acquisition: Technical Proficiency For Situational Effectiveness</span><span class="mod-lecturer">Daniel Tumelty-Bevan</span></span></summary>
+      <div class="mod-body">The Matryoshka doll framework. Situation, then position, then decision, then action. Fitts and Posner's cognitive stages. Bernstein's constraints. Why isolated technical work, however clean it looks on Tuesday, fails to transfer to Saturday.</div>
+    </details>
+    <details class="module">
+      <summary><span><span class="mod-title">A5. Managing Pressure: Emotion, Anxiety And Coping</span><span class="mod-lecturer">Jeff Richardson</span></span></summary>
+      <div class="mod-body">Anxiety is not one thing. It's at least seven different things, each with a different intervention. Threat appraisal versus challenge appraisal. The Game Face protocol. The toolkit you'd never piece together on your own.</div>
+    </details>
+    <details class="module">
+      <summary><span><span class="mod-title">A6. Training Design For Youth Development (LTAD)</span><span class="mod-lecturer">Alex Segovia Vilchez</span></span></summary>
+      <div class="mod-body">Mechanical qualities versus functional qualities. The Load on Dysfunction principle as a working diagnostic. The development model that scales from U9 all the way to senior. You'll never read a youth player's collapse the same way again.</div>
+    </details>
+    <details class="module">
+      <summary><span><span class="mod-title">A7. Nutritional Support For The Youth Player</span><span class="mod-lecturer">Jack Christopher</span></span></summary>
+      <div class="mod-body">Maturation-stage nutrition. Calcium loading. The bone remodelling science behind it. The spiral curriculum. Engage, Grow, Perform, Expertise. Plus the parent conversation, which most coaches dread and most courses skip.</div>
+    </details>
+    <details class="module">
+      <summary><span><span class="mod-title">A8. Goalkeeping Expectations: The Four Functions Of The Game</span><span class="mod-lecturer">Jeff Richardson</span></span></summary>
+      <div class="mod-body">The goalkeeper's job across attacking, defending, transition, and set-play phases. Communication frameworks. The match situations you can name and prepare for instead of hoping you handle them when they arrive.</div>
+    </details>
+    <details class="module">
+      <summary><span><span class="mod-title">A9. Goalkeeper Coaching Analysis: A Developmental Approach</span><span class="mod-lecturer">Graeme Smith</span></span></summary>
+      <div class="mod-body">Four types of analysis. Opposition. In-match. Post-match. Training. The risk of premature professionalisation. How to use video without forcing technical conclusions on a goalkeeper whose body isn't ready to hold them yet.</div>
+    </details>
+    <details class="module">
+      <summary><span><span class="mod-title">A10. Elite Youth Academy Methodology: Case Study</span><span class="mod-lecturer">Dani Ortiz · FC Barcelona</span></span></summary>
+      <div class="mod-body">The "light of the ball" methodology. Distribution as a function of teammate inputs and spatial roles. Fractal task design. The traffic-light self-evaluation system FC Barcelona academy uses to teach goalkeepers to coach themselves.</div>
+    </details>
 
     <h3 class="part-label">Part B — Game Environment (9 Modules)</h3>
-    <ul class="modules">
-      <li class="module">
-        <span class="mod-title">B1. Goalkeeper Decision-Making And Anticipation</span>
-        <span class="mod-lecturer">Jyri Nieminen</span>
-        Information collection and scanning methodology. Affordances theory. How teammate positioning, opposition shape, and pressing behaviour telegraph what's about to happen. The transition from reactive positioning to proactive positioning, and how to coach it deliberately.
-      </li>
-      <li class="module">
-        <span class="mod-title">B2. Demands Of The Elite GK Coach: Case Study</span>
-        <span class="mod-lecturer">Lee Baxter</span>
-        Multi-country case study. Sweden. Turkey. South Africa. Denmark. Japan. The Keepers Corner approach. What changes when you carry the same methodology across cultures and team styles, and what stays the same.
-      </li>
-      <li class="module">
-        <span class="mod-title">B3. A Top-Down Process In Goalkeeper Analysis</span>
-        <span class="mod-lecturer">Ivan Kovčić</span>
-        Specific football language for goalkeeping actions. In-training and opposition analysis. The week-by-week cycle of adapt, develop, repeat.
-      </li>
-      <li class="module">
-        <span class="mod-title">B4. Modern Goalkeeper Warm-Ups: An Investigation</span>
-        <span class="mod-lecturer">Fabian Otte · Borussia Mönchengladbach</span>
-        Otte coaches goalkeepers at Borussia Mönchengladbach. The ABCD warm-up microstructure. Why Bundesliga starters often leave the pitch before the team's pre-match shooting drill begins. The research on warm-up phase selection that almost no coach below pro level has seen.
-      </li>
-      <li class="module">
-        <span class="mod-title">B5. Set Plays: Goalkeeper Demands</span>
-        <span class="mod-lecturer">Andy Quy</span>
-        Four pillars of set-play demands. Technical, tactical, psychological, physical. Triple extension. Force production versus force reduction. The specific power development that separates set-play strong from set-play vulnerable.
-      </li>
-      <li class="module">
-        <span class="mod-title">B6. Resilience: Dealing With Adversity</span>
-        <span class="mod-lecturer">Tanja Simone Ecken · PhD Sport Psychology</span>
-        Ecken holds a PhD in sport psychology and an M.Sc. in clinical health psychology. Fletcher and Sarkar's resilience framework. The protective factors the coach actually controls. The transition from threat appraisal to challenge appraisal. EMDR. Meaning Focused Coping. Resilience taught as a coachable skill, not a personality trait you wish your goalkeeper had been born with.
-      </li>
-      <li class="module">
-        <span class="mod-title">B7. Defending Set Plays</span>
-        <span class="mod-lecturer">Andy Quy</span>
-        Covered versus uncovered balls. Pass orientation. Body shapes. The functional training and primary movement patterns that make set-play defence repeatable instead of lucky.
-      </li>
-      <li class="module">
-        <span class="mod-title">B8. [PLACEHOLDER: Module B8 Title]</span>
-        <span class="mod-lecturer">[PLACEHOLDER: Lecturer name]</span>
-        [PLACEHOLDER: One-line module description. Content analysis listed 9 Part B modules but only 8 are itemised in the source sales page. Confirm B8 details before launch.]
-      </li>
-      <li class="module">
-        <span class="mod-title">B9. Developing A Goalkeeper-Specific Performance Philosophy</span>
-        <span class="mod-lecturer">Matthew Newton</span>
-        Goalkeeper-specific physical characteristics. EPL anthropometric data, around 190cm and over 77kg on average, and why those numbers matter. Periodisation reverse-engineered from match demands. The pre-hab framework. Six-week testing cycles.
-      </li>
-    </ul>
+    <details class="module">
+      <summary><span><span class="mod-title">B1. Goalkeeper Decision-Making And Anticipation</span><span class="mod-lecturer">Jyri Nieminen</span></span></summary>
+      <div class="mod-body">Information collection and scanning methodology. Affordances theory. How teammate positioning, opposition shape, and pressing behaviour telegraph what's about to happen. The transition from reactive positioning to proactive positioning, and how to coach it deliberately.</div>
+    </details>
+    <details class="module">
+      <summary><span><span class="mod-title">B2. Demands Of The Elite GK Coach: Case Study</span><span class="mod-lecturer">Lee Baxter</span></span></summary>
+      <div class="mod-body">Multi-country case study. Sweden. Turkey. South Africa. Denmark. Japan. The Keepers Corner approach. What changes when you carry the same methodology across cultures and team styles, and what stays the same.</div>
+    </details>
+    <details class="module">
+      <summary><span><span class="mod-title">B3. A Top-Down Process In Goalkeeper Analysis</span><span class="mod-lecturer">Ivan Kovčić</span></span></summary>
+      <div class="mod-body">Specific football language for goalkeeping actions. In-training and opposition analysis. The week-by-week cycle of adapt, develop, repeat.</div>
+    </details>
+    <details class="module">
+      <summary><span><span class="mod-title">B4. Modern Goalkeeper Warm-Ups: An Investigation</span><span class="mod-lecturer">Fabian Otte · Borussia Mönchengladbach</span></span></summary>
+      <div class="mod-body">Otte coaches goalkeepers at Borussia Mönchengladbach. The ABCD warm-up microstructure. Why Bundesliga starters often leave the pitch before the team's pre-match shooting drill begins. The research on warm-up phase selection that almost no coach below pro level has seen.</div>
+    </details>
+    <details class="module">
+      <summary><span><span class="mod-title">B5. Set Plays: Goalkeeper Demands</span><span class="mod-lecturer">Andy Quy</span></span></summary>
+      <div class="mod-body">Four pillars of set-play demands. Technical, tactical, psychological, physical. Triple extension. Force production versus force reduction. The specific power development that separates set-play strong from set-play vulnerable.</div>
+    </details>
+    <details class="module">
+      <summary><span><span class="mod-title">B6. Resilience: Dealing With Adversity</span><span class="mod-lecturer">Tanja Simone Ecken · PhD Sport Psychology</span></span></summary>
+      <div class="mod-body">Ecken holds a PhD in sport psychology and an M.Sc. in clinical health psychology. Fletcher and Sarkar's resilience framework. The protective factors the coach actually controls. The transition from threat appraisal to challenge appraisal. EMDR. Meaning Focused Coping. Resilience taught as a coachable skill, not a personality trait you wish your goalkeeper had been born with.</div>
+    </details>
+    <details class="module">
+      <summary><span><span class="mod-title">B7. Defending Set Plays</span><span class="mod-lecturer">Andy Quy</span></span></summary>
+      <div class="mod-body">Covered versus uncovered balls. Pass orientation. Body shapes. The functional training and primary movement patterns that make set-play defence repeatable instead of lucky.</div>
+    </details>
+    <details class="module">
+      <summary><span><span class="mod-title">B8. [PLACEHOLDER: Module B8 Title]</span><span class="mod-lecturer">[PLACEHOLDER: Lecturer]</span></span></summary>
+      <div class="mod-body">[PLACEHOLDER: One-line module description. Content analysis listed 9 Part B modules but only 8 are itemised in the source sales page. Confirm B8 details before launch.]</div>
+    </details>
+    <details class="module">
+      <summary><span><span class="mod-title">B9. Developing A Goalkeeper-Specific Performance Philosophy</span><span class="mod-lecturer">Matthew Newton</span></span></summary>
+      <div class="mod-body">Goalkeeper-specific physical characteristics. EPL anthropometric data, around 190cm and over 77kg on average, and why those numbers matter. Periodisation reverse-engineered from match demands. The pre-hab framework. Six-week testing cycles.</div>
+    </details>
   </div>
 </section>
 
@@ -957,28 +1036,41 @@
 <section class="faq">
   <div class="wrap">
     <h2>The Questions Most Coaches Ask Before Enrolling.</h2>
-    <dl>
-      <dt>Is this just another online goalkeeper course like the ones I've already done?</dt>
-      <dd>No, and that's a fair question to ask before spending £249. Other courses teach <em>what</em> to coach. The drills. The techniques. The warm-up structures. This course teaches the science underneath. Why those drills work biomechanically. What the goalkeeper's brain is actually doing during a save. Why a Tuesday session needs to look completely different from a Thursday one. Once you have done this course, the courses you have done before will look different to you. You will not unsee the gap.</dd>
 
-      <dt>How much time does it take?</dt>
-      <dd><span class="placeholder-flag">[PLACEHOLDER: total course hours — Neil to confirm. Likely 15 to 25 hours of video content based on 19 modules.]</span> Self-paced, so you spread it over weeks, not days. Most coaches do one or two modules per week alongside their actual coaching schedule.</dd>
+    <details class="faq-item">
+      <summary>Is this just another online goalkeeper course like the ones I've already done?</summary>
+      <div class="faq-body">No, and that's a fair question to ask before spending £249. Other courses teach <em>what</em> to coach. The drills. The techniques. The warm-up structures. This course teaches the science underneath. Why those drills work biomechanically. What the goalkeeper's brain is actually doing during a save. Why a Tuesday session needs to look completely different from a Thursday one. Once you have done this course, the courses you have done before will look different to you. You will not unsee the gap.</div>
+    </details>
 
-      <dt>I coach grassroots, not at an academy. Is this still for me?</dt>
-      <dd>Yes. Arguably more so. The LTAD framework taught throughout the course applies from U9 upward. The science does not care whether your goalkeeper is at a Premier League academy or your local U13 team. The principles scale. What changes is the application.</dd>
+    <details class="faq-item">
+      <summary>How much time does it take?</summary>
+      <div class="faq-body"><span class="placeholder-flag">[PLACEHOLDER: total course hours — Neil to confirm. Likely 15 to 25 hours of video content based on 19 modules.]</span> Self-paced, so you spread it over weeks, not days. Most coaches do one or two modules per week alongside their actual coaching schedule.</div>
+    </details>
 
-      <dt>What is the certification actually worth?</dt>
-      <dd>The Professional Certificate in Goalkeeper Coaching Science (Pro-Youth Level) is awarded on course completion. ISSPF courses are accredited by leading universities. <span class="placeholder-flag">[PLACEHOLDER: specific accrediting institutions to be confirmed.]</span> The paper certificate is real and you can put it on your coaching CV. The change in how you actually coach is what the £249 is really paying for.</dd>
+    <details class="faq-item">
+      <summary>I coach grassroots, not at an academy. Is this still for me?</summary>
+      <div class="faq-body">Yes. Arguably more so. The LTAD framework taught throughout the course applies from U9 upward. The science does not care whether your goalkeeper is at a Premier League academy or your local U13 team. The principles scale. What changes is the application.</div>
+    </details>
 
-      <dt>Does this replace my coaching licence?</dt>
-      <dd>No. UEFA, FA, and federation licences and this course are different things. Licences certify you to coach in regulated environments. This course gives you the science the licences do not cover. The two together is the strongest position to be in.</dd>
+    <details class="faq-item">
+      <summary>What is the certification actually worth?</summary>
+      <div class="faq-body">The Professional Certificate in Goalkeeper Coaching Science (Pro-Youth Level) is awarded on course completion. ISSPF courses are accredited by leading universities. <span class="placeholder-flag">[PLACEHOLDER: specific accrediting institutions to be confirmed.]</span> The paper certificate is real and you can put it on your coaching CV. The change in how you actually coach is what the £249 is really paying for.</div>
+    </details>
 
-      <dt>Can I get a refund if it is not for me?</dt>
-      <dd><span class="placeholder-flag">[PLACEHOLDER: refund terms — Neil to confirm.]</span></dd>
+    <details class="faq-item">
+      <summary>Does this replace my coaching licence?</summary>
+      <div class="faq-body">No. UEFA, FA, and federation licences and this course are different things. Licences certify you to coach in regulated environments. This course gives you the science the licences do not cover. The two together is the strongest position to be in.</div>
+    </details>
 
-      <dt>Will there be more courses?</dt>
-      <dd>Yes. ISSPF runs a separate Senior Pro Level Goalkeeper Coaching course for coaches working with senior goalkeepers in professional environments. Many coaches do both. <span class="placeholder-flag">[PLACEHOLDER: bundle pricing if applicable.]</span></dd>
-    </dl>
+    <details class="faq-item">
+      <summary>Can I get a refund if it is not for me?</summary>
+      <div class="faq-body"><span class="placeholder-flag">[PLACEHOLDER: refund terms — Neil to confirm.]</span></div>
+    </details>
+
+    <details class="faq-item">
+      <summary>Will there be more courses?</summary>
+      <div class="faq-body">Yes. ISSPF runs a separate Senior Pro Level Goalkeeper Coaching course for coaches working with senior goalkeepers in professional environments. Many coaches do both. <span class="placeholder-flag">[PLACEHOLDER: bundle pricing if applicable.]</span></div>
+    </details>
   </div>
 </section>
 
@@ -1008,8 +1100,43 @@
   </div>
 </footer>
 
+<!-- STICKY BOTTOM CTA — appears once visitor scrolls past hero, hides when they hit pricing -->
+<div class="sticky-cta" id="stickyCta" aria-hidden="true">
+  <div class="sticky-cta-inner">
+    <span class="sticky-cta-text">The Course Behind The Report · <span class="price">£249 / $299</span></span>
+    <a class="cta-button" href="#enrol">Enrol Now</a>
+  </div>
+</div>
+
 <script>
   document.getElementById('copyright-year').textContent = new Date().getFullYear();
+
+  // Sticky CTA: show after scrolling past hero, hide once pricing block enters viewport
+  (function () {
+    var sticky = document.getElementById('stickyCta');
+    var hero = document.querySelector('.hero');
+    var pricing = document.getElementById('enrol');
+    var body = document.body;
+    if (!sticky || !hero || !pricing) return;
+
+    function update() {
+      var heroBottom = hero.getBoundingClientRect().bottom;
+      var pricingTop = pricing.getBoundingClientRect().top;
+      var viewportH = window.innerHeight;
+      // Show: hero is scrolled past AND pricing block hasn't entered viewport yet
+      var shouldShow = heroBottom < 0 && pricingTop > viewportH * 0.5;
+      if (shouldShow) {
+        sticky.classList.add('visible');
+        body.classList.add('sticky-active');
+      } else {
+        sticky.classList.remove('visible');
+        body.classList.remove('sticky-active');
+      }
+    }
+    window.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update);
+    update();
+  }());
 </script>
 
 </body>
