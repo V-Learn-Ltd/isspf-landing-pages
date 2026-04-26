@@ -864,9 +864,14 @@
       <a href="https://www.isspf.com/terms-and-condition/" target="_blank" rel="noopener noreferrer">Terms</a>
       <a href="https://www.isspf.com/contact/" target="_blank" rel="noopener noreferrer">Contact</a>
     </div>
-    <div class="copy">© 2026 ISSPF. All rights reserved.</div>
+    <div class="copy">© <span id="copyright-year">2026</span> ISSPF. All rights reserved.</div>
   </div>
 </footer>
+
+<script>
+  // Auto-update footer copyright year so it never looks dated.
+  document.getElementById('copyright-year').textContent = new Date().getFullYear();
+</script>
 
 </body>
 </html>
