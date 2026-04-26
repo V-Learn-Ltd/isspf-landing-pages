@@ -50,12 +50,17 @@ export default {
       variant = Math.random() < 0.5 ? 'a' : 'b';
     }
 
-    // Rewrite path to the variant's HTML file
-    const variantFile = variant === 'b' ? 'variant-b.html' : 'index.html';
-    const rewriteUrl = new URL(`${path}/${variantFile}`, url.origin);
+    // Rewrite path to the variant. CRITICAL: use canonical / extensionless paths.
+    // Cloudflare Pages 308-redirects /foo/index.html → /foo/ and /foo/variant-b.html → /foo/variant-b.
+    // If we fetch the .html form, Pages returns a 308 which our Worker propagates to the client,
+    // and the client's redirect-follow re-triggers our Worker → infinite loop.
+    // Use the canonical URL form: /<path>/ for the directory's default (serves index.html),
+    // /<path>/variant-b extensionless for the challenger.
+    const targetPath = variant === 'b' ? `${path}/variant-b` : `${path}/`;
+    const rewriteUrl = new URL(targetPath, url.origin);
     const rewriteRequest = new Request(rewriteUrl.toString(), request);
 
-    // Fetch the static asset
+    // Fetch the static asset (this call bypasses the Worker, no recursion risk).
     const response = await env.ASSETS.fetch(rewriteRequest);
 
     // Build new response so we can attach headers
