@@ -144,27 +144,36 @@
     box-shadow: 0 12px 28px rgba(237, 28, 36, 0.35);
   }
 
-  /* Hero stats strip */
+  /* Hero stats strip — upgraded to premium stat cards */
   .hero-stats {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 24px;
-    margin-top: 48px;
-    padding-top: 32px;
-    border-top: 1px solid var(--rule-dark);
-    max-width: 720px;
+    gap: 16px;
+    margin-top: 56px;
+    max-width: 760px;
   }
   @media (max-width: 520px) {
-    .hero-stats { grid-template-columns: 1fr; gap: 18px; }
+    .hero-stats { grid-template-columns: 1fr; gap: 12px; }
+  }
+  .stat {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--rule-dark);
+    border-radius: 6px;
+    padding: 22px 20px;
+    transition: border-color 0.2s ease, background 0.2s ease;
+  }
+  .stat:hover {
+    border-color: rgba(237, 28, 36, 0.4);
+    background: rgba(237, 28, 36, 0.06);
   }
   .stat-num {
     font-family: 'Anton', sans-serif;
     font-weight: 400;
-    font-size: clamp(40px, 6vw, 56px);
+    font-size: clamp(38px, 5.5vw, 52px);
     line-height: 1;
     color: var(--accent-red);
     letter-spacing: 0.005em;
-    margin-bottom: 6px;
+    margin-bottom: 8px;
   }
   .stat-label {
     font-size: 11px;
@@ -265,6 +274,17 @@
   @media (min-width: 880px) {
     .ba-grid { grid-template-columns: 1fr 1fr; gap: 40px; }
   }
+  .ba-col {
+    background: var(--bg-stone);
+    border-radius: 8px;
+    padding: 28px;
+    border: 1px solid var(--rule-light);
+  }
+  .ba-col.after {
+    background: var(--bg-white);
+    border: 1px solid rgba(237, 28, 36, 0.25);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
+  }
   .ba-col h3 {
     font-family: 'Anton', sans-serif;
     font-weight: 400;
@@ -272,27 +292,48 @@
     line-height: 1.15;
     letter-spacing: 0.005em;
     text-transform: uppercase;
-    margin: 0 0 18px;
-    padding-bottom: 12px;
-    border-bottom: 2px solid var(--accent-red);
+    margin: 0 0 20px;
+    padding-bottom: 14px;
+    border-bottom: 2px solid var(--rule-light);
+    color: var(--text-muted-dark);
+  }
+  .ba-col.after h3 {
+    color: var(--accent-red);
+    border-bottom-color: var(--accent-red);
   }
   .ba-col ul { list-style: none; padding: 0; margin: 0; }
   .ba-col li {
-    padding: 14px 0 14px 28px;
+    padding: 12px 0 12px 32px;
     position: relative;
     font-size: 15px;
-    line-height: 1.6;
-    border-bottom: 1px solid var(--rule-light);
+    line-height: 1.55;
   }
-  .ba-col li:last-child { border-bottom: none; }
-  .ba-col li::before {
+  .ba-col.before li {
+    color: var(--text-muted-dark);
+  }
+  .ba-col.before li::before {
     content: "";
     position: absolute;
     left: 0;
-    top: 22px;
-    width: 14px;
-    height: 2px;
-    background: var(--accent-red);
+    top: 16px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 18 18'><circle cx='9' cy='9' r='9' fill='%236b6b6b' opacity='0.15'/><path d='M6 6L12 12M12 6L6 12' stroke='%236b6b6b' stroke-width='2' stroke-linecap='round'/></svg>");
+    background-size: contain;
+    background-repeat: no-repeat;
+  }
+  .ba-col.after li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 16px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 18 18'><circle cx='9' cy='9' r='9' fill='%23ED1C24'/><path d='M5 9.5L7.5 12L13 6.5' stroke='white' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+    background-size: contain;
+    background-repeat: no-repeat;
   }
 
   /* ---------- WHAT'S INSIDE / CURRICULUM (accordion) ---------- */
@@ -510,8 +551,9 @@
     margin-top: 28px;
   }
 
-  /* ---------- PRICING ---------- */
+  /* ---------- PRICING (proper pricing card, Barcahub-flavoured) ---------- */
   .pricing { background: var(--bg-stone); padding: 88px 0; }
+  .pricing .pricing-intro { text-align: center; max-width: 720px; margin: 0 auto 48px; }
   .pricing .price-eyebrow {
     display: inline-block;
     font-size: 12px;
@@ -521,59 +563,192 @@
     color: var(--accent-red);
     margin-bottom: 14px;
   }
-  .pricing p {
+  .pricing h2 { text-align: center; margin: 0 0 16px; }
+  .pricing-intro p {
     font-size: 17px;
-    line-height: 1.7;
-    margin: 0 0 16px;
-    color: var(--text-dark);
+    line-height: 1.65;
+    color: var(--text-muted-dark);
+    margin: 0;
   }
-  .pricing p.value-anchor {
+
+  /* The pricing card itself */
+  .price-card {
+    max-width: 480px;
+    margin: 0 auto;
     background: var(--bg-white);
-    padding: 22px 24px;
-    border-left: 4px solid var(--accent-red);
-    font-size: 16px;
-    margin: 24px 0;
-  }
-  .included-list { list-style: none; padding: 0; margin: 32px 0; }
-  .included-list li {
-    padding: 14px 0 14px 32px;
+    border-radius: 10px;
+    box-shadow:
+      0 24px 48px rgba(0, 0, 0, 0.08),
+      0 4px 12px rgba(0, 0, 0, 0.04);
+    overflow: hidden;
+    border: 1px solid var(--rule-light);
     position: relative;
-    font-size: 16px;
-    line-height: 1.55;
+  }
+  .price-card-banner {
+    background: var(--accent-red);
+    color: var(--text-cream);
+    text-align: center;
+    padding: 12px 20px;
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+  .price-card-body { padding: 36px 32px 32px; }
+  .price-card-title {
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-muted-dark);
+    margin: 0 0 8px;
+    text-align: center;
+  }
+  .price-card-name {
+    font-family: 'Anton', sans-serif;
+    font-weight: 400;
+    font-size: clamp(22px, 3.6vw, 28px);
+    line-height: 1.1;
+    letter-spacing: 0.005em;
+    text-transform: uppercase;
+    color: var(--text-dark);
+    text-align: center;
+    margin: 0 0 28px;
+    padding-bottom: 24px;
     border-bottom: 1px solid var(--rule-light);
   }
-  .included-list li:last-child { border-bottom: none; }
+  .price-display {
+    text-align: center;
+    margin: 0 0 12px;
+  }
+  .price-display .currency {
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 28px;
+    color: var(--text-dark);
+    vertical-align: top;
+    line-height: 1;
+    margin-right: 4px;
+    position: relative;
+    top: 12px;
+  }
+  .price-display .amount {
+    font-family: 'Anton', sans-serif;
+    font-weight: 400;
+    font-size: clamp(60px, 9vw, 88px);
+    line-height: 1;
+    color: var(--accent-red);
+    letter-spacing: 0.005em;
+  }
+  .price-display .alt-currency {
+    display: block;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    color: var(--text-muted-dark);
+    margin-top: 8px;
+    font-weight: 500;
+  }
+  .price-card-meta {
+    text-align: center;
+    font-size: 13px;
+    color: var(--text-muted-dark);
+    line-height: 1.5;
+    margin: 0 0 28px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--rule-light);
+  }
+  .price-card-meta strong { color: var(--text-dark); font-weight: 700; }
+
+  .included-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 32px;
+  }
+  .included-list li {
+    padding: 12px 0 12px 32px;
+    position: relative;
+    font-size: 15px;
+    line-height: 1.5;
+    color: var(--text-dark);
+  }
   .included-list li::before {
     content: "";
     position: absolute;
     left: 0;
-    top: 22px;
+    top: 14px;
     width: 18px;
-    height: 3px;
-    background: var(--accent-red);
+    height: 18px;
+    border-radius: 50%;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 18 18'><circle cx='9' cy='9' r='9' fill='%23ED1C24'/><path d='M5 9.5L7.5 12L13 6.5' stroke='white' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+    background-size: contain;
+    background-repeat: no-repeat;
   }
-  .guarantee-box {
+  .included-list li strong { color: var(--text-dark); font-weight: 700; }
+
+  .price-card .cta-button {
+    display: block;
+    width: 100%;
+    text-align: center;
+    box-sizing: border-box;
+  }
+
+  .price-card-guarantee {
+    margin-top: 24px;
+    padding: 18px 20px;
+    background: var(--bg-stone);
+    border-radius: 6px;
+    display: grid;
+    grid-template-columns: 36px 1fr;
+    gap: 14px;
+    align-items: start;
+  }
+  .price-card-guarantee::before {
+    content: "";
+    width: 36px;
+    height: 36px;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='36' height='36' viewBox='0 0 36 36'><path d='M18 3l13 5v9c0 8.5-5.5 14.5-13 17-7.5-2.5-13-8.5-13-17V8l13-5z' fill='none' stroke='%23ED1C24' stroke-width='2' stroke-linejoin='round'/><path d='M12.5 18l4 4 7-7' fill='none' stroke='%23ED1C24' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+    background-size: contain;
+    background-repeat: no-repeat;
+  }
+  .price-card-guarantee-text {
+    font-size: 13px;
+    line-height: 1.55;
+    color: var(--text-muted-dark);
+  }
+  .price-card-guarantee-text strong {
+    display: block;
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    color: var(--text-dark);
+    font-size: 14px;
+    margin-bottom: 2px;
+  }
+
+  /* Value-anchor sits below the card */
+  .value-anchor {
+    max-width: 720px;
+    margin: 48px auto 0;
     background: var(--bg-white);
-    border-top: 4px solid var(--accent-red);
-    padding: 24px 28px;
-    margin: 32px 0;
+    padding: 28px 32px;
+    border-left: 4px solid var(--accent-red);
+    border-radius: 4px;
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--text-muted-dark);
   }
-  .guarantee-box strong {
+  .value-anchor strong { color: var(--text-dark); font-weight: 700; }
+  .value-anchor .va-heading {
     display: block;
     font-family: 'Anton', sans-serif;
     font-weight: 400;
-    font-size: 22px;
-    line-height: 1.2;
+    font-size: 18px;
+    letter-spacing: 0.02em;
     text-transform: uppercase;
-    margin-bottom: 8px;
     color: var(--text-dark);
+    margin-bottom: 10px;
   }
-  .guarantee-box .placeholder-flag {
-    color: var(--text-muted-dark);
-    font-style: italic;
-    font-size: 14px;
-  }
-  .pricing-cta-row { margin-top: 32px; text-align: center; }
 
   /* ---------- FAQ (accordion) ---------- */
   .faq { padding: 88px 0; background: var(--bg-white); }
@@ -808,7 +983,7 @@
     <p>The course replaces it. Not with theory you'll never use. With the exact frameworks the lecturers in this faculty use every week inside FC Barcelona, Borussia Mönchengladbach, EPL clubs, and a handful of national programmes. You see the science. You see the application. Then you redesign your own sessions from the inside out.</p>
 
     <div class="ba-grid">
-      <div class="ba-col">
+      <div class="ba-col before">
         <h3>Where You Are Now</h3>
         <ul>
           <li>Building sessions on intuition, inherited drills, and what worked last year</li>
@@ -819,7 +994,7 @@
           <li>Caught between telling them what to do and letting them figure it out, and not sure which is right</li>
         </ul>
       </div>
-      <div class="ba-col">
+      <div class="ba-col after">
         <h3>Where The Course Gets You To</h3>
         <ul>
           <li>Designing sessions using the four-stage save loop. See, recognise, plan, do. Most coaches train only the last one. You train all four.</li>
@@ -1003,31 +1178,53 @@
   </div>
 </section>
 
-<!-- PRICING -->
+<!-- PRICING (proper pricing card) -->
 <section class="pricing" id="enrol">
   <div class="wrap">
-    <span class="price-eyebrow">Your Investment</span>
-    <h2>One Payment. Lifetime Access.</h2>
-
-    <p>The course is <strong>£249 in pounds. $299 in US dollars.</strong> Local currency displayed at checkout. No subscription. No recurring charge. No expiry. Watch the modules at your own pace. Come back to any module any time, on any device, for the rest of your coaching career.</p>
-
-    <p class="value-anchor">Compare that to the alternatives a coach with this level of intent typically considers. A weekend goalkeeper coaching workshop runs £350 to £600 and gives you one speaker, two days, and a binder. A university sport science short course runs £1,200 to £2,800 and gives you general theory rather than goalkeeper specifics. A private session with a UEFA Pro coach starts at £400 per hour. This course gives you nineteen modules from fifteen lecturers from FC Barcelona, Borussia Mönchengladbach, the Premier League, and elite international football. For one payment of £249.</p>
-
-    <ul class="included-list">
-      <li>Nineteen video modules across two parts: the Training Environment and the Game Environment.</li>
-      <li>Fifteen lecturers drawn from elite academies, Premier League performance teams, and international football.</li>
-      <li>Lifetime access. Log in and re-watch any module any time. Update your thinking against the next age group, the next season, the next goalkeeper.</li>
-      <li>Self-paced. No deadlines. No scheduled cohorts. No live classes you have to make.</li>
-      <li>Professional Certificate in Goalkeeper Coaching Science (Pro-Youth Level) on completion. Real document. Coaching CV ready.</li>
-    </ul>
-
-    <div class="guarantee-box">
-      <strong>A Guarantee That Respects Your Intelligence.</strong>
-      <span class="placeholder-flag">[PLACEHOLDER: refund / guarantee terms — Neil to confirm. Suggested minimum: 14-day money-back if you decide it's not for you, no questions asked.]</span>
+    <div class="pricing-intro">
+      <span class="price-eyebrow">Your Investment</span>
+      <h2>One Payment. Lifetime Access.</h2>
+      <p>One enrolment. Nineteen modules. Fifteen lecturers from elite football. The science you've been asking the wrong question for.</p>
     </div>
 
-    <div class="pricing-cta-row">
-      <a class="cta-button large" href="#checkout">Enrol Now · £249 / $299</a>
+    <div class="price-card">
+      <div class="price-card-banner">PRO-YOUTH LEVEL</div>
+
+      <div class="price-card-body">
+        <p class="price-card-title">Professional Certificate In</p>
+        <h3 class="price-card-name">Goalkeeper Coaching Science</h3>
+
+        <div class="price-display">
+          <span class="currency">£</span><span class="amount">249</span>
+          <span class="alt-currency">$299 USD · Local currency at checkout</span>
+        </div>
+
+        <p class="price-card-meta">
+          <strong>One payment.</strong> No subscription. No recurring charge. No expiry.
+        </p>
+
+        <ul class="included-list">
+          <li><strong>19 video modules</strong> across Training and Game environments</li>
+          <li><strong>15 elite faculty</strong> from FC Barcelona, Borussia Mönchengladbach, the EPL and international football</li>
+          <li><strong>Lifetime access</strong> on any device. Re-watch any module any time</li>
+          <li><strong>Self-paced.</strong> No deadlines. No live classes</li>
+          <li><strong>Professional Certificate</strong> on completion. Coaching CV ready</li>
+        </ul>
+
+        <a class="cta-button large" href="#checkout">Enrol Now · £249 / $299</a>
+
+        <div class="price-card-guarantee">
+          <div class="price-card-guarantee-text">
+            <strong>A guarantee that respects your intelligence.</strong>
+            <span class="placeholder-flag">[PLACEHOLDER: refund / guarantee terms — Neil to confirm. Suggested: 14-day money-back, no questions asked.]</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="value-anchor">
+      <span class="va-heading">Why £249 Is The Number It Is</span>
+      Compare that to the alternatives a coach with this level of intent typically considers. A weekend goalkeeper coaching workshop runs £350 to £600 and gives you one speaker, two days, and a binder. A university sport science short course runs £1,200 to £2,800 and gives you general theory rather than goalkeeper specifics. A private session with a UEFA Pro coach starts at £400 per hour. <strong>This course gives you nineteen modules from fifteen lecturers from FC Barcelona, Borussia Mönchengladbach, the Premier League, and elite international football. For one payment of £249.</strong>
     </div>
   </div>
 </section>
