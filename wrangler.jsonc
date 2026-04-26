@@ -1,20 +1,10 @@
 {
   "$schema": "https://developers.cloudflare.com/schemas/wrangler.json",
   "name": "isspf-landing-pages",
-  "main": "_worker.js",
   "compatibility_date": "2026-04-25",
-  "compatibility_flags": ["nodejs_compat"],
 
-  // Static asset serving via Worker assets binding.
-  // - directory: serve files from the repo root (so /gk-report/logo.jpg etc. resolve)
-  // - binding: env.ASSETS in _worker.js to fetch a static file
-  // - run_worker_first: run the Worker on every request so it can do A/B routing
-  //   even for paths that have a matching static file (like /gk-report/index.html)
-  // - .assetsignore at the root excludes _worker.js, wrangler.jsonc, README.md etc.
-  //   from being served as public assets
-  "assets": {
-    "directory": "./",
-    "binding": "ASSETS",
-    "run_worker_first": true
-  }
+  // Pages config — declares build output dir so we don't depend on dashboard.
+  // Pages auto-detects _worker.js at this path and runs it as a Pages Function
+  // (Worker advanced mode), which handles our A/B routing.
+  "pages_build_output_dir": "./"
 }
