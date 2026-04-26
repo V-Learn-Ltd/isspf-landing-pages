@@ -1,11 +1,20 @@
 {
   "$schema": "https://developers.cloudflare.com/schemas/wrangler.json",
   "name": "isspf-landing-pages",
+  "main": "_worker.js",
   "compatibility_date": "2026-04-25",
   "compatibility_flags": ["nodejs_compat"],
 
-  // Tells Cloudflare Pages to deploy from the repo root, not a subdirectory.
-  // This makes _worker.js at the root active for all paths, and lets each
-  // campaign live in its own slug folder (e.g. /gk-report/, /<next>/).
-  "pages_build_output_dir": "./"
+  // Static asset serving via Worker assets binding.
+  // - directory: serve files from the repo root (so /gk-report/logo.jpg etc. resolve)
+  // - binding: env.ASSETS in _worker.js to fetch a static file
+  // - run_worker_first: run the Worker on every request so it can do A/B routing
+  //   even for paths that have a matching static file (like /gk-report/index.html)
+  // - .assetsignore at the root excludes _worker.js, wrangler.jsonc, README.md etc.
+  //   from being served as public assets
+  "assets": {
+    "directory": "./",
+    "binding": "ASSETS",
+    "run_worker_first": true
+  }
 }

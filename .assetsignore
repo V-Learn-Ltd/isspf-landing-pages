@@ -1,7 +1,9 @@
-# Files the Cloudflare Pages Worker uses internally —
-# must NOT be served as public static assets at /_worker.js etc.
+# Files that must NOT be served as public static assets.
+# The Worker binary, the Cloudflare config, the docs, and dotfiles all stay private.
 _worker.js
 wrangler.jsonc
 .gitignore
-README.md
 .assetsignore
+README.md
+MORNING-CHECKLIST.md
+.DS_Store
