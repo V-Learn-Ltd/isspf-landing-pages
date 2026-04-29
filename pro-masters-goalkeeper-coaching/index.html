@@ -1,0 +1,1337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Professional Masters in Goalkeeper Coaching Science (Senior Pro Level) | ISSPF</title>
+<meta name="description" content="The Senior Pro Level course behind The Goalkeeper Science Report. 19 modules. 14 faculty from Bundesliga, FC Barcelona heritage, the Premier League and elite international soccer. Built for goalkeeper coaches working with senior players." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+<style>
+  :root {
+    --bg-white: #ffffff;
+    --bg-stone: #f4f4f4;
+    --bg-dark: #0a0a0a;
+    --bg-dark-2: #141414;
+    --text-dark: #111111;
+    --text-muted-dark: #6b6b6b;
+    --text-cream: #ffffff;
+    --text-muted-light: #b8b8b8;
+    --accent-red: #ED1C24;
+    --accent-red-hover: #c8161d;
+    --rule-dark: rgba(255, 255, 255, 0.10);
+    --rule-light: rgba(0, 0, 0, 0.10);
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-weight: 400;
+    color: var(--text-dark);
+    background: var(--bg-white);
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  .wrap { max-width: 720px; margin: 0 auto; padding: 0 24px; }
+  .wrap-wide { max-width: 1180px; margin: 0 auto; padding: 0 24px; }
+
+  /* ---------- HEADER ---------- */
+  header {
+    background: var(--bg-white);
+    border-bottom: 1px solid var(--rule-light);
+    padding: 16px 0;
+  }
+  header .wrap-wide { display: flex; align-items: center; justify-content: space-between; }
+  .logo { display: flex; align-items: center; }
+  .logo-img { height: 44px; width: auto; display: block; }
+  .logo-img.missing { display: none; }
+  .logo-text {
+    display: none;
+    font-family: 'Inter', sans-serif;
+    font-weight: 900;
+    font-size: 18px;
+    letter-spacing: 0.04em;
+    color: var(--text-dark);
+  }
+  .logo-img.missing + .logo-text { display: inline; }
+  .header-meta {
+    font-size: 16px;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent-red);
+  }
+
+  /* ---------- HERO ---------- */
+  .hero {
+    background: var(--bg-dark);
+    color: var(--text-cream);
+    padding: 56px 0 80px;
+  }
+  .eyebrow {
+    display: inline-block;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--accent-red);
+    margin-bottom: 22px;
+  }
+  .hammer {
+    font-family: 'Anton', 'Inter', sans-serif;
+    font-weight: 400;
+    font-size: clamp(44px, 7.8vw, 84px);
+    line-height: 0.92;
+    letter-spacing: 0.005em;
+    text-transform: uppercase;
+    color: var(--text-cream);
+    margin: 0 0 24px;
+    max-width: 920px;
+  }
+  .descriptive-headline {
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: clamp(18px, 2.4vw, 22px);
+    line-height: 1.4;
+    color: var(--text-cream);
+    margin: 0 0 22px;
+    max-width: 760px;
+  }
+  .subhead {
+    font-size: clamp(15px, 2.1vw, 16px);
+    line-height: 1.65;
+    color: var(--text-muted-light);
+    max-width: 720px;
+    margin: 0 0 28px;
+  }
+  .subhead strong { color: var(--text-cream); font-weight: 600; }
+  .trust-line {
+    font-size: 13px;
+    color: var(--text-muted-light);
+    margin: 0 0 32px;
+    max-width: 720px;
+  }
+  .trust-line strong { color: var(--text-cream); font-weight: 600; }
+
+  /* CTA buttons */
+  .cta-button {
+    display: inline-block;
+    background: var(--accent-red);
+    color: var(--text-cream);
+    font-family: 'Inter', sans-serif;
+    font-weight: 800;
+    font-size: 15px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    border: none;
+    padding: 20px 32px;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.15s ease;
+  }
+  .cta-button:hover { background: var(--accent-red-hover); }
+  .cta-button.large {
+    font-size: 16px;
+    padding: 22px 40px;
+    box-shadow: 0 12px 28px rgba(237, 28, 36, 0.35);
+  }
+
+  /* Hero stats strip — upgraded to premium stat cards */
+  .hero-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-top: 56px;
+    max-width: 760px;
+  }
+  @media (max-width: 520px) {
+    .hero-stats { grid-template-columns: 1fr; gap: 12px; }
+  }
+  .stat {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--rule-dark);
+    border-radius: 6px;
+    padding: 22px 20px;
+    transition: border-color 0.2s ease, background 0.2s ease;
+  }
+  .stat:hover {
+    border-color: rgba(237, 28, 36, 0.4);
+    background: rgba(237, 28, 36, 0.06);
+  }
+  .stat-num {
+    font-family: 'Anton', sans-serif;
+    font-weight: 400;
+    font-size: clamp(38px, 5.5vw, 52px);
+    line-height: 1;
+    color: var(--accent-red);
+    letter-spacing: 0.005em;
+    margin-bottom: 8px;
+  }
+  .stat-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-muted-light);
+    line-height: 1.35;
+  }
+
+  /* ---------- TRUST STRIP ---------- */
+  .trust-strip {
+    background: var(--bg-white);
+    padding: 36px 0 40px;
+    border-bottom: 1px solid var(--rule-light);
+  }
+  .trust-strip-eyebrow {
+    text-align: center;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-muted-dark);
+    margin: 0 0 24px;
+  }
+  .partner-logos {
+    display: block;
+    width: 100%;
+    max-width: 960px;
+    height: auto;
+    margin: 0 auto;
+  }
+
+  /* ---------- BELIEF SECTION ---------- */
+  .belief { padding: 88px 0; background: var(--bg-white); }
+  h2 {
+    font-family: 'Anton', 'Inter', sans-serif;
+    font-weight: 400;
+    font-size: clamp(28px, 4.8vw, 44px);
+    line-height: 1;
+    letter-spacing: 0.005em;
+    text-transform: uppercase;
+    margin: 0 0 28px;
+    color: var(--text-dark);
+  }
+  .belief .lede {
+    font-style: italic;
+    color: var(--text-muted-dark);
+    font-size: 17px;
+    margin: 0 0 24px;
+  }
+  .belief p {
+    font-size: 17px;
+    line-height: 1.7;
+    margin: 0 0 16px;
+  }
+  .belief p strong { font-weight: 700; color: var(--text-dark); }
+  .pull-out {
+    font-family: 'Anton', sans-serif;
+    font-weight: 400;
+    font-size: clamp(36px, 5.5vw, 56px);
+    line-height: 1.05;
+    letter-spacing: 0.005em;
+    text-transform: uppercase;
+    color: var(--accent-red);
+    margin: 32px 0;
+    text-align: center;
+  }
+  .tagline {
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 17px;
+    line-height: 1.4;
+    color: var(--accent-red);
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 2px solid var(--accent-red);
+    letter-spacing: 0.005em;
+    text-transform: uppercase;
+  }
+
+  /* ---------- TRANSFORMATION ---------- */
+  .transformation { padding: 88px 0; background: var(--bg-white); border-top: 1px solid var(--rule-light); }
+  .transformation .lede {
+    font-style: italic;
+    color: var(--text-muted-dark);
+    font-size: 17px;
+    margin: 0 0 24px;
+  }
+  .transformation p { font-size: 17px; line-height: 1.7; margin: 0 0 16px; }
+  .transformation p strong { font-weight: 700; color: var(--text-dark); }
+  .ba-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 32px;
+    margin: 36px 0 24px;
+  }
+  @media (min-width: 880px) {
+    .ba-grid { grid-template-columns: 1fr 1fr; gap: 40px; }
+  }
+  .ba-col {
+    background: var(--bg-stone);
+    border-radius: 8px;
+    padding: 28px;
+    border: 1px solid var(--rule-light);
+  }
+  .ba-col.after {
+    background: var(--bg-white);
+    border: 1px solid rgba(237, 28, 36, 0.25);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
+  }
+  .ba-col h3 {
+    font-family: 'Anton', sans-serif;
+    font-weight: 400;
+    font-size: 22px;
+    line-height: 1.15;
+    letter-spacing: 0.005em;
+    text-transform: uppercase;
+    margin: 0 0 20px;
+    padding-bottom: 14px;
+    border-bottom: 2px solid var(--rule-light);
+    color: var(--text-muted-dark);
+  }
+  .ba-col.after h3 {
+    color: var(--accent-red);
+    border-bottom-color: var(--accent-red);
+  }
+  .ba-col ul { list-style: none; padding: 0; margin: 0; }
+  .ba-col li {
+    padding: 12px 0 12px 32px;
+    position: relative;
+    font-size: 15px;
+    line-height: 1.55;
+  }
+  .ba-col.before li {
+    color: var(--text-muted-dark);
+  }
+  .ba-col.before li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 16px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 18 18'><circle cx='9' cy='9' r='9' fill='%236b6b6b' opacity='0.15'/><path d='M6 6L12 12M12 6L6 12' stroke='%236b6b6b' stroke-width='2' stroke-linecap='round'/></svg>");
+    background-size: contain;
+    background-repeat: no-repeat;
+  }
+  .ba-col.after li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 16px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 18 18'><circle cx='9' cy='9' r='9' fill='%23ED1C24'/><path d='M5 9.5L7.5 12L13 6.5' stroke='white' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+    background-size: contain;
+    background-repeat: no-repeat;
+  }
+
+  /* ---------- WHAT'S INSIDE / CURRICULUM (accordion) ---------- */
+  .inside { background: var(--bg-stone); padding: 88px 0; }
+  .inside .sub {
+    font-size: 17px;
+    line-height: 1.65;
+    color: var(--text-muted-dark);
+    margin: 0 0 36px;
+  }
+  .inside .part-label {
+    font-family: 'Anton', sans-serif;
+    font-weight: 400;
+    font-size: clamp(22px, 3.5vw, 28px);
+    line-height: 1;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: var(--accent-red);
+    margin: 40px 0 18px;
+    padding-top: 28px;
+    border-top: 2px solid var(--accent-red);
+  }
+  .inside .part-label:first-of-type { margin-top: 0; padding-top: 0; border-top: none; }
+
+  /* Module accordion using native <details>/<summary> */
+  .module {
+    background: var(--bg-white);
+    border: 1px solid var(--rule-light);
+    border-radius: 4px;
+    margin-bottom: 8px;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+  .module[open] {
+    border-color: rgba(237, 28, 36, 0.35);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+  }
+  .module summary {
+    list-style: none;
+    cursor: pointer;
+    padding: 18px 22px 18px 22px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 12px;
+    align-items: center;
+    user-select: none;
+  }
+  .module summary::-webkit-details-marker { display: none; }
+  .module summary::after {
+    content: "+";
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+    font-size: 24px;
+    line-height: 1;
+    color: var(--accent-red);
+    transition: transform 0.2s ease;
+    width: 24px;
+    text-align: center;
+  }
+  .module[open] summary::after {
+    content: "−";
+  }
+  .module summary:hover { background: rgba(237, 28, 36, 0.03); }
+  .module .mod-title {
+    display: block;
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    color: var(--text-dark);
+    font-size: 16px;
+    line-height: 1.3;
+    margin-bottom: 4px;
+  }
+  .module .mod-lecturer {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--accent-red);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .module .mod-body {
+    padding: 0 22px 22px 22px;
+    font-size: 15px;
+    line-height: 1.65;
+    color: var(--text-dark);
+    border-top: 1px solid var(--rule-light);
+    margin-top: 4px;
+    padding-top: 18px;
+  }
+  .module .mod-body em { color: var(--accent-red); font-style: normal; font-weight: 600; }
+
+  /* ---------- MID-CTA ---------- */
+  .mid-cta {
+    background: var(--bg-dark);
+    color: var(--text-cream);
+    padding: 56px 0 28px;
+    text-align: center;
+    border-top: 4px solid var(--accent-red);
+  }
+  .mid-cta h2 { color: var(--text-cream); margin: 0 0 14px; }
+  .mid-cta .reassure {
+    color: var(--text-muted-light);
+    font-size: 15px;
+    line-height: 1.6;
+    margin: 0 auto 28px;
+    max-width: 600px;
+  }
+  .mid-cta .tagline {
+    color: var(--accent-red);
+    border-top-color: var(--accent-red);
+    margin-top: 32px;
+    text-align: center;
+    max-width: 540px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* ---------- FACULTY ---------- */
+  .faculty { background: var(--bg-dark); color: var(--text-cream); padding: 44px 0 88px; }
+  .faculty h2 { color: var(--text-cream); }
+  .faculty .lede { font-size: 17px; color: var(--text-muted-light); margin: 0 0 36px; }
+  .faculty-grid {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 36px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+  @media (min-width: 720px) {
+    .faculty-grid { grid-template-columns: 1fr 1fr; column-gap: 40px; }
+  }
+  .faculty-grid li {
+    padding: 16px 0;
+    border-top: 1px solid var(--rule-dark);
+    display: grid;
+    grid-template-columns: 1fr 1.4fr;
+    gap: 16px;
+    font-size: 15px;
+    line-height: 1.45;
+  }
+  .faculty-grid li:last-child { border-bottom: 1px solid var(--rule-dark); }
+  .faculty-grid li strong { font-weight: 700; color: var(--text-cream); }
+  .faculty-grid li span { color: var(--text-muted-light); }
+  .faculty-credentials {
+    font-size: 14px;
+    color: var(--text-muted-light);
+    line-height: 1.65;
+  }
+  .faculty-credentials strong { color: var(--text-cream); font-weight: 600; }
+
+  /* ---------- COUNTERINTUITIVE PROOF BEAT ---------- */
+  .proof-beat {
+    background: var(--bg-dark);
+    color: var(--text-cream);
+    padding: 88px 0;
+    border-top: 4px solid var(--accent-red);
+  }
+  .proof-beat h2 {
+    color: var(--text-cream);
+    font-size: clamp(36px, 6.5vw, 64px);
+    margin-bottom: 32px;
+  }
+  .proof-beat p {
+    font-size: clamp(16px, 2.1vw, 18px);
+    line-height: 1.7;
+    color: var(--text-muted-light);
+    margin: 0 0 16px;
+    max-width: 720px;
+  }
+  .proof-beat p strong { color: var(--text-cream); font-weight: 600; }
+  .proof-beat .caption {
+    font-size: 14px;
+    font-style: italic;
+    color: var(--accent-red);
+    margin-top: 28px;
+    padding-top: 24px;
+    border-top: 1px solid var(--rule-dark);
+    max-width: 720px;
+  }
+
+  /* ---------- WHO IT'S FOR ---------- */
+  .for-you { padding: 88px 0; background: var(--bg-white); }
+  .for-you ul { list-style: none; padding: 0; margin: 0 0 32px; }
+  .for-you li {
+    padding: 16px 0 16px 32px;
+    position: relative;
+    font-size: 16px;
+    line-height: 1.6;
+    border-bottom: 1px solid var(--rule-light);
+  }
+  .for-you li:last-child { border-bottom: none; }
+  .for-you li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 26px;
+    width: 18px;
+    height: 3px;
+    background: var(--accent-red);
+  }
+  .for-you li strong { font-weight: 700; color: var(--text-dark); }
+  .for-you .not-for-heading {
+    font-family: 'Anton', sans-serif;
+    font-weight: 400;
+    font-size: 24px;
+    text-transform: uppercase;
+    color: var(--text-dark);
+    margin: 40px 0 16px;
+  }
+  .for-you .closer {
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 18px;
+    color: var(--accent-red);
+    margin-top: 28px;
+  }
+
+  /* ---------- PRICING (proper pricing card, Barcahub-flavoured) ---------- */
+  .pricing { background: var(--bg-stone); padding: 88px 0; }
+  .pricing .pricing-intro { text-align: center; max-width: 720px; margin: 0 auto 48px; }
+  .pricing .price-eyebrow {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent-red);
+    margin-bottom: 14px;
+  }
+  .pricing h2 { text-align: center; margin: 0 0 16px; }
+  .pricing-intro p {
+    font-size: 17px;
+    line-height: 1.65;
+    color: var(--text-muted-dark);
+    margin: 0;
+  }
+
+  /* The pricing card itself */
+  .price-card {
+    max-width: 480px;
+    margin: 0 auto;
+    background: var(--bg-white);
+    border-radius: 10px;
+    box-shadow:
+      0 24px 48px rgba(0, 0, 0, 0.08),
+      0 4px 12px rgba(0, 0, 0, 0.04);
+    overflow: hidden;
+    border: 1px solid var(--rule-light);
+    position: relative;
+  }
+  .price-card-banner {
+    background: var(--accent-red);
+    color: var(--text-cream);
+    text-align: center;
+    padding: 12px 20px;
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+  .price-card-body { padding: 36px 32px 32px; }
+  .price-card-title {
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-muted-dark);
+    margin: 0 0 8px;
+    text-align: center;
+  }
+  .price-card-name {
+    font-family: 'Anton', sans-serif;
+    font-weight: 400;
+    font-size: clamp(22px, 3.6vw, 28px);
+    line-height: 1.1;
+    letter-spacing: 0.005em;
+    text-transform: uppercase;
+    color: var(--text-dark);
+    text-align: center;
+    margin: 0 0 28px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--rule-light);
+  }
+  .price-display {
+    text-align: center;
+    margin: 0 0 12px;
+  }
+  .price-display .currency {
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 28px;
+    color: var(--text-dark);
+    vertical-align: top;
+    line-height: 1;
+    margin-right: 4px;
+    position: relative;
+    top: 12px;
+  }
+  .price-display .amount {
+    font-family: 'Anton', sans-serif;
+    font-weight: 400;
+    font-size: clamp(60px, 9vw, 88px);
+    line-height: 1;
+    color: var(--accent-red);
+    letter-spacing: 0.005em;
+  }
+  .price-display .alt-currency {
+    display: block;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    color: var(--text-muted-dark);
+    margin-top: 8px;
+    font-weight: 500;
+  }
+  .price-card-meta {
+    text-align: center;
+    font-size: 13px;
+    color: var(--text-muted-dark);
+    line-height: 1.5;
+    margin: 0 0 28px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--rule-light);
+  }
+  .price-card-meta strong { color: var(--text-dark); font-weight: 700; }
+
+  .included-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 32px;
+  }
+  .included-list li {
+    padding: 12px 0 12px 32px;
+    position: relative;
+    font-size: 15px;
+    line-height: 1.5;
+    color: var(--text-dark);
+  }
+  .included-list li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 14px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 18 18'><circle cx='9' cy='9' r='9' fill='%23ED1C24'/><path d='M5 9.5L7.5 12L13 6.5' stroke='white' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+    background-size: contain;
+    background-repeat: no-repeat;
+  }
+  .included-list li strong { color: var(--text-dark); font-weight: 700; }
+
+  .price-card .cta-button {
+    display: block;
+    width: 100%;
+    text-align: center;
+    box-sizing: border-box;
+  }
+
+  .price-card-guarantee {
+    margin-top: 24px;
+    padding: 18px 20px;
+    background: var(--bg-stone);
+    border-radius: 6px;
+    display: grid;
+    grid-template-columns: 36px 1fr;
+    gap: 14px;
+    align-items: start;
+  }
+  .price-card-guarantee::before {
+    content: "";
+    width: 36px;
+    height: 36px;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='36' height='36' viewBox='0 0 36 36'><path d='M18 3l13 5v9c0 8.5-5.5 14.5-13 17-7.5-2.5-13-8.5-13-17V8l13-5z' fill='none' stroke='%23ED1C24' stroke-width='2' stroke-linejoin='round'/><path d='M12.5 18l4 4 7-7' fill='none' stroke='%23ED1C24' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+    background-size: contain;
+    background-repeat: no-repeat;
+  }
+  .price-card-guarantee-text {
+    font-size: 13px;
+    line-height: 1.55;
+    color: var(--text-muted-dark);
+  }
+  .price-card-guarantee-text strong {
+    display: block;
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    color: var(--text-dark);
+    font-size: 14px;
+    margin-bottom: 2px;
+  }
+
+  /* Value-anchor sits below the card */
+  .value-anchor {
+    max-width: 720px;
+    margin: 48px auto 0;
+    background: var(--bg-white);
+    padding: 28px 32px;
+    border-left: 4px solid var(--accent-red);
+    border-radius: 4px;
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--text-muted-dark);
+  }
+  .value-anchor strong { color: var(--text-dark); font-weight: 700; }
+  .value-anchor .va-heading {
+    display: block;
+    font-family: 'Anton', sans-serif;
+    font-weight: 400;
+    font-size: 18px;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: var(--text-dark);
+    margin-bottom: 10px;
+  }
+
+  /* ---------- FAQ (accordion) ---------- */
+  .faq { padding: 88px 0; background: var(--bg-white); }
+  .faq-item {
+    border-bottom: 1px solid var(--rule-light);
+  }
+  .faq-item:first-of-type { border-top: 1px solid var(--rule-light); }
+  .faq-item[open] { background: rgba(237, 28, 36, 0.02); }
+  .faq-item summary {
+    list-style: none;
+    cursor: pointer;
+    padding: 22px 0;
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 17px;
+    line-height: 1.4;
+    color: var(--text-dark);
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 16px;
+    align-items: start;
+    user-select: none;
+  }
+  .faq-item summary::-webkit-details-marker { display: none; }
+  .faq-item summary::after {
+    content: "+";
+    font-weight: 400;
+    font-size: 24px;
+    line-height: 1;
+    color: var(--accent-red);
+    flex-shrink: 0;
+  }
+  .faq-item[open] summary::after { content: "−"; }
+  .faq-item summary:hover { color: var(--accent-red); }
+  .faq-item .faq-body {
+    padding: 0 0 24px 0;
+    font-size: 16px;
+    line-height: 1.65;
+    color: var(--text-dark);
+  }
+  .faq-item .faq-body strong { font-weight: 700; }
+  .faq-item .placeholder-flag { color: var(--text-muted-dark); font-style: italic; }
+
+  /* ---------- FINAL CTA ---------- */
+  .final-cta { background: var(--bg-dark); color: var(--text-cream); padding: 96px 0; text-align: center; border-top: 4px solid var(--accent-red); }
+  .final-cta h2 { color: var(--text-cream); margin-bottom: 24px; max-width: 880px; margin-left: auto; margin-right: auto; }
+  .final-cta p {
+    color: var(--text-muted-light);
+    font-size: 17px;
+    line-height: 1.7;
+    max-width: 620px;
+    margin: 0 auto 18px;
+  }
+  .final-cta p strong { color: var(--text-cream); font-weight: 600; }
+  .final-cta .tagline {
+    color: var(--accent-red);
+    border-top-color: var(--accent-red);
+    margin-top: 36px;
+    text-align: center;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* ---------- FOOTER ---------- */
+  footer {
+    background: var(--bg-dark-2);
+    color: var(--text-muted-light);
+    padding: 36px 0 44px;
+    font-size: 12px;
+    border-top: 1px solid var(--rule-dark);
+  }
+  footer .wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    align-items: center;
+    text-align: center;
+  }
+  footer .accred { color: var(--text-cream); font-weight: 600; }
+  footer a { color: var(--text-muted-light); text-decoration: none; }
+  footer a:hover { color: var(--text-cream); }
+  footer .links { display: flex; gap: 18px; }
+  footer .copy { font-size: 11px; opacity: 0.7; }
+
+  /* ---------- STICKY BOTTOM CTA BAR ---------- */
+  .sticky-cta {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: var(--bg-dark);
+    border-top: 4px solid var(--accent-red);
+    padding: 14px 24px;
+    z-index: 100;
+    transform: translateY(110%);
+    transition: transform 0.25s ease;
+    box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.35);
+  }
+  .sticky-cta.visible { transform: translateY(0); }
+  .sticky-cta-inner {
+    max-width: 1180px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .sticky-cta-text {
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    color: var(--text-cream);
+    font-size: 14px;
+    letter-spacing: 0.005em;
+  }
+  .sticky-cta-text .price {
+    color: var(--accent-red);
+    font-weight: 800;
+  }
+  .sticky-cta .cta-button {
+    padding: 12px 22px;
+    font-size: 13px;
+  }
+  /* Add bottom padding to body when sticky CTA is visible to prevent footer cutoff */
+  body.sticky-active { padding-bottom: 72px; }
+
+  /* ---------- MOBILE TUNING ---------- */
+  @media (max-width: 600px) {
+    .hero { padding: 40px 0 60px; }
+    .belief, .transformation, .inside, .for-you, .pricing, .faq { padding: 56px 0; }
+    .faculty { padding: 32px 0 56px; }
+    .proof-beat, .final-cta { padding: 64px 0; }
+    .logo-img { height: 36px; }
+    .header-meta { display: none; }
+    .sticky-cta { padding: 10px 16px; }
+    .sticky-cta-text { font-size: 12px; }
+    .sticky-cta .cta-button { padding: 10px 16px; font-size: 12px; }
+    body.sticky-active { padding-bottom: 64px; }
+  }
+</style>
+</head>
+
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="wrap-wide">
+    <div class="logo">
+      <img class="logo-img" src="logo.jpg" alt="ISSPF — International Soccer Science &amp; Performance Federation" onerror="this.classList.add('missing');" />
+      <span class="logo-text">ISSPF</span>
+    </div>
+    <div class="header-meta">Professional Masters in Goalkeeper Coaching Science</div>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="wrap-wide">
+    <div class="eyebrow">The Course Behind The Report · Senior Pro Level</div>
+
+    <h1 class="hammer">The Drill Is Not The Job. The Science Is.</h1>
+
+    <p class="descriptive-headline">
+      The course that takes the science the report introduced and turns it into the way you coach senior goalkeepers. Nineteen modules. Fourteen faculty drawn from Bundesliga, FC Barcelona heritage, the Premier League, and elite international soccer.
+    </p>
+
+    <p class="subhead">
+      The report named what was missing. The Shot-Stopper's Trap. <strong>WHAT knowledge without WHY.</strong> By the time you finish this course, that question retires for good. You will explain not just <em>what</em> to train, but <em>why</em>, <em>when</em>, and <em>how</em>. To your goalkeeper. To the parents on the touchline. To the head coach who asks. To yourself, on the drive home.
+    </p>
+
+    <p class="trust-line">
+      Trusted by goalkeeper coaches in <strong>70+ countries</strong>. ISSPF rated <strong>4.4/5</strong> from 76 verified Trustpilot reviews. Accredited by leading universities.
+    </p>
+
+    <div class="hero-stats">
+      <div class="stat">
+        <div class="stat-num">19</div>
+        <div class="stat-label">Modules Across Two Parts</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">14</div>
+        <div class="stat-label">Faculty From Elite Soccer</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">4&ndash;16x</div>
+        <div class="stat-label">More Explosive Actions In Training Than Match</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TRUST STRIP -->
+<section class="trust-strip">
+  <div class="wrap-wide">
+    <p class="trust-strip-eyebrow">Endorsed &amp; Accredited By Leading Universities And Elite Clubs</p>
+    <img class="partner-logos" src="partner-logos.png" alt="ISSPF partner organisations and accrediting universities" />
+  </div>
+</section>
+
+<!-- BELIEF SECTION -->
+<section class="belief">
+  <div class="wrap">
+    <h2>Most Coaches Are Training The Smallest Part Of The Game.</h2>
+    <p class="lede">And they don't know it.</p>
+
+    <p>The 775-goal study in the report told you something most coaches have never heard. Of every goal scored at the professional level, only <strong>3.6% were genuine must-saves</strong>. The other <strong>96.4% were either physically unsaveable or sat in a borderline grey zone</strong>.</p>
+
+    <p>Read that one more time. <strong>96 out of every 100 goals are decided before the goalkeeper's hands ever get involved.</strong></p>
+
+    <p>If that's true, and it is, then everything we call goalkeeper coaching needs a rewrite. Because what most coaches train, hour after hour, week after week, is the 3.6%. The dive. The catch. The footwork pattern. The shape on the cross.</p>
+
+    <p>Those things matter. They will never be the job.</p>
+
+    <p class="pull-out">The Job Is The 96.4%.</p>
+
+    <p>The job is <strong>what the goalkeeper does in the seconds, minutes, sessions and seasons before that 3.6% moment arrives</strong>. Where they're standing. What they're scanning. What their brain has already decided. How their body has been built. How they've been protected from the wrong kind of failure and exposed to the right kind. That work is invisible. It does not look like a save. It does not show up on a highlight reel. It is the entire science underneath the position. And it is what this course teaches.</p>
+
+    <div class="tagline">Drills Fill A Session. Science Develops The Goalkeeper.</div>
+  </div>
+</section>
+
+<!-- TRANSFORMATION -->
+<section class="transformation">
+  <div class="wrap">
+    <h2>You Came In Able To Run Forty Drills Without Repeating Yourself.</h2>
+    <p class="lede">You walk out able to explain why each one earns its place.</p>
+
+    <p>You know the drive. The post-session loop where the doubt creeps in. <em>Did they actually get better tonight, or did they just get tired? Why did that drill work for Tom and not for Adam? What do I say to the parent on Saturday who wants to know why their fourteen-year-old isn't doing more strength work yet? What do I say to the head coach who asks why I'm running a Tuesday session that looks nothing like a Saturday match?</em></p>
+
+    <p>You can run forty drills without repeating yourself. You're not a beginner. You've done licensing courses. You've sat through enough YouTube to know who's serious and who's selling. The gap isn't in your effort or your hours. It's in the layer underneath. The layer most coaching qualifications never touched.</p>
+
+    <p>The course replaces it. Not with theory you'll never use. With the exact frameworks the lecturers in this faculty use every week inside FC Barcelona, Borussia Mönchengladbach, EPL clubs, and a handful of national programmes. You see the science. You see the application. Then you redesign your own sessions from the inside out.</p>
+
+    <div class="ba-grid">
+      <div class="ba-col before">
+        <h3>Where You Are Now</h3>
+        <ul>
+          <li>Building sessions on intuition, inherited drills, and what worked last year</li>
+          <li>Treating thirteen-year-olds like miniature professionals because nobody told you not to</li>
+          <li>Reacting to the anxiety, the freeze, the hesitation, never quite anticipating it</li>
+          <li>One warm-up, all keepers, every Tuesday, regardless of who's in front of you</li>
+          <li>Calling it "mental toughness" because nobody handed you a better word</li>
+          <li>Caught between telling them what to do and letting them figure it out, and not sure which is right</li>
+        </ul>
+      </div>
+      <div class="ba-col after">
+        <h3>Where The Course Gets You To</h3>
+        <ul>
+          <li>Designing sessions using the four-stage save loop. See, recognise, plan, do. Most coaches train only the last one. You train all four.</li>
+          <li>Reading the senior goalkeeper's training week the way a strength coach reads a barbell. You know when to push explosive power. You know when to dial back. You know which microcycle phase a goalkeeper's nervous system can absorb and which it can't.</li>
+          <li>Building resilience through Fletcher and Sarkar's protective factor framework. Not with team talks. With the specific things a coach controls.</li>
+          <li>Personalising warm-ups by goalkeeper psychology while keeping the ABCD microstructure intact. Some keepers need silence. Some need stimulation. You'll know which is which and why.</li>
+          <li>Switching between explicit coaching and implicit coaching as a strategic decision tied to the learning phase, not a philosophical preference.</li>
+          <li>Running pre-match, in-match, and post-match analysis that feeds directly into next week's session design.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="tagline">Drills Fill A Session. Science Develops The Goalkeeper.</div>
+  </div>
+</section>
+
+<!-- WHAT'S INSIDE -->
+<section class="inside">
+  <div class="wrap">
+    <h2>Nineteen Modules. Two Parts. One Way Of Thinking.</h2>
+    <p class="sub">The course is structured the way elite goalkeeper coaches actually think about the position. First the training environment they build during the week. Then the game environment they prepare goalkeepers to win in on Saturday. Each module taught by the lecturer who lives that work for a living.</p>
+
+    <h3 class="part-label">Part A — Training Environment (10 Modules)</h3>
+    <details class="module">
+      <summary><span><span class="mod-title">A1. The Role Of The Goalkeeper Coach</span><span class="mod-lecturer">Fraser Stewart</span></span></summary>
+      <div class="mod-body">The person-centred coaching philosophy that sits underneath everything else. Coach to player to environment to game. Establishes the mindset before the methods.</div>
+    </details>
+    <details class="module">
+      <summary><span><span class="mod-title">A2. The Specific Competitive Demands Of The Modern Goalkeeper</span><span class="mod-lecturer">Eduardo Cachulo</span></span></summary>
+      <div class="mod-body">Key moments and sub-moments of the goalkeeper role. Applied game principles. Physical demand and the actual effort profile. The motor skills and psychological skills that decide whether a goalkeeper survives the level above the one they're at now.</div>
+    </details>
+    <details class="module">
+      <summary><span><span class="mod-title">A3. Modern Soccer Goalkeeper Training: An Introduction To Contemporary Training</span><span class="mod-lecturer">Fabian Otte · Borussia Mönchengladbach</span></span></summary>
+      <div class="mod-body">The basics of skill training in sports coaching reset for the modern goalkeeper. Practical recommendations from top-flight skill development. The way Bundesliga goalkeeper rooms actually run, taught by the coach who runs one.</div>
+    </details>
+    <details class="module">
+      <summary><span><span class="mod-title">A4. Soccer-Specific Movement Preparation: Improving Efficiency</span><span class="mod-lecturer">Aleksa Boskovic</span></span></summary>
+      <div class="mod-body">Mobility and athletic movement planes. Ankle, hip and spine mobilisation in sporting performance. Core development and lower body activation. Practical application and program design that actually transfers to match demands.</div>
+    </details>
+    <details class="module">
+      <summary><span><span class="mod-title">A5. Philosophical And Technical Insights To Goalkeeper Training</span><span class="mod-lecturer">Dean Santangelo</span></span></summary>
+      <div class="mod-body">Building a goalkeeper training philosophy from the ground up. The four-corner approach. Coaching and goalkeeper training structure. Microcycle weekly planning that sits inside the team week without fighting it.</div>
+    </details>
+    <details class="module">
+      <summary><span><span class="mod-title">A6. Dietary Analysis Of A Goalkeeper: Elite EPL Player Case Study</span><span class="mod-lecturer">Liam Anderson</span></span></summary>
+      <div class="mod-body">Anonymised case study of a Premier League goalkeeper's nutrition profile. Energy intake and expenditure across a microcycle. The case study outcomes, improvements and the considerations the player and the staff missed before the analysis ran.</div>
+    </details>
+    <details class="module">
+      <summary><span><span class="mod-title">A7. Developing A Goalkeeper-Specific Game And Training Model</span><span class="mod-lecturer">Eduardo Cachulo</span></span></summary>
+      <div class="mod-body">Building a specific goalkeeper training model anchored in neuroscience and decision-making research. The methods that translate principle into session. How the elite environments Cachulo has worked inside actually structure the goalkeeper week.</div>
+    </details>
+    <details class="module">
+      <summary><span><span class="mod-title">A8. Managing Pressure: Emotion, Anxiety And Coping In Elite Soccer</span><span class="mod-lecturer">Jeff Richardson</span></span></summary>
+      <div class="mod-body">Choking under pressure understood at causal level. Self-talk. Awareness. The role of resilience in soccer. The toolkit you'd never piece together on your own, taught by a coach who works with elite goalkeepers on the mental side of the position.</div>
+    </details>
+    <details class="module">
+      <summary><span><span class="mod-title">A9. Skill Acquisition In Goalkeeping: Developing Technical Proficiency For Situational Effectiveness</span><span class="mod-lecturer">Sascha Marth</span></span></summary>
+      <div class="mod-body">The history of goalkeeping training compared to the characteristics of modern day methods. Decision making and technical skills inside the framework of <em>Big Picture Training</em>. Why isolated technical work fails to transfer to Saturday.</div>
+    </details>
+    <details class="module">
+      <summary><span><span class="mod-title">A10. Goalkeeper Decision-Making And Anticipation</span><span class="mod-lecturer">Jyri Nieminen</span></span></summary>
+      <div class="mod-body">Scanning and field information. Game references and decision-making processes. Tactical understanding, training the player, and structuring the content of the session so that decision quality is the variable being trained, not the variable being tested.</div>
+    </details>
+
+    <h3 class="part-label">Part B — Game Environment (9 Modules)</h3>
+    <details class="module">
+      <summary><span><span class="mod-title">B1. Goalkeeper Decision-Making And Anticipation: Game References</span><span class="mod-lecturer">Jyri Nieminen</span></span></summary>
+      <div class="mod-body">Information collection and scanning methodology applied to the game itself. Affordances theory. How teammate positioning, opposition shape, and pressing behaviour telegraph what's about to happen. The transition from reactive positioning to proactive positioning, coached deliberately.</div>
+    </details>
+    <details class="module">
+      <summary><span><span class="mod-title">B2. Demands And Considerations Of An Elite Goalkeeper Coach: Case Study</span><span class="mod-lecturer">Lee Baxter</span></span></summary>
+      <div class="mod-body">Multi-country case study. Sweden. Turkey. South Africa. Denmark. Japan. The Keepers Corner approach. What changes when you carry the same methodology across cultures and team styles, and what stays the same.</div>
+    </details>
+    <details class="module">
+      <summary><span><span class="mod-title">B3. Individual Development Of The Goalkeeper Within A Team Environment</span><span class="mod-lecturer">Ivan Kovčić</span></span></summary>
+      <div class="mod-body">Team development versus individual development. Isolated training versus integrated training. Detecting problems with references. Implementing goalkeeper-specific content inside a team week without breaking the team week.</div>
+    </details>
+    <details class="module">
+      <summary><span><span class="mod-title">B4. Ready To Perform? An Investigation Into Modern Soccer Goalkeeper Warm-Ups</span><span class="mod-lecturer">Fabian Otte · Borussia Mönchengladbach</span></span></summary>
+      <div class="mod-body">The research on warm-up phase selection that almost no coach below pro level has seen. The ABCD warm-up microstructure. Why Bundesliga starters often leave the pitch before the team's pre-match shooting drill begins. Research, findings and discussion.</div>
+    </details>
+    <details class="module">
+      <summary><span><span class="mod-title">B5. Set Plays: Goalkeeper Demands</span><span class="mod-lecturer">Andy Quy</span></span></summary>
+      <div class="mod-body">The demands of the goalkeeper during set-plays. Key physical components. Triple extension. Force production versus force reduction. The specific power development that separates set-play strong from set-play vulnerable.</div>
+    </details>
+    <details class="module">
+      <summary><span><span class="mod-title">B6. Resilience In Soccer: Dealing With Adversity</span><span class="mod-lecturer">Tanja Simone Ecken · PhD Sport Psychology</span></span></summary>
+      <div class="mod-body">Ecken holds a PhD in sport psychology and an M.Sc. in clinical health psychology. Fletcher and Sarkar's resilience framework. The protective factors the coach actually controls. EMDR. Meaning Focused Coping. Resilience taught as a coachable skill, not a personality trait you wish your goalkeeper had been born with.</div>
+    </details>
+    <details class="module">
+      <summary><span><span class="mod-title">B7. A Top-Down Process In Goalkeeper Analysis</span><span class="mod-lecturer">Ivan Kovčić</span></span></summary>
+      <div class="mod-body">Specific soccer language for goalkeeping actions. Quality goalkeeping actions defined and graded. In-training and opponent analysis. How to be ready to adapt and develop inside the week, not after it.</div>
+    </details>
+    <details class="module">
+      <summary><span><span class="mod-title">B8. Defending Set Plays</span><span class="mod-lecturer">Andy Quy</span></span></summary>
+      <div class="mod-body">Covered versus uncovered balls. Pass orientation. Body shapes. The key physical components, functional training and primary movement patterns that make set-play defence repeatable instead of lucky.</div>
+    </details>
+    <details class="module">
+      <summary><span><span class="mod-title">B9. Developing A Goalkeeper-Specific Performance Philosophy</span><span class="mod-lecturer">Matt Newton</span></span></summary>
+      <div class="mod-body">Goalkeeper-specific physical competencies. Injury epidemiology and aetiology. How to assess injury risk. EPL anthropometric data, around 190cm and over 77kg on average, and why those numbers matter. Periodisation reverse-engineered from match demands. Six-week testing cycles.</div>
+    </details>
+  </div>
+</section>
+
+<!-- MID-CTA -->
+<section class="mid-cta">
+  <div class="wrap">
+    <h2>Stop Rehearsing The 3.6%. Start Building The 96.4%.</h2>
+    <p class="reassure">Lifetime access. Self-paced. Watch when it suits you, come back to any module any time.</p>
+    <a class="cta-button" href="#enrol">Enrol Now</a>
+    <div class="tagline">Drills Fill A Session. Science Develops The Goalkeeper.</div>
+  </div>
+</section>
+
+<!-- FACULTY -->
+<section class="faculty">
+  <div class="wrap">
+    <h2>Fourteen Coaches Who Build Senior Goalkeepers For A Living.</h2>
+    <p class="lede">Each one teaching the part of the position they spend their working week inside. Not academic theorists. Practitioners who walk onto the grass at Bundesliga, Premier League, FC Barcelona and elite international environments.</p>
+
+    <ul class="faculty-grid">
+      <li><strong>Fabian Otte</strong><span>Bundesliga, Borussia Mönchengladbach</span></li>
+      <li><strong>Eduardo Cachulo</strong><span>FC Barcelona heritage, elite GK methodology</span></li>
+      <li><strong>Lee Baxter</strong><span>International coach. Sweden, Turkey, South Africa, Denmark, Japan</span></li>
+      <li><strong>Dean Santangelo</strong><span>Elite GK training philosophy and microcycle design</span></li>
+      <li><strong>Liam Anderson</strong><span>Premier League performance nutritionist</span></li>
+      <li><strong>Sascha Marth</strong><span>Skill acquisition and modern GK methodology</span></li>
+      <li><strong>Aleksa Boskovic</strong><span>Movement preparation and athletic performance specialist</span></li>
+      <li><strong>Matt Newton</strong><span>Elite performance physiologist, Premier League background</span></li>
+      <li><strong>Tanja Simone Ecken</strong><span>PhD Sport Psychology, elite resilience specialist</span></li>
+      <li><strong>Andy Quy</strong><span>Set-piece specialist, EPL experience</span></li>
+      <li><strong>Ivan Kovčić</strong><span>Sport psychology and tactical positioning</span></li>
+      <li><strong>Jeff Richardson</strong><span>Mental performance coach, elite soccer</span></li>
+      <li><strong>Jyri Nieminen</strong><span>Decision-making and scanning specialist</span></li>
+      <li><strong>Fraser Stewart</strong><span>Coach education specialist</span></li>
+    </ul>
+
+    <p class="faculty-credentials">
+      <strong>ISSPF courses are accredited by leading universities.</strong> Rated 4.4 out of 5 from 76 verified Trustpilot reviews. Trusted by goalkeeper coaches in over 70 countries.
+    </p>
+  </div>
+</section>
+
+<!-- COUNTERINTUITIVE PROOF BEAT -->
+<section class="proof-beat">
+  <div class="wrap">
+    <div class="eyebrow">The Training Truth Almost No Course Teaches</div>
+    <h2>Train Harder Than The Game.</h2>
+    <p>Every coaching instinct says <em>train like you play.</em> The GPS data on elite goalkeepers says the opposite. They perform <strong>four to sixteen times more high-intensity dives, jumps, sprints and explosive actions in training than they will in any actual match.</strong></p>
+    <p>Read that again. Not 20% more. Not double. <strong>Four to sixteen times more.</strong></p>
+    <p>That is not a mistake. It is the design.</p>
+    <p>Soccer is a sport of brief moments. Five-metre sprints. Jumps from set pieces. Directional changes in tight space. With long recovery windows between them. If your training only replicates match intensity, you are training recovery, not capacity. You have to deliberately exceed match demand to build the physical and cognitive reserve a goalkeeper draws on for the three to five critical moments per match that actually decide the result.</p>
+    <p>Periodisation then scales it back down toward matchday so the keeper arrives fresh and confident, not fatigued.</p>
+    <p>The permission this gives the coach is profound: it is okay to push harder in training than the game demands. That is how champions are built. Inside the course, Matthew Newton (elite performance physiologist) and Andy Quy (set-piece specialist) walk through how to build the demands, how to scale them across the week, and how to know when you have gone too far.</p>
+    <div class="caption">Module B5: Set Plays, Goalkeeper Demands. Module B9: Developing A Goalkeeper-Specific Performance Philosophy.</div>
+  </div>
+</section>
+
+<!-- WHO IT'S FOR -->
+<section class="for-you">
+  <div class="wrap">
+    <h2>This Course Is For You If…</h2>
+    <ul>
+      <li>You are coaching senior goalkeepers at any level. Grassroots adult, semi-pro, lower league, professional. The science scales. The principles do not change.</li>
+      <li>You have done your licensing courses, or you are working through them, and you can feel exactly where they stop short.</li>
+      <li>You do not want another drill bank. You want the framework that tells you why each drill earns its place in your session.</li>
+      <li>You are willing to think before you train. To understand the science, then redesign your sessions, rather than copy them.</li>
+      <li>You want to be the coach who has a real answer when a parent, a sporting director, or your own goalkeeper asks <strong>why</strong>.</li>
+      <li>You read the report. You felt it. And you are no longer willing to coach the way you coached before you read it.</li>
+    </ul>
+
+    <h3 class="not-for-heading">And It Is NOT For You If…</h3>
+    <ul>
+      <li>You are looking for a quick-fix or a fast-track. The course front-loads theory before back-loading application. It is built for coaches who want the <em>why</em>.</li>
+      <li>You want a one-size-fits-all system. The course repeatedly emphasises individual differences in maturation, psychology, and learning preference.</li>
+      <li>You expect this to replace your UEFA, FA, or federation coaching licence. It does not. It teaches the science the licences do not cover.</li>
+    </ul>
+
+    <p class="closer">If the first list sounds like you, this course will land hard.</p>
+  </div>
+</section>
+
+<!-- PRICING (proper pricing card) -->
+<section class="pricing" id="enrol">
+  <div class="wrap">
+    <div class="pricing-intro">
+      <span class="price-eyebrow">Your Investment</span>
+      <h2>One Payment. Lifetime Access.</h2>
+      <p>One enrolment. Nineteen modules. Fourteen lecturers from elite soccer. The science you've been asking the wrong question for.</p>
+    </div>
+
+    <div class="price-card">
+      <div class="price-card-banner">SENIOR PRO LEVEL</div>
+
+      <div class="price-card-body">
+        <p class="price-card-title">Professional Certificate In</p>
+        <h3 class="price-card-name">Goalkeeper Coaching Science</h3>
+
+        <div class="price-display">
+          <span class="currency">£</span><span class="amount">249</span>
+          <span class="alt-currency">$299 USD · Local currency at checkout</span>
+        </div>
+
+        <p class="price-card-meta">
+          <strong>One payment.</strong> No subscription. No recurring charge. No expiry.
+        </p>
+
+        <ul class="included-list">
+          <li><strong>19 video modules</strong> across Training and Game environments</li>
+          <li><strong>14 elite faculty</strong> from Bundesliga, FC Barcelona heritage, the EPL and international soccer</li>
+          <li><strong>Lifetime access</strong> on any device. Re-watch any module any time</li>
+          <li><strong>Self-paced.</strong> No deadlines. No live classes</li>
+          <li><strong>Professional Certificate</strong> on completion. Coaching CV ready</li>
+        </ul>
+
+        <a class="cta-button large" href="#checkout">Enrol Now · £249 / $299</a>
+
+        <div class="price-card-guarantee">
+          <div class="price-card-guarantee-text">
+            <strong>A guarantee that respects your intelligence.</strong>
+            <span class="placeholder-flag">[PLACEHOLDER: refund / guarantee terms — Neil to confirm. Suggested: 14-day money-back, no questions asked.]</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="value-anchor">
+      <span class="va-heading">Why £249 Is The Number It Is</span>
+      Compare that to the alternatives a coach with this level of intent typically considers. A weekend goalkeeper coaching workshop runs £350 to £600 and gives you one speaker, two days, and a binder. A university sport science short course runs £1,200 to £2,800 and gives you general theory rather than goalkeeper specifics. A private session with a UEFA Pro coach starts at £400 per hour. <strong>This course gives you nineteen modules from fourteen lecturers from Bundesliga, FC Barcelona heritage, the Premier League, and elite international soccer. For one payment of £249.</strong>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq">
+  <div class="wrap">
+    <h2>The Questions Most Coaches Ask Before Enrolling.</h2>
+
+    <details class="faq-item">
+      <summary>Is this just another online goalkeeper course like the ones I've already done?</summary>
+      <div class="faq-body">No, and that's a fair question to ask before spending £249. Other courses teach <em>what</em> to coach. The drills. The techniques. The warm-up structures. This course teaches the science underneath. Why those drills work biomechanically. What the goalkeeper's brain is actually doing during a save. Why a Tuesday session needs to look completely different from a Thursday one. Once you have done this course, the courses you have done before will look different to you. You will not unsee the gap.</div>
+    </details>
+
+    <details class="faq-item">
+      <summary>How much time does it take?</summary>
+      <div class="faq-body"><span class="placeholder-flag">[PLACEHOLDER: total course hours — Neil to confirm. Likely 15 to 25 hours of video content based on 19 modules.]</span> Self-paced, so you spread it over weeks, not days. Most coaches do one or two modules per week alongside their actual coaching schedule.</div>
+    </details>
+
+    <details class="faq-item">
+      <summary>I coach senior grassroots, not at a professional club. Is this still for me?</summary>
+      <div class="faq-body">Yes. Arguably more so. The science does not care whether your goalkeeper is in a Bundesliga first team or a Saturday-league side. The principles scale. What changes is the application. The coaches with the smallest budgets often get the most out of this material because they cannot afford to waste a session.</div>
+    </details>
+
+    <details class="faq-item">
+      <summary>What is the certification actually worth?</summary>
+      <div class="faq-body">The Professional Masters in Goalkeeper Coaching Science (Senior Pro Level) is awarded on course completion. ISSPF courses are accredited by leading universities. <span class="placeholder-flag">[PLACEHOLDER: specific accrediting institutions to be confirmed.]</span> The paper certificate is real and you can put it on your coaching CV. The change in how you actually coach is what the £249 is really paying for.</div>
+    </details>
+
+    <details class="faq-item">
+      <summary>Does this replace my coaching licence?</summary>
+      <div class="faq-body">No. UEFA, FA, and federation licences and this course are different things. Licences certify you to coach in regulated environments. This course gives you the science the licences do not cover. The two together is the strongest position to be in.</div>
+    </details>
+
+    <details class="faq-item">
+      <summary>Can I get a refund if it is not for me?</summary>
+      <div class="faq-body"><span class="placeholder-flag">[PLACEHOLDER: refund terms — Neil to confirm.]</span></div>
+    </details>
+
+    <details class="faq-item">
+      <summary>Will there be more courses?</summary>
+      <div class="faq-body">Yes. ISSPF runs a separate Pro-Youth Level Goalkeeper Coaching course for coaches working with developing goalkeepers in academy and youth environments. Many coaches do both. <span class="placeholder-flag">[PLACEHOLDER: bundle pricing if applicable.]</span></div>
+    </details>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="final-cta">
+  <div class="wrap">
+    <h2>Two Coaches Are About To Walk Onto The Pitch On Tuesday.</h2>
+    <p>The first runs the same drills they ran last Tuesday. <strong>Same WHAT.</strong> Same hope it transfers. Same uncertainty when the head coach asks why.</p>
+    <p>The second knows why every drill is there. Knows when to scale it up and when to strip it back. Knows the science under the technique. Knows what to say when the head coach asks why.</p>
+    <p>The second coach is not born. They are built. <strong>Module by module. Nineteen of them.</strong></p>
+    <a class="cta-button large" href="#checkout" style="margin-top: 16px;">Enrol Now · £249 / $299</a>
+    <div class="tagline">Drills Fill A Session. Science Develops The Goalkeeper.</div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap">
+    <div class="accred">International Soccer Science &amp; Performance Federation</div>
+    <div>Accredited by leading universities. Endorsed by elite clubs.</div>
+    <div class="links">
+      <a href="https://www.isspf.com/privacy/" target="_blank" rel="noopener noreferrer">Privacy Policy</a>
+      <a href="https://www.isspf.com/terms-and-condition/" target="_blank" rel="noopener noreferrer">Terms</a>
+      <a href="https://www.isspf.com/contact/" target="_blank" rel="noopener noreferrer">Contact</a>
+    </div>
+    <div class="copy">© <span id="copyright-year">2026</span> ISSPF. All rights reserved.</div>
+  </div>
+</footer>
+
+<!-- STICKY BOTTOM CTA — appears once visitor scrolls past hero, hides when they hit pricing -->
+<div class="sticky-cta" id="stickyCta" aria-hidden="true">
+  <div class="sticky-cta-inner">
+    <span class="sticky-cta-text">The Course Behind The Report · <span class="price">£249 / $299</span></span>
+    <a class="cta-button" href="#enrol">Enrol Now</a>
+  </div>
+</div>
+
+<script>
+  document.getElementById('copyright-year').textContent = new Date().getFullYear();
+
+  // Sticky CTA: show after scrolling past hero, hide once pricing block enters viewport
+  (function () {
+    var sticky = document.getElementById('stickyCta');
+    var hero = document.querySelector('.hero');
+    var pricing = document.getElementById('enrol');
+    var body = document.body;
+    if (!sticky || !hero || !pricing) return;
+
+    function update() {
+      var heroBottom = hero.getBoundingClientRect().bottom;
+      var pricingTop = pricing.getBoundingClientRect().top;
+      var viewportH = window.innerHeight;
+      // Show: hero is scrolled past AND pricing block hasn't entered viewport yet
+      var shouldShow = heroBottom < 0 && pricingTop > viewportH * 0.5;
+      if (shouldShow) {
+        sticky.classList.add('visible');
+        body.classList.add('sticky-active');
+      } else {
+        sticky.classList.remove('visible');
+        body.classList.remove('sticky-active');
+      }
+    }
+    window.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update);
+    update();
+  }());
+</script>
+
+</body>
+</html>
