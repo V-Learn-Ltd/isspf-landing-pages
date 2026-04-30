@@ -1659,20 +1659,20 @@
 <script>
   document.getElementById('copyright-year').textContent = new Date().getFullYear();
 
-  // Sticky CTA: show after scrolling past hero, hide once pricing block enters viewport
+  // Sticky CTA: show after scrolling past the belief section, hide once pricing block enters viewport
   (function () {
     var sticky = document.getElementById('stickyCta');
-    var hero = document.querySelector('.hero');
+    var belief = document.querySelector('.belief');
     var pricing = document.getElementById('enrol');
     var body = document.body;
-    if (!sticky || !hero || !pricing) return;
+    if (!sticky || !belief || !pricing) return;
 
     function update() {
-      var heroBottom = hero.getBoundingClientRect().bottom;
+      var beliefBottom = belief.getBoundingClientRect().bottom;
       var pricingTop = pricing.getBoundingClientRect().top;
       var viewportH = window.innerHeight;
-      // Show: hero is scrolled past AND pricing block hasn't entered viewport yet
-      var shouldShow = heroBottom < 0 && pricingTop > viewportH * 0.5;
+      // Show: belief section has fully scrolled past AND pricing block hasn't entered viewport yet
+      var shouldShow = beliefBottom < 0 && pricingTop > viewportH * 0.5;
       if (shouldShow) {
         sticky.classList.add('visible');
         body.classList.add('sticky-active');
