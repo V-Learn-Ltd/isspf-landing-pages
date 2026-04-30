@@ -758,19 +758,9 @@
   .price-display {
     text-align: center;
     margin: 0 0 12px;
+    min-height: clamp(60px, 9vw, 88px);
   }
-  .price-display .currency {
-    font-family: 'Inter', sans-serif;
-    font-weight: 700;
-    font-size: 28px;
-    color: var(--text-dark);
-    vertical-align: top;
-    line-height: 1;
-    margin-right: 4px;
-    position: relative;
-    top: 12px;
-  }
-  .price-display .amount {
+  .price-display .priceFull {
     font-family: 'Anton', sans-serif;
     font-weight: 400;
     font-size: clamp(60px, 9vw, 88px);
@@ -786,6 +776,13 @@
     margin-top: 8px;
     font-weight: 500;
   }
+  /* Inline price span for FAQ / body copy usage */
+  .price.priceFull {
+    font-weight: 700;
+    color: var(--text-dark);
+    white-space: nowrap;
+  }
+  .price-display .priceFull { color: var(--accent-red); font-weight: 400; }
   .price-card-meta {
     text-align: center;
     font-size: 13px;
@@ -1344,8 +1341,8 @@
         <h3 class="price-card-name">Goalkeeper Coaching Science</h3>
 
         <div class="price-display">
-          <span class="currency">£</span><span class="amount">249</span>
-          <span class="alt-currency">$299 USD · Local currency at checkout</span>
+          <span class="price priceFull"></span>
+          <span class="alt-currency">Charged in your local currency at checkout</span>
         </div>
 
         <p class="price-card-meta">
@@ -1360,7 +1357,7 @@
           <li><strong>Professional Certificate</strong> on completion. Coaching CV ready</li>
         </ul>
 
-        <a class="cta-button large" href="https://learn.isspf.com/buy/certificate-in-goalkeeper-coaching-science-youth/">Enrol Now · £249 / $299</a>
+        <a class="cta-button large" href="https://learn.isspf.com/buy/certificate-in-goalkeeper-coaching-science-youth/">Enrol Now</a>
 
         <div class="price-card-guarantee">
           <div class="price-card-guarantee-text">
@@ -1381,7 +1378,7 @@
 
     <details class="faq-item">
       <summary>Is this just another online goalkeeper course like the ones I've already done?</summary>
-      <div class="faq-body">No, and that's a fair question to ask before spending £249. Other courses teach <em>what</em> to coach. The drills. The techniques. The warm-up structures. This course teaches the science underneath. Why those drills work biomechanically. What the goalkeeper's brain is actually doing during a save. Why a Tuesday session needs to look completely different from a Thursday one. Once you have done this course, the courses you have done before will look different to you. You will not unsee the gap.</div>
+      <div class="faq-body">No, and that's a fair question to ask before spending <span class="price priceFull"></span>. Other courses teach <em>what</em> to coach. The drills. The techniques. The warm-up structures. This course teaches the science underneath. Why those drills work biomechanically. What the goalkeeper's brain is actually doing during a save. Why a Tuesday session needs to look completely different from a Thursday one. Once you have done this course, the courses you have done before will look different to you. You will not unsee the gap.</div>
     </details>
 
     <details class="faq-item">
@@ -1396,7 +1393,7 @@
 
     <details class="faq-item">
       <summary>What is the certification actually worth?</summary>
-      <div class="faq-body">The Professional Certificate in Goalkeeper Coaching Science (Pro-Youth Level) is awarded on course completion. ISSPF courses are accredited by leading universities. <span class="placeholder-flag">[PLACEHOLDER: specific accrediting institutions to be confirmed.]</span> The paper certificate is real and you can put it on your coaching CV. The change in how you actually coach is what the £249 is really paying for.</div>
+      <div class="faq-body">The Professional Certificate in Goalkeeper Coaching Science (Pro-Youth Level) is awarded on course completion. ISSPF courses are accredited by leading universities. <span class="placeholder-flag">[PLACEHOLDER: specific accrediting institutions to be confirmed.]</span> The paper certificate is real and you can put it on your coaching CV. The change in how you actually coach is what the <span class="price priceFull"></span> is really paying for.</div>
     </details>
 
     <details class="faq-item">
@@ -1425,7 +1422,7 @@
     <p>The first runs the same youth drills they ran last Tuesday. <strong>Same WHAT.</strong> Same hope it transfers. Same uncertainty when the parent on the touchline asks why.</p>
     <p>The second knows why every drill is there, why it belongs at U13 and not at U11, why this child's freeze last Saturday is not "a confidence dip" but a coachable signal. Knows what to say when the academy director asks how the U16s are being prepared for senior football.</p>
     <p>The second coach is not born. They are built. <strong>Module by module. Ten of them.</strong></p>
-    <a class="cta-button large" href="https://learn.isspf.com/buy/certificate-in-goalkeeper-coaching-science-youth/" style="margin-top: 16px;">Enrol Now · £249 / $299</a>
+    <a class="cta-button large" href="https://learn.isspf.com/buy/certificate-in-goalkeeper-coaching-science-youth/" style="margin-top: 16px;">Enrol Now</a>
     <div class="tagline">Drills Fill A Session. Science Develops The Goalkeeper.</div>
   </div>
 </section>
@@ -1451,6 +1448,110 @@
     <a class="cta-button" href="#enrol">Enrol Now</a>
   </div>
 </div>
+
+<!-- GeoIP price localisation -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+<script>
+    jQuery(document).ready(function() {
+        try {
+            var onSuccess = function(location) {
+                switch (location.country.iso_code) {
+                    case "GB":
+                    case "IM":
+                    case "JE":
+                    case "GG":
+                        uk();
+                        break;
+                    case "AU":
+                        aus();
+                        break;
+                    case "AT":
+                    case "BE":
+                    case "CY":
+                    case "DE":
+                    case "DK":
+                    case "EE":
+                    case "FI":
+                    case "FR":
+                    case "GR":
+                    case "IS":
+                    case "IE":
+                    case "IT":
+                    case "LV":
+                    case "LT":
+                    case "LU":
+                    case "PT":
+                    case "SK":
+                    case "SI":
+                    case "NL":
+                    case "NO":
+                    case "ES":
+                        eur();
+                        break;
+                    case "ZA":
+                        zar();
+                        break;
+                    case "MY":
+                        my();
+                        break;
+                    case "CA":
+                        ca();
+                        break;
+                    default:
+                        usa();
+                }
+            };
+            var onError = function(error) {
+                usa();
+            };
+            geoip2.country(onSuccess, onError);
+        } catch (err) {
+            usa();
+        }
+        function usa() {
+          jQuery(".priceFull").text("$329");
+          jQuery(".priceDiscount").text("$59");
+          jQuery(".priceSubscribe").html("$60<small style='font-size:12px'>/month x5</small>");
+        }
+
+        function uk() {
+          jQuery(".priceFull").text("£249");
+          jQuery(".priceDiscount").text("£49");
+          jQuery(".priceSubscribe").html("£50<small style='font-size:12px'>/month x5</small>");
+        }
+
+        function aus() {
+          jQuery(".priceFull").text("AU$479");
+          jQuery(".priceDiscount").text("$89 AUD");
+          jQuery(".priceSubscribe").html("A$80 AUD<small style='font-size:12px'>/month x5</small>");
+        }
+
+        function eur() {
+          jQuery(".priceFull").text("€299");
+          jQuery(".priceDiscount").text("€49");
+          jQuery(".priceSubscribe").html("€50<small style='font-size:12px'>/month x5</small>");
+        }
+
+        function my() {
+          jQuery(".priceFull").text("RM1299");
+          jQuery(".priceDiscount").text("€49");
+          jQuery(".priceSubscribe").html("RM260<small style='font-size:12px'>/month x5</small>");
+        }
+
+        function zar() {
+          jQuery(".priceFull").text("R4599");
+          jQuery(".priceDiscount").text("€49");
+          jQuery(".priceSubscribe").html("R960<small style='font-size:12px'>/month x5</small>");
+        }
+
+        function ca() {
+          jQuery(".priceFull").text("CA$479");
+          jQuery(".priceDiscount").text("€49");
+          jQuery(".priceSubscribe").html("R960<small style='font-size:12px'>/month x5</small>");
+        }
+    });
+</script>
 
 <script>
   document.getElementById('copyright-year').textContent = new Date().getFullYear();
