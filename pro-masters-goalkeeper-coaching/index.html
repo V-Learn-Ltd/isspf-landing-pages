@@ -995,6 +995,89 @@
   footer .links { display: flex; gap: 18px; }
   footer .copy { font-size: 11px; opacity: 0.7; }
 
+  /* ---------- EXIT INTENT MODAL ---------- */
+  .exit-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.78);
+    z-index: 9000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+  .exit-modal-overlay.visible {
+    display: flex;
+    animation: exitFade 0.25s ease-out;
+  }
+  @keyframes exitFade { from { opacity: 0 } to { opacity: 1 } }
+  .exit-modal {
+    background: var(--bg-white);
+    border-radius: 12px;
+    max-width: 540px;
+    width: 100%;
+    padding: 56px 36px 44px;
+    position: relative;
+    text-align: center;
+    box-shadow: 0 32px 64px rgba(0, 0, 0, 0.4);
+    animation: exitPop 0.32s cubic-bezier(0.34, 1.56, 0.64, 1);
+    border-top: 6px solid var(--accent-red);
+  }
+  @keyframes exitPop {
+    from { transform: scale(0.92); opacity: 0 }
+    to { transform: scale(1); opacity: 1 }
+  }
+  .exit-modal-close {
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    background: none;
+    border: 0;
+    font-size: 30px;
+    line-height: 1;
+    color: var(--text-muted-dark);
+    cursor: pointer;
+    padding: 8px 12px;
+    font-family: 'Inter', sans-serif;
+  }
+  .exit-modal-close:hover { color: var(--text-dark); }
+  .exit-modal h2 {
+    font-family: 'Anton', sans-serif;
+    font-weight: 400;
+    font-size: clamp(40px, 6vw, 60px);
+    line-height: 1;
+    letter-spacing: 0.005em;
+    text-transform: uppercase;
+    color: var(--text-dark);
+    margin: 0 0 18px;
+  }
+  .exit-modal p {
+    font-size: 16px;
+    line-height: 1.55;
+    color: var(--text-dark);
+    margin: 0 auto 18px;
+    max-width: 420px;
+  }
+  .exit-modal .exit-code {
+    display: inline-block;
+    font-family: 'Anton', sans-serif;
+    font-weight: 400;
+    font-size: clamp(28px, 4.5vw, 36px);
+    letter-spacing: 0.06em;
+    color: var(--accent-red);
+    margin: 4px 0 24px;
+    padding: 10px 22px;
+    border: 2px dashed var(--accent-red);
+    border-radius: 6px;
+  }
+  .exit-modal .cta-button {
+    display: inline-block;
+    width: 100%;
+    max-width: 360px;
+    padding: 16px 28px;
+    font-size: 15px;
+  }
+
   /* ---------- STICKY BOTTOM CTA BAR ---------- */
   .sticky-cta {
     position: fixed;
@@ -1544,6 +1627,17 @@
   </div>
 </footer>
 
+<!-- EXIT INTENT MODAL -->
+<div class="exit-modal-overlay" id="exitModal" aria-hidden="true" role="dialog" aria-labelledby="exitModalTitle">
+  <div class="exit-modal">
+    <button class="exit-modal-close" id="exitModalClose" aria-label="Close">&times;</button>
+    <h2 id="exitModalTitle">Are You Sure?</h2>
+    <p>The 25% discount is about to expire. Use the code at checkout before it's gone.</p>
+    <div class="exit-code">GKSCIENCE25</div>
+    <a class="cta-button large" href="https://learn.isspf.com/buy/goalkeeper-coaching-science-senior-pro-level/">Enrol Now · Save 25%</a>
+  </div>
+</div>
+
 <!-- STICKY BOTTOM CTA — appears once visitor scrolls past hero, hides when they hit pricing -->
 <div class="sticky-cta" id="stickyCta" aria-hidden="true">
   <div class="sticky-cta-inner">
@@ -1658,6 +1752,44 @@
 
 <script>
   document.getElementById('copyright-year').textContent = new Date().getFullYear();
+
+  // Exit-intent modal: fires once per session when cursor leaves the top of the viewport
+  (function () {
+    var modal = document.getElementById('exitModal');
+    if (!modal) return;
+    var closeBtn = document.getElementById('exitModalClose');
+    var KEY = 'isspfExitShown';
+    var armedAt = Date.now();
+    var ARM_DELAY_MS = 5000;
+    var fired = false;
+
+    function show() {
+      if (fired) return;
+      try { if (sessionStorage.getItem(KEY) === '1') return; } catch (e) {}
+      if (Date.now() - armedAt < ARM_DELAY_MS) return;
+      fired = true;
+      modal.classList.add('visible');
+      modal.setAttribute('aria-hidden', 'false');
+      try { sessionStorage.setItem(KEY, '1'); } catch (e) {}
+      document.body.style.overflow = 'hidden';
+    }
+    function hide() {
+      modal.classList.remove('visible');
+      modal.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    }
+
+    document.addEventListener('mouseleave', function (e) {
+      if (e.clientY <= 0) show();
+    });
+    if (closeBtn) closeBtn.addEventListener('click', hide);
+    modal.addEventListener('click', function (e) {
+      if (e.target === modal) hide();
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && modal.classList.contains('visible')) hide();
+    });
+  }());
 
   // Sticky CTA: show after scrolling past the belief section, hide once pricing block enters viewport
   (function () {
