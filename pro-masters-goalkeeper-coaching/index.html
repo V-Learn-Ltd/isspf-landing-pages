@@ -74,6 +74,31 @@
     color: var(--text-cream);
     padding: 56px 0 80px;
   }
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 36px;
+    align-items: center;
+  }
+  @media (min-width: 880px) {
+    .hero-grid {
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+      gap: 56px;
+    }
+  }
+  .hero-image {
+    position: relative;
+  }
+  .hero-image img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.04);
+  }
+  @media (max-width: 879px) {
+    .hero-image { order: 2; max-width: 480px; margin: 0 auto; }
+  }
   .eyebrow {
     display: inline-block;
     font-family: 'Inter', sans-serif;
@@ -87,7 +112,7 @@
   .hammer {
     font-family: 'Anton', 'Inter', sans-serif;
     font-weight: 400;
-    font-size: clamp(44px, 7.8vw, 84px);
+    font-size: clamp(44px, 7.2vw, 78px);
     line-height: 0.92;
     letter-spacing: 0.005em;
     text-transform: uppercase;
@@ -212,7 +237,7 @@
   h2 {
     font-family: 'Anton', 'Inter', sans-serif;
     font-weight: 400;
-    font-size: clamp(28px, 4.8vw, 44px);
+    font-size: clamp(38px, 6.4vw, 68px);
     line-height: 1;
     letter-spacing: 0.005em;
     text-transform: uppercase;
@@ -234,12 +259,12 @@
   .pull-out {
     font-family: 'Anton', sans-serif;
     font-weight: 400;
-    font-size: clamp(36px, 5.5vw, 56px);
-    line-height: 1.05;
+    font-size: clamp(52px, 9vw, 104px);
+    line-height: 1.02;
     letter-spacing: 0.005em;
     text-transform: uppercase;
     color: var(--accent-red);
-    margin: 32px 0;
+    margin: 48px 0;
     text-align: center;
   }
   .tagline {
@@ -905,21 +930,29 @@
 <!-- HERO -->
 <section class="hero">
   <div class="wrap-wide">
-    <div class="eyebrow">The Course Behind The Report · Senior Pro Level</div>
+    <div class="hero-grid">
+      <div class="hero-text">
+        <div class="eyebrow">The Course Behind The Report · Senior Pro Level</div>
 
-    <h1 class="hammer">Saturday Is Decided On Tuesday.</h1>
+        <h1 class="hammer">Saturday Is Decided On Tuesday.</h1>
 
-    <p class="descriptive-headline">
-      The course that takes the science the report introduced and turns it into the way you coach goalkeepers across the training week. Nineteen modules. Fourteen faculty drawn from Bundesliga, FC Barcelona heritage, the Premier League, and elite international soccer. Built for the coach who wants to know why every session in the week earns its place.
-    </p>
+        <p class="descriptive-headline">
+          The course that takes the science the report introduced and turns it into the way you coach goalkeepers across the training week. Nineteen modules. Fourteen faculty drawn from Bundesliga, FC Barcelona heritage, the Premier League, and elite international soccer. Built for the coach who wants to know why every session in the week earns its place.
+        </p>
 
-    <p class="subhead">
-      The report named what was missing. The Shot-Stopper's Trap. <strong>WHAT knowledge without WHY.</strong> By the time you finish this course, that question retires for good. You will explain not just <em>what</em> to train, but <em>why</em>, <em>when</em>, and <em>how</em>. To your goalkeeper. To the head coach in the dressing room. To the sporting director after a result. To yourself, on the drive home from a match where the second goal still doesn't make sense.
-    </p>
+        <p class="subhead">
+          The report named what was missing. The Shot-Stopper's Trap. <strong>WHAT knowledge without WHY.</strong> By the time you finish this course, that question retires for good. You will explain not just <em>what</em> to train, but <em>why</em>, <em>when</em>, and <em>how</em>. To your goalkeeper. To the head coach in the dressing room. To the sporting director after a result. To yourself, on the drive home from a match where the second goal still doesn't make sense.
+        </p>
 
-    <p class="trust-line">
-      Trusted by goalkeeper coaches in <strong>70+ countries</strong>. ISSPF rated <strong>4.4/5</strong> from 76 verified Trustpilot reviews. Accredited by leading universities.
-    </p>
+        <p class="trust-line">
+          Trusted by goalkeeper coaches in <strong>70+ countries</strong>. ISSPF rated <strong>4.4/5</strong> from 76 verified Trustpilot reviews. Accredited by leading universities.
+        </p>
+      </div>
+
+      <div class="hero-image">
+        <img src="https://www.isspf.com/wp-content/uploads/2022/03/MODERN-DAY-GOALKEEPING-1.webp" alt="Modern goalkeeper coaching at elite level" loading="eager" />
+      </div>
+    </div>
 
     <div class="hero-stats">
       <div class="stat">
@@ -1297,7 +1330,7 @@
 <!-- STICKY BOTTOM CTA — appears once visitor scrolls past hero, hides when they hit pricing -->
 <div class="sticky-cta" id="stickyCta" aria-hidden="true">
   <div class="sticky-cta-inner">
-    <span class="sticky-cta-text">The Course Behind The Report · <span class="price">£249 / $299</span></span>
+    <span class="sticky-cta-text">Senior Pro Level &middot; The Course Behind The Report</span>
     <a class="cta-button" href="#enrol">Enrol Now</a>
   </div>
 </div>
