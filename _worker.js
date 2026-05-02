@@ -40,6 +40,18 @@ export default {
     const path = url.pathname.replace(/\/$/, '');
     const cookies = parseCookies(request.headers.get('cookie') || '');
 
+    // ── /api/affwp-convert — fire a lead-conversion referral ──
+    // Called from /gk-report/check-inbox/ once the visitor has submitted the form.
+    // Reads the affwp_affiliate_id + affwp_visit_id cookies (set by Step 1 below
+    // when the affiliate-tagged URL was first hit), and POSTs a zero-amount
+    // referral to AffiliateWP so the lead shows up against the affiliate.
+    if (url.pathname === '/api/affwp-convert' && request.method === 'POST') {
+      return await handleAffiliateConvert(request, env, cookies);
+    }
+    if (url.pathname === '/api/affwp-convert' && request.method === 'OPTIONS') {
+      return new Response(null, { status: 204 });
+    }
+
     // ── Step 1: Resolve the response (A/B routing or pass-through) ──
     let response;
     let isNewABAssignment = false;
@@ -150,6 +162,107 @@ export default {
     return newResponse;
   },
 };
+
+
+// ─────────────────────────────────────────────────────────────
+// AFFILIATE CONVERSION HANDLER
+// ─────────────────────────────────────────────────────────────
+
+/**
+ * Convert the current visitor's tracked visit into a referral.
+ * Called from /gk-report/check-inbox/ after a successful opt-in.
+ *
+ * Returns JSON describing the outcome:
+ *   { ok: true, referral_id, affiliate_id, visit_id }      — success
+ *   { ok: true, skipped: 'no-affiliate' }                  — visitor isn't affiliate-attributed
+ *   { ok: false, error: '...' }                            — API call failed
+ */
+async function handleAffiliateConvert(request, env, cookies) {
+  const affiliateId = cookies['affwp_affiliate_id'];
+  const visitId = cookies['affwp_visit_id'];
+
+  // No affiliate cookie = visitor wasn't referred. Return ok with skipped reason.
+  if (!affiliateId) {
+    return jsonResponse({ ok: true, skipped: 'no-affiliate' });
+  }
+
+  const parentUrl = (env.AFFWP_PARENT_URL || '').replace(/\/$/, '');
+  const publicKey = env.AFFWP_PUBLIC_KEY || '';
+  const token = env.AFFWP_TOKEN || '';
+  const referralType = env.AFFWP_LEAD_TYPE || 'opt-in';
+  const referralContext = env.AFFWP_LEAD_CONTEXT || 'gk-report-lead';
+  const referralDescription = env.AFFWP_LEAD_DESCRIPTION || 'Goalkeeper Science Report opt-in';
+
+  if (!parentUrl || !publicKey || !token) {
+    return jsonResponse({ ok: false, error: 'missing-config' }, 500);
+  }
+
+  try {
+    const apiParams = new URLSearchParams({
+      affiliate_id: affiliateId,
+      amount: '0',
+      type: referralType,
+      context: referralContext,
+      description: referralDescription,
+      status: 'unpaid',
+    });
+    if (visitId) {
+      apiParams.set('visit_id', visitId);
+    }
+
+    const apiUrl = `${parentUrl}/wp-json/affwp/v1/referrals?${apiParams.toString()}`;
+    const authHeader = 'Basic ' + btoa(`${publicKey}:${token}`);
+
+    const apiResponse = await fetch(apiUrl, {
+      method: 'POST',
+      headers: {
+        'Authorization': authHeader,
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: '',
+    });
+
+    const responseText = await apiResponse.text();
+
+    if (!apiResponse.ok) {
+      console.error('[AffWP convert] API error:', apiResponse.status, responseText.substring(0, 300));
+      return jsonResponse({
+        ok: false,
+        error: 'api-error',
+        status: apiResponse.status,
+        body: responseText.substring(0, 300),
+      }, 502);
+    }
+
+    let referralId = null;
+    try {
+      const data = JSON.parse(responseText);
+      referralId = data.referral_id || data.id || null;
+    } catch (parseErr) {
+      console.error('[AffWP convert] Failed to parse API response:', parseErr.message);
+    }
+
+    return jsonResponse({
+      ok: true,
+      referral_id: referralId,
+      affiliate_id: affiliateId,
+      visit_id: visitId || null,
+    });
+  } catch (err) {
+    console.error('[AffWP convert] Request failed:', err.message);
+    return jsonResponse({ ok: false, error: 'request-failed', message: err.message }, 502);
+  }
+}
+
+function jsonResponse(payload, status = 200) {
+  return new Response(JSON.stringify(payload), {
+    status,
+    headers: {
+      'Content-Type': 'application/json; charset=UTF-8',
+      'Cache-Control': 'no-store',
+    },
+  });
+}
 
 
 // ─────────────────────────────────────────────────────────────

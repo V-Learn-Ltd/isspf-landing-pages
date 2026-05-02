@@ -318,6 +318,29 @@
 
 <script>
   document.getElementById('copyright-year').textContent = new Date().getFullYear();
+
+  // AffiliateWP lead conversion — fires once per session if the visitor
+  // arrived via an affiliate link (?a=<id>). The worker's /api/affwp-convert
+  // endpoint reads the affwp_affiliate_id + affwp_visit_id cookies and POSTs
+  // a zero-amount referral so the lead shows in the affiliate's dashboard.
+  (function () {
+    var KEY = 'isspfLeadConverted';
+    try { if (sessionStorage.getItem(KEY) === '1') return; } catch (e) {}
+
+    fetch('/api/affwp-convert', {
+      method: 'POST',
+      credentials: 'same-origin',
+      headers: { 'Content-Type': 'application/json' },
+      body: '{}',
+      keepalive: true,
+    }).then(function (r) {
+      try { sessionStorage.setItem(KEY, '1'); } catch (e) {}
+      // Optional: log outcome to console for debugging
+      // r.json().then(function (d) { console.log('[AffWP convert]', d); });
+    }).catch(function () {
+      // Fail silently — conversion tracking shouldn't block the user
+    });
+  }());
 </script>
 
 </body>

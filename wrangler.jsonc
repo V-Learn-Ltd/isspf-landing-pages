@@ -15,6 +15,12 @@
     "AFFWP_PARENT_URL": "https://learn.isspf.com",
     "AFFWP_REF_VAR": "a",
     "AFFWP_COOKIE_DAYS": "365",
-    "AFFWP_CREDIT_LAST": "false"
+    "AFFWP_CREDIT_LAST": "false",
+
+    // Lead-conversion settings used by /api/affwp-convert (fired from /gk-report/check-inbox/)
+    // AFFWP_LEAD_TYPE: AffiliateWP referral type — 'opt-in' if Lead Generation add-on installed, otherwise 'sale'
+    "AFFWP_LEAD_TYPE": "opt-in",
+    "AFFWP_LEAD_CONTEXT": "gk-report-lead",
+    "AFFWP_LEAD_DESCRIPTION": "Goalkeeper Science Report opt-in"
   }
 }
