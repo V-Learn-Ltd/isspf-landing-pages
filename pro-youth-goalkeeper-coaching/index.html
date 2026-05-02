@@ -1672,24 +1672,25 @@
 <script>
   document.getElementById('copyright-year').textContent = new Date().getFullYear();
 
-  // Exit-intent modal: fires once per session when cursor leaves the top of the viewport
+  // Exit-intent modal: fires once per day when cursor leaves the top of the viewport
   (function () {
     var modal = document.getElementById('exitModal');
     if (!modal) return;
     var closeBtn = document.getElementById('exitModalClose');
-    var KEY = 'isspfExitShown';
+    var KEY = 'isspfExitShownDate';
     var armedAt = Date.now();
     var ARM_DELAY_MS = 5000;
     var fired = false;
+    var todayStamp = new Date().toISOString().slice(0, 10);
 
     function show() {
       if (fired) return;
-      try { if (sessionStorage.getItem(KEY) === '1') return; } catch (e) {}
+      try { if (localStorage.getItem(KEY) === todayStamp) return; } catch (e) {}
       if (Date.now() - armedAt < ARM_DELAY_MS) return;
       fired = true;
       modal.classList.add('visible');
       modal.setAttribute('aria-hidden', 'false');
-      try { sessionStorage.setItem(KEY, '1'); } catch (e) {}
+      try { localStorage.setItem(KEY, todayStamp); } catch (e) {}
       document.body.style.overflow = 'hidden';
     }
     function hide() {
