@@ -5,6 +5,16 @@
 
   // Pages config — declares build output dir so we don't depend on dashboard.
   // Pages auto-detects _worker.js at this path and runs it as a Pages Function
-  // (Worker advanced mode), which handles our A/B routing.
-  "pages_build_output_dir": "./"
+  // (Worker advanced mode), which handles A/B routing + AffiliateWP tracking.
+  "pages_build_output_dir": "./",
+
+  // Non-secret AffiliateWP configuration (mirrors Urban Sketch / iPhotography pattern).
+  // Secrets must be set via Cloudflare dashboard:
+  //   Workers & Pages → isspf-landing-pages → Settings → Variables and Secrets → Add
+  "vars": {
+    "AFFWP_PARENT_URL": "https://learn.isspf.com",
+    "AFFWP_REF_VAR": "a",
+    "AFFWP_COOKIE_DAYS": "365",
+    "AFFWP_CREDIT_LAST": "false"
+  }
 }
