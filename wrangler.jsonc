@@ -21,6 +21,17 @@
     // AFFWP_LEAD_TYPE: AffiliateWP referral type — 'opt-in' if Lead Generation add-on installed, otherwise 'sale'
     "AFFWP_LEAD_TYPE": "opt-in",
     "AFFWP_LEAD_CONTEXT": "gk-report-lead",
-    "AFFWP_LEAD_DESCRIPTION": "Goalkeeper Science Report opt-in"
+    "AFFWP_LEAD_DESCRIPTION": "Goalkeeper Science Report opt-in",
+
+    // Meta Conversions API (used by /api/meta-capi). Mirrors the browser pixel
+    // server-side so events arrive even when the pixel is blocked.
+    // Required secret (set in Cloudflare dashboard, NOT here):
+    //   META_CAPI_ACCESS_TOKEN — generate at:
+    //     Events Manager → Data Sources → [Pixel] → Settings →
+    //     Conversions API → Generate access token
+    // Optional secret (only during testing):
+    //   META_TEST_EVENT_CODE — paste the test event code from Events Manager →
+    //     Test Events; remove once verified to stop test-bucketing live events.
+    "META_PIXEL_ID": "856256648998431"
   }
 }

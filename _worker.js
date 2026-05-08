@@ -1,7 +1,7 @@
 /**
- * Cloudflare Pages Worker — A/B routing + AffiliateWP cross-domain tracking
+ * Cloudflare Pages Worker — A/B routing + AffiliateWP tracking + Meta CAPI
  *
- * Two responsibilities:
+ * Three responsibilities:
  *
  * 1. A/B test routing for selected paths (currently /gk-report)
  *    - Sticky 50/50 random assignment via cookie
@@ -13,13 +13,24 @@
  *    - Drops affwp_affiliate_id and affwp_visit_id cookies for 365 days
  *    - First-touch wins: existing affiliate cookies are NOT overwritten
  *
+ * 3. Meta Conversions API forwarding via /api/meta-capi
+ *    - Receives event_name + event_id + custom_data from the browser pixel
+ *    - Reads _fbp / _fbc cookies (Meta first-party identifiers) + IP + UA
+ *    - Hashes any PII (email, phone) before forwarding
+ *    - POSTs to graph.facebook.com so events arrive even when the browser
+ *      pixel is blocked (iOS, ad-blockers, cookie-consent rejection)
+ *    - event_id is shared with the browser pixel call so Meta dedupes
+ *
  * Configuration (wrangler.jsonc vars + Cloudflare dashboard secrets):
- *   AFFWP_PARENT_URL   - https://learn.isspf.com (vars)
- *   AFFWP_REF_VAR      - "a" (vars)
- *   AFFWP_COOKIE_DAYS  - "365" (vars)
- *   AFFWP_CREDIT_LAST  - "false" (vars) — first-touch wins
- *   AFFWP_PUBLIC_KEY   - AffiliateWP REST API public key (secret)
- *   AFFWP_TOKEN        - AffiliateWP REST API token (secret)
+ *   AFFWP_PARENT_URL         - https://learn.isspf.com (vars)
+ *   AFFWP_REF_VAR            - "a" (vars)
+ *   AFFWP_COOKIE_DAYS        - "365" (vars)
+ *   AFFWP_CREDIT_LAST        - "false" (vars) — first-touch wins
+ *   AFFWP_PUBLIC_KEY         - AffiliateWP REST API public key (secret)
+ *   AFFWP_TOKEN              - AffiliateWP REST API token (secret)
+ *   META_PIXEL_ID            - 856256648998431 (vars)
+ *   META_CAPI_ACCESS_TOKEN   - Meta CAPI access token (secret)
+ *   META_TEST_EVENT_CODE     - Optional, only set during Events Manager testing (secret)
  */
 
 // ─────────────────────────────────────────────────────────────
@@ -49,6 +60,18 @@ export default {
       return await handleAffiliateConvert(request, env, cookies);
     }
     if (url.pathname === '/api/affwp-convert' && request.method === 'OPTIONS') {
+      return new Response(null, { status: 204 });
+    }
+
+    // ── /api/meta-capi — server-side mirror of a browser pixel event ──
+    // Called from every landing page in parallel with the browser fbq() call.
+    // Browser sends { event_name, event_id, event_source_url, custom_data,
+    // user_data? }; the worker enriches with IP, UA, _fbp/_fbc cookies and
+    // POSTs to graph.facebook.com. Meta dedupes browser+server by event_id.
+    if (url.pathname === '/api/meta-capi' && request.method === 'POST') {
+      return await handleMetaCAPIEvent(request, env, cookies);
+    }
+    if (url.pathname === '/api/meta-capi' && request.method === 'OPTIONS') {
       return new Response(null, { status: 204 });
     }
 
@@ -327,6 +350,144 @@ async function createAffiliateVisit(request, url, env, affiliateId, campaign) {
   }
 
   return null;
+}
+
+
+// ─────────────────────────────────────────────────────────────
+// META CONVERSIONS API HANDLER
+// ─────────────────────────────────────────────────────────────
+
+/**
+ * Forward a single browser-fired pixel event to Meta CAPI server-side.
+ * Browser sends a JSON body shaped:
+ *   {
+ *     event_name:        'PageView' | 'Lead' | 'ViewContent' | 'InitiateCheckout' | ...
+ *     event_id:          UUID (must match the eventID passed to fbq for dedupe)
+ *     event_source_url:  full URL of the page that fired the event
+ *     custom_data:       object — content_name, content_category, content_ids, value, currency, etc.
+ *     user_data:         optional — { email, phone, first_name, last_name } in plaintext;
+ *                        worker hashes before forwarding
+ *   }
+ *
+ * Returns:
+ *   { ok: true, event_name, event_id, fbtrace_id }   — forwarded successfully
+ *   { ok: false, error: '...' }                      — config or upstream error
+ */
+async function handleMetaCAPIEvent(request, env, cookies) {
+  const pixelId = env.META_PIXEL_ID || '';
+  const accessToken = env.META_CAPI_ACCESS_TOKEN || '';
+
+  if (!pixelId || !accessToken) {
+    console.error('[Meta CAPI] Missing META_PIXEL_ID or META_CAPI_ACCESS_TOKEN');
+    return jsonResponse({ ok: false, error: 'missing-config' }, 500);
+  }
+
+  let body;
+  try {
+    body = await request.json();
+  } catch (err) {
+    return jsonResponse({ ok: false, error: 'invalid-json' }, 400);
+  }
+
+  const eventName = body.event_name;
+  if (!eventName || typeof eventName !== 'string') {
+    return jsonResponse({ ok: false, error: 'missing-event-name' }, 400);
+  }
+
+  const ip = request.headers.get('cf-connecting-ip')
+    || (request.headers.get('x-forwarded-for') || '').split(',')[0].trim()
+    || '';
+  const userAgent = request.headers.get('user-agent') || '';
+  const fbp = cookies['_fbp'] || '';
+  const fbc = cookies['_fbc'] || '';
+
+  // user_data: required by Meta for matching. fbp/fbc when present give the
+  // best match quality; IP+UA is the fallback.
+  const ud = {
+    client_ip_address: ip,
+    client_user_agent: userAgent,
+  };
+  if (fbp) ud.fbp = fbp;
+  if (fbc) ud.fbc = fbc;
+
+  // Hash any PII the browser passed (lowercase + trim before SHA-256).
+  if (body.user_data && typeof body.user_data === 'object') {
+    const u = body.user_data;
+    if (u.email && typeof u.email === 'string') {
+      ud.em = [await sha256(u.email.trim().toLowerCase())];
+    }
+    if (u.phone && typeof u.phone === 'string') {
+      ud.ph = [await sha256(u.phone.replace(/[^0-9]/g, ''))];
+    }
+    if (u.first_name && typeof u.first_name === 'string') {
+      ud.fn = [await sha256(u.first_name.trim().toLowerCase())];
+    }
+    if (u.last_name && typeof u.last_name === 'string') {
+      ud.ln = [await sha256(u.last_name.trim().toLowerCase())];
+    }
+  }
+
+  const eventPayload = {
+    data: [{
+      event_name: eventName,
+      event_time: Math.floor(Date.now() / 1000),
+      event_id: body.event_id || undefined,
+      event_source_url: body.event_source_url || request.headers.get('referer') || '',
+      action_source: 'website',
+      user_data: ud,
+      custom_data: (body.custom_data && typeof body.custom_data === 'object') ? body.custom_data : {},
+    }],
+  };
+
+  if (env.META_TEST_EVENT_CODE) {
+    eventPayload.test_event_code = env.META_TEST_EVENT_CODE;
+  }
+
+  try {
+    const apiUrl = `https://graph.facebook.com/v21.0/${pixelId}/events?access_token=${encodeURIComponent(accessToken)}`;
+    const apiResponse = await fetch(apiUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(eventPayload),
+    });
+    const responseText = await apiResponse.text();
+
+    if (!apiResponse.ok) {
+      console.error('[Meta CAPI] API error:', apiResponse.status, responseText.substring(0, 300));
+      return jsonResponse({
+        ok: false,
+        error: 'api-error',
+        status: apiResponse.status,
+        body: responseText.substring(0, 300),
+      }, 502);
+    }
+
+    let fbtraceId = null;
+    try {
+      const data = JSON.parse(responseText);
+      fbtraceId = data.fbtrace_id || null;
+    } catch (parseErr) {
+      // Ignore — graph API normally returns valid JSON, but missing one is non-fatal
+    }
+
+    return jsonResponse({
+      ok: true,
+      event_name: eventName,
+      event_id: body.event_id || null,
+      fbtrace_id: fbtraceId,
+    });
+  } catch (err) {
+    console.error('[Meta CAPI] Request failed:', err.message);
+    return jsonResponse({ ok: false, error: 'request-failed', message: err.message }, 502);
+  }
+}
+
+async function sha256(text) {
+  const data = new TextEncoder().encode(text);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  return Array.from(new Uint8Array(hashBuffer))
+    .map(b => b.toString(16).padStart(2, '0'))
+    .join('');
 }
 
 

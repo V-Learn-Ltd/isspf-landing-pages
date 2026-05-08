@@ -7,6 +7,56 @@
 <meta name="description" content="Your Goalkeeper Science Report is on its way. Check your inbox to download." />
 <meta name="robots" content="noindex" />
 
+<!-- Meta Pixel + CAPI Code -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '856256648998431');
+
+// metaCapi: fire the pixel event AND mirror it to /api/meta-capi server-side.
+// A shared event_id lets Meta dedupe browser+server so neither double-counts.
+window.metaCapi = function (eventName, customData, userData) {
+  var eid = (window.crypto && crypto.randomUUID)
+    ? crypto.randomUUID()
+    : (Date.now() + '-' + Math.random().toString(36).slice(2));
+  try { fbq('track', eventName, customData || {}, { eventID: eid }); } catch (e) {}
+  try {
+    fetch('/api/meta-capi', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'same-origin',
+      keepalive: true,
+      body: JSON.stringify({
+        event_name: eventName,
+        event_id: eid,
+        event_source_url: location.href,
+        custom_data: customData || {},
+        user_data: userData || undefined
+      })
+    });
+  } catch (e) {}
+};
+
+metaCapi('PageView');
+metaCapi('Lead', {
+  content_name: 'Goalkeeper Science Report',
+  content_category: 'Lead Magnet'
+});
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=856256648998431&ev=PageView&noscript=1"
+/></noscript>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=856256648998431&ev=Lead&noscript=1&cd[content_name]=Goalkeeper%20Science%20Report&cd[content_category]=Lead%20Magnet"
+/></noscript>
+<!-- End Meta Pixel + CAPI Code -->
+
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />

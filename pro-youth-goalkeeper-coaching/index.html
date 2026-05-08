@@ -6,6 +6,55 @@
 <title>Professional Certificate in Goalkeeper Coaching Science (Pro-Youth Level) | ISSPF</title>
 <meta name="description" content="The Pro-Youth Level course behind The Goalkeeper Science Report. 10 modules. 9 faculty from FC Barcelona academy, elite professional academies and international youth environments. Built for coaches developing the next generation of goalkeepers." />
 
+<!-- Meta Pixel + CAPI Code -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '856256648998431');
+
+// metaCapi: fire the pixel event AND mirror it to /api/meta-capi server-side.
+// A shared event_id lets Meta dedupe browser+server so neither double-counts.
+window.metaCapi = function (eventName, customData, userData) {
+  var eid = (window.crypto && crypto.randomUUID)
+    ? crypto.randomUUID()
+    : (Date.now() + '-' + Math.random().toString(36).slice(2));
+  try { fbq('track', eventName, customData || {}, { eventID: eid }); } catch (e) {}
+  try {
+    fetch('/api/meta-capi', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'same-origin',
+      keepalive: true,
+      body: JSON.stringify({
+        event_name: eventName,
+        event_id: eid,
+        event_source_url: location.href,
+        custom_data: customData || {},
+        user_data: userData || undefined
+      })
+    });
+  } catch (e) {}
+};
+
+metaCapi('PageView');
+metaCapi('ViewContent', {
+  content_name: 'Professional Certificate in Goalkeeper Coaching Science (Pro-Youth Level)',
+  content_category: 'Course',
+  content_ids: ['gk-youth-smm'],
+  content_type: 'product'
+});
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=856256648998431&ev=PageView&noscript=1"
+/></noscript>
+<!-- End Meta Pixel + CAPI Code -->
+
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
@@ -1736,6 +1785,26 @@
     window.addEventListener('scroll', update, { passive: true });
     window.addEventListener('resize', update);
     update();
+  }());
+</script>
+
+<script>
+  // Meta Pixel + CAPI: InitiateCheckout on buy-button clicks.
+  // Fires browser pixel + server-side CAPI (deduped by event_id) when a visitor
+  // clicks any link to the SMM checkout page on learn.isspf.com. metaCapi is
+  // fire-and-forget; the link still navigates normally.
+  (function () {
+    if (typeof window.metaCapi !== 'function') return;
+    document.querySelectorAll('a[href*="learn.isspf.com/smm/buy-gk-youth"]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        window.metaCapi('InitiateCheckout', {
+          content_name: 'Professional Certificate in Goalkeeper Coaching Science (Pro-Youth Level)',
+          content_category: 'Course',
+          content_ids: ['gk-youth-smm'],
+          content_type: 'product'
+        });
+      });
+    });
   }());
 </script>
 
