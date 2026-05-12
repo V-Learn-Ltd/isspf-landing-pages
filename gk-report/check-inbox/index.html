@@ -119,13 +119,34 @@ src="https://www.facebook.com/tr?id=856256648998431&ev=Lead&noscript=1&cd[conten
     color: var(--accent-red);
   }
 
-  /* HERO */
-  .hero {
+  /* SPLIT HERO — left: check inbox info, right: three quick steps */
+  .split-hero {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: stretch;
+  }
+  .split-left,
+  .split-right {
+    padding: 64px 48px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .split-left {
     background: var(--bg-dark);
     color: var(--text-cream);
-    padding: 60px 0 72px;
     text-align: center;
   }
+  .split-right {
+    background: var(--bg-white);
+    color: var(--text-dark);
+  }
+  .split-inner {
+    width: 100%;
+    max-width: 520px;
+    margin: 0 auto;
+  }
+
   .eyebrow {
     display: inline-block;
     font-family: 'Inter', sans-serif;
@@ -139,7 +160,7 @@ src="https://www.facebook.com/tr?id=856256648998431&ev=Lead&noscript=1&cd[conten
   .hammer {
     font-family: 'Anton', 'Inter', sans-serif;
     font-weight: 400;
-    font-size: clamp(40px, 6.5vw, 72px);
+    font-size: clamp(40px, 5.4vw, 64px);
     line-height: 0.95;
     letter-spacing: 0.005em;
     text-transform: uppercase;
@@ -149,11 +170,11 @@ src="https://www.facebook.com/tr?id=856256648998431&ev=Lead&noscript=1&cd[conten
   .descriptive {
     font-family: 'Inter', sans-serif;
     font-weight: 500;
-    font-size: clamp(17px, 2.4vw, 20px);
+    font-size: clamp(16px, 1.8vw, 19px);
     line-height: 1.45;
     color: var(--text-muted-light);
-    margin: 0 auto 36px;
-    max-width: 540px;
+    margin: 0 auto 32px;
+    max-width: 460px;
   }
   .descriptive strong { color: var(--text-cream); font-weight: 600; }
 
@@ -161,7 +182,7 @@ src="https://www.facebook.com/tr?id=856256648998431&ev=Lead&noscript=1&cd[conten
   .cover-preview {
     display: block;
     width: auto;
-    max-width: 220px;
+    max-width: 200px;
     height: auto;
     margin: 0 auto;
     border-radius: 4px;
@@ -171,19 +192,14 @@ src="https://www.facebook.com/tr?id=856256648998431&ev=Lead&noscript=1&cd[conten
       0 8px 16px rgba(0, 0, 0, 0.4);
   }
 
-  /* INSTRUCTIONS BLOCK */
-  .instructions {
-    background: var(--bg-white);
-    padding: 72px 0 88px;
-  }
   h2 {
     font-family: 'Anton', 'Inter', sans-serif;
     font-weight: 400;
-    font-size: clamp(28px, 4.4vw, 40px);
+    font-size: clamp(28px, 3.4vw, 38px);
     line-height: 1;
     letter-spacing: 0.005em;
     text-transform: uppercase;
-    margin: 0 0 36px;
+    margin: 0 0 28px;
     color: var(--text-dark);
     text-align: center;
   }
@@ -191,15 +207,15 @@ src="https://www.facebook.com/tr?id=856256648998431&ev=Lead&noscript=1&cd[conten
   .step-list {
     list-style: none;
     padding: 0;
-    margin: 0 0 32px;
+    margin: 0;
     counter-reset: step;
   }
   .step-list li {
     display: grid;
-    grid-template-columns: 56px 1fr;
-    gap: 22px;
+    grid-template-columns: 48px 1fr;
+    gap: 18px;
     align-items: start;
-    padding: 22px 0;
+    padding: 16px 0;
     border-bottom: 1px solid var(--rule-light);
     counter-increment: step;
   }
@@ -209,18 +225,18 @@ src="https://www.facebook.com/tr?id=856256648998431&ev=Lead&noscript=1&cd[conten
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 56px;
-    height: 56px;
+    width: 48px;
+    height: 48px;
     background: var(--accent-red);
     color: #fff;
     border-radius: 50%;
     font-family: 'Anton', sans-serif;
-    font-size: 28px;
+    font-size: 24px;
     line-height: 1;
   }
   .step-body strong {
     display: block;
-    font-size: 18px;
+    font-size: 17px;
     font-weight: 700;
     color: var(--text-dark);
     margin-bottom: 4px;
@@ -228,8 +244,8 @@ src="https://www.facebook.com/tr?id=856256648998431&ev=Lead&noscript=1&cd[conten
   }
   .step-body p {
     margin: 0;
-    font-size: 15px;
-    line-height: 1.6;
+    font-size: 14px;
+    line-height: 1.55;
     color: var(--text-muted-dark);
   }
   .step-body em {
@@ -241,8 +257,12 @@ src="https://www.facebook.com/tr?id=856256648998431&ev=Lead&noscript=1&cd[conten
     border-radius: 3px;
   }
 
+  /* WHY NOTE — full-width band below the split */
+  .why-section {
+    background: var(--bg-white);
+    padding: 36px 0 72px;
+  }
   .why-note {
-    margin-top: 32px;
     padding: 22px 24px;
     background: var(--bg-stone);
     border-left: 4px solid var(--accent-red);
@@ -273,9 +293,14 @@ src="https://www.facebook.com/tr?id=856256648998431&ev=Lead&noscript=1&cd[conten
   footer .links { display: flex; gap: 18px; }
   footer .copy { font-size: 11px; opacity: 0.7; }
 
+  @media (max-width: 900px) {
+    .split-hero { grid-template-columns: 1fr; }
+    .split-left, .split-right { padding: 48px 24px; }
+  }
+
   @media (max-width: 600px) {
-    .hero { padding: 40px 0 56px; }
-    .instructions { padding: 48px 0 64px; }
+    .split-left, .split-right { padding: 40px 20px; }
+    .why-section { padding: 28px 0 56px; }
     .cover-preview { max-width: 160px; }
     .step-list li { grid-template-columns: 44px 1fr; gap: 16px; }
     .step-list li::before { width: 44px; height: 44px; font-size: 22px; }
@@ -301,51 +326,57 @@ src="https://www.facebook.com/tr?id=856256648998431&ev=Lead&noscript=1&cd[conten
   </div>
 </header>
 
-<!-- HERO -->
-<section class="hero">
-  <div class="wrap">
-    <div class="eyebrow">Almost There</div>
+<!-- SPLIT HERO: left = check inbox info, right = three quick steps -->
+<section class="split-hero">
+  <div class="split-left">
+    <div class="split-inner">
+      <div class="eyebrow">Almost There</div>
 
-    <h1 class="hammer">Check Your Inbox.</h1>
+      <h1 class="hammer">Check Your Inbox.</h1>
 
-    <p class="descriptive">
-      We've just sent <strong>The Goalkeeper Science Report</strong> download link to your email. Confirm your address and the report is yours.
-    </p>
+      <p class="descriptive">
+        We've just sent <strong>The Goalkeeper Science Report</strong> download link to your email. Confirm your address and the report is yours.
+      </p>
 
-    <img
-      class="cover-preview"
-      src="../report-cover.png"
-      alt="The Goalkeeper Science Report — cover"
-    />
+      <img
+        class="cover-preview"
+        src="../report-cover.png"
+        alt="The Goalkeeper Science Report — cover"
+      />
+    </div>
+  </div>
+
+  <div class="split-right">
+    <div class="split-inner">
+      <h2>Three quick steps</h2>
+
+      <ol class="step-list">
+        <li>
+          <div class="step-body">
+            <strong>Open your inbox.</strong>
+            <p>Look for an email from <em>support@isspf.com</em> with the subject line about your Goalkeeper Science Report. The download link is inside.</p>
+          </div>
+        </li>
+        <li>
+          <div class="step-body">
+            <strong>Can't see it? Check spam and junk.</strong>
+            <p>First-time emails from new senders sometimes get filtered. If you can't find it in your inbox after 2 minutes, check your <em>spam</em> or <em>junk</em> folder and mark it as "Not spam."</p>
+          </div>
+        </li>
+        <li>
+          <div class="step-body">
+            <strong>Gmail users — move it to your Primary tab.</strong>
+            <p>If the email landed in your <em>Promotions</em> tab, drag it into the <em>Primary</em> tab. Future emails from us will come straight through, so you don't miss the science.</p>
+          </div>
+        </li>
+      </ol>
+    </div>
   </div>
 </section>
 
-<!-- INSTRUCTIONS -->
-<section class="instructions">
+<!-- WHY NOTE -->
+<section class="why-section">
   <div class="wrap">
-    <h2>Three quick steps</h2>
-
-    <ol class="step-list">
-      <li>
-        <div class="step-body">
-          <strong>Open your inbox.</strong>
-          <p>Look for an email from <em>support@isspf.com</em> with the subject line about your Goalkeeper Science Report. The download link is inside.</p>
-        </div>
-      </li>
-      <li>
-        <div class="step-body">
-          <strong>Can't see it? Check spam and junk.</strong>
-          <p>First-time emails from new senders sometimes get filtered. If you can't find it in your inbox after 2 minutes, check your <em>spam</em> or <em>junk</em> folder and mark it as "Not spam."</p>
-        </div>
-      </li>
-      <li>
-        <div class="step-body">
-          <strong>Gmail users — move it to your Primary tab.</strong>
-          <p>If the email landed in your <em>Promotions</em> tab, drag it into the <em>Primary</em> tab. Future emails from us will come straight through, so you don't miss the science.</p>
-        </div>
-      </li>
-    </ol>
-
     <div class="why-note">
       <strong>Why we do it this way:</strong> Bots and fake signups can't confirm a real email address. Asking you to click the link in your inbox keeps our list clean and means the science only goes to coaches who actually want it.
     </div>
