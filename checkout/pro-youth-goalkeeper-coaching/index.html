@@ -299,16 +299,16 @@ metaCapi('InitiateCheckout',{content_name:'Pro-Youth Goalkeeper Coaching Science
 
   .what-list { list-style: none; padding: 0; margin: 20px 0 0; }
   .what-list li {
-    display: flex; align-items: flex-start; gap: 10px;
-    padding: 8px 0;
-    font-size: 15px; line-height: 1.5;
+    position: relative;
+    padding: 8px 0 8px 28px;
+    font-size: 15px; line-height: 1.55;
   }
   .what-list li::before {
     content: '✓';
+    position: absolute;
+    left: 0; top: 9px;
     color: var(--accent-green);
     font-weight: 800;
-    flex-shrink: 0;
-    margin-top: 1px;
   }
 
   .guarantee-block {
@@ -399,9 +399,9 @@ metaCapi('InitiateCheckout',{content_name:'Pro-Youth Goalkeeper Coaching Science
           <div class="line-sub">10 modules · Lifetime access</div>
         </div>
         <div style="text-align: right;">
-          <span class="line-anchor"><span class="priceFull">£249</span></span>
-          <span class="line-price"><span class="priceDiscount">£49</span></span>
-          <div class="line-savings">You save <span class="priceSavings">£200</span></div>
+          <span class="line-anchor" id="line-anchor" style="display:none;"><span class="priceFull">£249</span></span>
+          <span class="line-price"><span class="priceDiscount">£249</span></span>
+          <div class="line-savings" id="line-savings" style="display:none;">You save <span class="priceSavings">£62</span></div>
         </div>
       </div>
 
@@ -502,13 +502,15 @@ metaCapi('InitiateCheckout',{content_name:'Pro-Youth Goalkeeper Coaching Science
    * Currency code is what we send to Stripe in lower-case.
    * ──────────────────────────────────────────────────────────── */
   const PRICING = {
-    GBP: { currency: 'gbp', symbol: '£', full: 249, discount: 49, workbook: 19, locale: 'en-GB' },
-    USD: { currency: 'usd', symbol: '$', full: 329, discount: 59, workbook: 24, locale: 'en-US' },
-    EUR: { currency: 'eur', symbol: '€', full: 299, discount: 49, workbook: 22, locale: 'en-IE' },
-    AUD: { currency: 'aud', symbol: 'AU$', full: 479, discount: 89, workbook: 35, locale: 'en-AU' },
-    CAD: { currency: 'cad', symbol: 'CA$', full: 479, discount: 79, workbook: 32, locale: 'en-CA' },
-    MYR: { currency: 'myr', symbol: 'RM', full: 1299, discount: 249, workbook: 99, locale: 'ms-MY' },
-    ZAR: { currency: 'zar', symbol: 'R', full: 4599, discount: 899, workbook: 349, locale: 'en-ZA' }
+    // price = the actual selling price (£249, $329 etc). Coupon discounts this when applied.
+    // Anchor strikethrough only appears when coupon is active.
+    GBP: { currency: 'gbp', symbol: '£',   price: 249,  workbook: 19,  locale: 'en-GB' },
+    USD: { currency: 'usd', symbol: '$',   price: 329,  workbook: 24,  locale: 'en-US' },
+    EUR: { currency: 'eur', symbol: '€',   price: 299,  workbook: 22,  locale: 'en-IE' },
+    AUD: { currency: 'aud', symbol: 'AU$', price: 479,  workbook: 35,  locale: 'en-AU' },
+    CAD: { currency: 'cad', symbol: 'CA$', price: 479,  workbook: 32,  locale: 'en-CA' },
+    MYR: { currency: 'myr', symbol: 'RM',  price: 1299, workbook: 99,  locale: 'ms-MY' },
+    ZAR: { currency: 'zar', symbol: 'R',   price: 4599, workbook: 349, locale: 'en-ZA' }
   };
   // Country → currency map
   const COUNTRY_TO_CCY = {
@@ -542,16 +544,24 @@ metaCapi('InitiateCheckout',{content_name:'Pro-Youth Goalkeeper Coaching Science
   }
 
   function recompute() {
-    const courseAfterCoupon = couponPercent > 0
-      ? Math.round(activePricing.discount * (1 - couponPercent / 100))
-      : activePricing.discount;
-    const total = bumpChecked ? courseAfterCoupon + activePricing.workbook : courseAfterCoupon;
+    const basePrice = activePricing.price;
+    const afterCoupon = couponPercent > 0
+      ? Math.round(basePrice * (1 - couponPercent / 100))
+      : basePrice;
+    const total = bumpChecked ? afterCoupon + activePricing.workbook : afterCoupon;
+    const couponActive = couponPercent > 0;
 
-    document.querySelectorAll('.priceFull').forEach(el => el.textContent = fmt(activePricing.full));
-    document.querySelectorAll('.priceDiscount').forEach(el => el.textContent = fmt(courseAfterCoupon));
-    document.querySelectorAll('.priceSavings').forEach(el => el.textContent = fmt(activePricing.full - courseAfterCoupon));
+    document.querySelectorAll('.priceFull').forEach(el => el.textContent = fmt(basePrice));
+    document.querySelectorAll('.priceDiscount').forEach(el => el.textContent = fmt(afterCoupon));
+    document.querySelectorAll('.priceSavings').forEach(el => el.textContent = fmt(basePrice - afterCoupon));
     document.querySelectorAll('.workbookPrice').forEach(el => el.textContent = fmt(activePricing.workbook));
     document.querySelectorAll('.totalDisplay').forEach(el => el.textContent = fmt(total));
+
+    // Show/hide the strikethrough anchor + "you save" only when a coupon is applied
+    const anchor = document.getElementById('line-anchor');
+    const savings = document.getElementById('line-savings');
+    if (anchor) anchor.style.display = couponActive ? 'inline' : 'none';
+    if (savings) savings.style.display = couponActive ? 'block' : 'none';
   }
 
   function setCurrencyFromGeoIP() {
@@ -586,10 +596,10 @@ metaCapi('InitiateCheckout',{content_name:'Pro-Youth Goalkeeper Coaching Science
     btn.textContent = 'Pay ' + fmt(getCurrentTotal()) + ' — Enrol now';
   }
   function getCurrentTotal() {
-    const courseAfterCoupon = couponPercent > 0
-      ? Math.round(activePricing.discount * (1 - couponPercent / 100))
-      : activePricing.discount;
-    return bumpChecked ? courseAfterCoupon + activePricing.workbook : courseAfterCoupon;
+    const afterCoupon = couponPercent > 0
+      ? Math.round(activePricing.price * (1 - couponPercent / 100))
+      : activePricing.price;
+    return bumpChecked ? afterCoupon + activePricing.workbook : afterCoupon;
   }
 
   // BUMP toggle

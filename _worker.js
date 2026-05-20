@@ -555,18 +555,19 @@ const COURSE_CONFIG = {
     description: 'Professional Certificate in Goalkeeper Coaching Science (Pro-Youth Level) — 10 modules, 9 faculty. Lifetime access.',
     wlm_level_env: 'WLM_LEVEL_PRO_YOUTH',
     prices: {
-      // currency: { full (anchor, for display only), unit (what we actually charge) }
-      gbp: { full: 24900, unit: 4900 },
-      usd: { full: 32900, unit: 5900 },
-      eur: { full: 29900, unit: 4900 },
-      aud: { full: 47900, unit: 8900 },
-      cad: { full: 47900, unit: 7900 },
-      myr: { full: 129900, unit: 24900 },
-      zar: { full: 459900, unit: 89900 }
+      // currency: amount in smallest unit (pence/cents). Coupon (e.g. GKSCIENCE25)
+      // discounts this server-side before sending to Stripe.
+      gbp: 24900,
+      usd: 32900,
+      eur: 29900,
+      aud: 47900,
+      cad: 47900,
+      myr: 129900,
+      zar: 459900
     },
     workbook: {
       name: 'Pro-Youth Goalkeeper Science Workbook',
-      description: 'Printable companion to the Pro-Youth course — diagnostic worksheets, session-planning frameworks, youth-LTAD trackers, four-stage save loop.',
+      description: 'Printed companion to the Pro-Youth course — shipped to your door. Chapter summaries, training prompts, weekly planning, reflection questions.',
       wlm_level_env: 'WLM_LEVEL_WORKBOOK_YOUTH',
       prices: { gbp: 1900, usd: 2400, eur: 2200, aud: 3500, cad: 3200, myr: 9900, zar: 34900 }
     }
@@ -576,17 +577,17 @@ const COURSE_CONFIG = {
     description: 'Professional Certificate in Goalkeeper Coaching Science (Senior Pro Masters Level) — 19 modules, 14 faculty. Lifetime access.',
     wlm_level_env: 'WLM_LEVEL_SENIOR',
     prices: {
-      gbp: { full: 32900, unit: 4900 },
-      usd: { full: 44900, unit: 5900 },
-      eur: { full: 35900, unit: 4900 },
-      aud: { full: 65900, unit: 8900 },
-      cad: { full: 65900, unit: 7900 },
-      myr: { full: 169900, unit: 24900 },
-      zar: { full: 699900, unit: 89900 }
+      gbp: 32900,
+      usd: 44900,
+      eur: 35900,
+      aud: 65900,
+      cad: 65900,
+      myr: 169900,
+      zar: 699900
     },
     workbook: {
       name: 'Senior Pro Masters Goalkeeper Science Workbook',
-      description: 'Printable companion to the Senior Pro Masters course — match-day frameworks, periodisation worksheets, decision-making diagnostics, set-play reference cards.',
+      description: 'Printed companion to the Senior Pro Masters course — shipped to your door. Chapter summaries, match-day prompts, weekly planning, reflection questions.',
       wlm_level_env: 'WLM_LEVEL_WORKBOOK_SENIOR',
       prices: { gbp: 1900, usd: 2400, eur: 2200, aud: 3500, cad: 3200, myr: 9900, zar: 34900 }
     }
@@ -599,10 +600,9 @@ const COURSE_CONFIG = {
  * `applies_to`: 'all' or array of course_ids.
  */
 const COUPONS = {
-  // GKSCIENCE25 is intentionally NOT here yet — Neil to confirm if it's still in play
-  // at the new £49 tripwire pricing. Tripwire prices may not warrant additional discount.
-  // Example for when Neil decides:
-  // 'GKSCIENCE25': { percent: 25, applies_to: 'all', expires: '2026-12-31' }
+  // GKSCIENCE25 — 25% off both courses. Used in the email sequence.
+  // Add an 'expires' ISO date if you want it to auto-disable.
+  'GKSCIENCE25': { percent: 25, applies_to: 'all' }
 };
 
 

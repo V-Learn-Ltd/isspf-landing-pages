@@ -91,8 +91,8 @@ metaCapi('InitiateCheckout',{content_name:'Senior Pro Masters Goalkeeper Coachin
   .trust-row svg { flex-shrink:0; color:var(--accent-green); }
   .left-col { background:var(--bg-white); border:1px solid var(--rule-light); border-radius:12px; padding:32px 28px; }
   .what-list { list-style:none; padding:0; margin:20px 0 0; }
-  .what-list li { display:flex; align-items:flex-start; gap:10px; padding:8px 0; font-size:15px; line-height:1.5; }
-  .what-list li::before { content:'✓'; color:var(--accent-green); font-weight:800; flex-shrink:0; margin-top:1px; }
+  .what-list li { position:relative; padding:8px 0 8px 28px; font-size:15px; line-height:1.55; }
+  .what-list li::before { content:'✓'; position:absolute; left:0; top:9px; color:var(--accent-green); font-weight:800; }
   .guarantee-block { margin-top:28px; padding:20px; background:var(--bg-stone); border-left:4px solid var(--accent-red); border-radius:6px; }
   .guarantee-block h3 { margin:0 0 8px; font-size:15px; font-weight:800; color:var(--text-dark); letter-spacing:0.02em; }
   .guarantee-block p { margin:0; font-size:14px; line-height:1.55; color:var(--text-muted-dark); }
@@ -146,9 +146,9 @@ metaCapi('InitiateCheckout',{content_name:'Senior Pro Masters Goalkeeper Coachin
           <div class="line-sub">19 modules · Lifetime access</div>
         </div>
         <div style="text-align: right;">
-          <span class="line-anchor"><span class="priceFull">£329</span></span>
-          <span class="line-price"><span class="priceDiscount">£49</span></span>
-          <div class="line-savings">You save <span class="priceSavings">£280</span></div>
+          <span class="line-anchor" id="line-anchor" style="display:none;"><span class="priceFull">£329</span></span>
+          <span class="line-price"><span class="priceDiscount">£329</span></span>
+          <div class="line-savings" id="line-savings" style="display:none;">You save <span class="priceSavings">£82</span></div>
         </div>
       </div>
 
@@ -241,13 +241,15 @@ metaCapi('InitiateCheckout',{content_name:'Senior Pro Masters Goalkeeper Coachin
   document.getElementById('year').textContent = new Date().getFullYear();
 
   const PRICING = {
-    GBP: { currency:'gbp', symbol:'£',   full:329,  discount:49,  workbook:19,  locale:'en-GB' },
-    USD: { currency:'usd', symbol:'$',   full:449,  discount:59,  workbook:24,  locale:'en-US' },
-    EUR: { currency:'eur', symbol:'€',   full:359,  discount:49,  workbook:22,  locale:'en-IE' },
-    AUD: { currency:'aud', symbol:'AU$', full:659,  discount:89,  workbook:35,  locale:'en-AU' },
-    CAD: { currency:'cad', symbol:'CA$', full:659,  discount:79,  workbook:32,  locale:'en-CA' },
-    MYR: { currency:'myr', symbol:'RM',  full:1699, discount:249, workbook:99,  locale:'ms-MY' },
-    ZAR: { currency:'zar', symbol:'R',   full:6999, discount:899, workbook:349, locale:'en-ZA' }
+    // price = the actual selling price. Coupon discounts this when applied.
+    // Anchor strikethrough only appears when coupon is active.
+    GBP: { currency:'gbp', symbol:'£',   price:329,  workbook:19,  locale:'en-GB' },
+    USD: { currency:'usd', symbol:'$',   price:449,  workbook:24,  locale:'en-US' },
+    EUR: { currency:'eur', symbol:'€',   price:359,  workbook:22,  locale:'en-IE' },
+    AUD: { currency:'aud', symbol:'AU$', price:659,  workbook:35,  locale:'en-AU' },
+    CAD: { currency:'cad', symbol:'CA$', price:659,  workbook:32,  locale:'en-CA' },
+    MYR: { currency:'myr', symbol:'RM',  price:1699, workbook:99,  locale:'ms-MY' },
+    ZAR: { currency:'zar', symbol:'R',   price:6999, workbook:349, locale:'en-ZA' }
   };
   const COUNTRY_TO_CCY = {
     GB:'GBP', IM:'GBP', JE:'GBP', GG:'GBP',
@@ -273,17 +275,23 @@ metaCapi('InitiateCheckout',{content_name:'Senior Pro Masters Goalkeeper Coachin
 
   function fmt(n) { return activePricing.symbol + n.toLocaleString(activePricing.locale, { maximumFractionDigits: 0 }); }
   function recompute() {
-    const courseAfterCoupon = couponPercent > 0 ? Math.round(activePricing.discount * (1 - couponPercent / 100)) : activePricing.discount;
-    const total = bumpChecked ? courseAfterCoupon + activePricing.workbook : courseAfterCoupon;
-    document.querySelectorAll('.priceFull').forEach(el => el.textContent = fmt(activePricing.full));
-    document.querySelectorAll('.priceDiscount').forEach(el => el.textContent = fmt(courseAfterCoupon));
-    document.querySelectorAll('.priceSavings').forEach(el => el.textContent = fmt(activePricing.full - courseAfterCoupon));
+    const basePrice = activePricing.price;
+    const afterCoupon = couponPercent > 0 ? Math.round(basePrice * (1 - couponPercent / 100)) : basePrice;
+    const total = bumpChecked ? afterCoupon + activePricing.workbook : afterCoupon;
+    const couponActive = couponPercent > 0;
+    document.querySelectorAll('.priceFull').forEach(el => el.textContent = fmt(basePrice));
+    document.querySelectorAll('.priceDiscount').forEach(el => el.textContent = fmt(afterCoupon));
+    document.querySelectorAll('.priceSavings').forEach(el => el.textContent = fmt(basePrice - afterCoupon));
     document.querySelectorAll('.workbookPrice').forEach(el => el.textContent = fmt(activePricing.workbook));
     document.querySelectorAll('.totalDisplay').forEach(el => el.textContent = fmt(total));
+    const anchor = document.getElementById('line-anchor');
+    const savings = document.getElementById('line-savings');
+    if (anchor) anchor.style.display = couponActive ? 'inline' : 'none';
+    if (savings) savings.style.display = couponActive ? 'block' : 'none';
   }
   function getCurrentTotal() {
-    const courseAfterCoupon = couponPercent > 0 ? Math.round(activePricing.discount * (1 - couponPercent / 100)) : activePricing.discount;
-    return bumpChecked ? courseAfterCoupon + activePricing.workbook : courseAfterCoupon;
+    const afterCoupon = couponPercent > 0 ? Math.round(activePricing.price * (1 - couponPercent / 100)) : activePricing.price;
+    return bumpChecked ? afterCoupon + activePricing.workbook : afterCoupon;
   }
   function enableButton() {
     const btn = document.getElementById('pay-stripe-btn');
