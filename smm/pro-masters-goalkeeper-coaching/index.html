@@ -473,13 +473,14 @@ metaCapi('InitiateCheckout',{content_name:'Senior Pro Masters Goalkeeper Coachin
 
   /* PRICING TABLE — geoip-localised */
   const PRICING = {
-    GBP: { currency: 'gbp', symbol: '£',   price: 329,  workbook: 19,  locale: 'en-GB' },
-    USD: { currency: 'usd', symbol: '$',   price: 449,  workbook: 24,  locale: 'en-US' },
-    EUR: { currency: 'eur', symbol: '€',   price: 359,  workbook: 22,  locale: 'en-IE' },
-    AUD: { currency: 'aud', symbol: 'AU$', price: 659,  workbook: 35,  locale: 'en-AU' },
-    CAD: { currency: 'cad', symbol: 'CA$', price: 659,  workbook: 32,  locale: 'en-CA' },
-    MYR: { currency: 'myr', symbol: 'RM',  price: 1699, workbook: 99,  locale: 'ms-MY' },
-    ZAR: { currency: 'zar', symbol: 'R',   price: 6999, workbook: 349, locale: 'en-ZA' }
+    // Senior workbook prices confirmed against WLM Edit Forms 2026-05-20.
+    GBP: { currency: 'gbp', symbol: '£',   price: 329,  workbook: 49.99, locale: 'en-GB' },
+    USD: { currency: 'usd', symbol: '$',   price: 449,  workbook: 69.99, locale: 'en-US' },
+    EUR: { currency: 'eur', symbol: '€',   price: 359,  workbook: 59.99, locale: 'en-IE' },
+    AUD: { currency: 'aud', symbol: 'AU$', price: 659,  workbook: 94.99, locale: 'en-AU' },
+    CAD: { currency: 'cad', symbol: 'CA$', price: 659,  workbook: 94.99, locale: 'en-CA' },
+    MYR: { currency: 'myr', symbol: 'RM',  price: 1699, workbook: 259,   locale: 'ms-MY' },
+    ZAR: { currency: 'zar', symbol: 'R',   price: 6999, workbook: 999,   locale: 'en-ZA' }
   };
   const COUNTRY_TO_CCY = {
     GB:'GBP', IM:'GBP', JE:'GBP', GG:'GBP', US:'USD',

@@ -473,13 +473,14 @@ metaCapi('InitiateCheckout',{content_name:'Pro-Youth Goalkeeper Coaching Science
 
   /* PRICING TABLE — geoip-localised */
   const PRICING = {
-    GBP: { currency: 'gbp', symbol: '£',   price: 249,  workbook: 19,  locale: 'en-GB' },
-    USD: { currency: 'usd', symbol: '$',   price: 329,  workbook: 24,  locale: 'en-US' },
-    EUR: { currency: 'eur', symbol: '€',   price: 299,  workbook: 22,  locale: 'en-IE' },
-    AUD: { currency: 'aud', symbol: 'AU$', price: 479,  workbook: 35,  locale: 'en-AU' },
-    CAD: { currency: 'cad', symbol: 'CA$', price: 479,  workbook: 32,  locale: 'en-CA' },
-    MYR: { currency: 'myr', symbol: 'RM',  price: 1299, workbook: 99,  locale: 'ms-MY' },
-    ZAR: { currency: 'zar', symbol: 'R',   price: 4599, workbook: 349, locale: 'en-ZA' }
+    // Youth workbook prices confirmed against WLM Edit Forms 2026-05-20.
+    GBP: { currency: 'gbp', symbol: '£',   price: 249,  workbook: 39.99, locale: 'en-GB' },
+    USD: { currency: 'usd', symbol: '$',   price: 329,  workbook: 49.99, locale: 'en-US' },
+    EUR: { currency: 'eur', symbol: '€',   price: 299,  workbook: 44.99, locale: 'en-IE' },
+    AUD: { currency: 'aud', symbol: 'AU$', price: 479,  workbook: 74.99, locale: 'en-AU' },
+    CAD: { currency: 'cad', symbol: 'CA$', price: 479,  workbook: 74.99, locale: 'en-CA' },
+    MYR: { currency: 'myr', symbol: 'RM',  price: 1299, workbook: 199,   locale: 'ms-MY' },
+    ZAR: { currency: 'zar', symbol: 'R',   price: 4599, workbook: 799,   locale: 'en-ZA' }
   };
   const COUNTRY_TO_CCY = {
     GB:'GBP', IM:'GBP', JE:'GBP', GG:'GBP', US:'USD',
@@ -505,7 +506,9 @@ metaCapi('InitiateCheckout',{content_name:'Pro-Youth Goalkeeper Coaching Science
   let stripePublishableKey = null;
 
   function fmt(n) {
-    return activePricing.symbol + n.toLocaleString(activePricing.locale, { maximumFractionDigits: 0 });
+    // Show 0 decimals for whole numbers (£249) and up to 2 decimals for prices ending in .99 etc (£39.99)
+    const isWhole = Math.abs(n - Math.round(n)) < 0.005;
+    return activePricing.symbol + n.toLocaleString(activePricing.locale, isWhole ? { maximumFractionDigits: 0 } : { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   }
   function getCurrentTotal() {
     const afterCoupon = couponPercent > 0 ? Math.round(activePricing.price * (1 - couponPercent / 100)) : activePricing.price;
