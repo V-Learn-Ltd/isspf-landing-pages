@@ -702,8 +702,8 @@ async function handleCreateCheckoutSession(request, env) {
   if (!stripeSecret) return jsonResponse({ ok: false, error: 'stripe-not-configured' }, 500);
 
   const origin = new URL(request.url).origin;
-  const successUrl = `${origin}/checkout/thank-you/?session_id={CHECKOUT_SESSION_ID}&course=${encodeURIComponent(courseId)}&currency=${encodeURIComponent(currency)}`;
-  const cancelUrl = `${origin}/checkout/${courseIdToSlug(courseId)}/`;
+  const successUrl = `${origin}/smm/thank-you/?session_id={CHECKOUT_SESSION_ID}&course=${encodeURIComponent(courseId)}&currency=${encodeURIComponent(currency)}`;
+  const cancelUrl = `${origin}/smm/${courseIdToSlug(courseId)}/`;
 
   // Build Stripe Checkout Session via API
   const form = new URLSearchParams();
@@ -989,8 +989,8 @@ async function handlePaypalCreateOrder(request, env) {
           brand_name: 'ISSPF',
           shipping_preference: bump ? 'GET_FROM_FILE' : 'NO_SHIPPING',
           user_action: 'PAY_NOW',
-          return_url: 'https://go.isspf.com/checkout/thank-you/',
-          cancel_url: 'https://go.isspf.com/checkout/' + courseIdToSlug(courseId) + '/'
+          return_url: 'https://go.isspf.com/smm/thank-you/',
+          cancel_url: 'https://go.isspf.com/smm/' + courseIdToSlug(courseId) + '/'
         }
       }
     }

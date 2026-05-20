@@ -366,27 +366,6 @@ metaCapi('InitiateCheckout',{content_name:'Senior Pro Masters Goalkeeper Coachin
           </div>
           <div class="price-saving" id="line-savings">You save <span class="priceSavings">£82</span> with code GKSCIENCE25</div>
 
-          <!-- ORDER BUMP -->
-          <label class="bump" for="bump-workbook">
-            <span class="bump-tag">Recommended</span>
-            <div class="bump-row">
-              <input type="checkbox" id="bump-workbook" />
-              <div class="bump-text">
-                <div class="bump-title">Add the Printed Senior Pro Masters Goalkeeper Workbook</div>
-                <div class="bump-sub">Make Goalkeeper Coaching Practical, Not Just Drills</div>
-              </div>
-            </div>
-            <div class="bump-body">
-              <div class="bump-image">
-                <img src="https://learn.isspf.com/wp-content/uploads/2025/09/gksw.png" alt="Workbook" loading="lazy" onerror="this.style.display='none'" />
-              </div>
-              <div class="bump-desc">
-                <p>Professionally printed companion to the course, shipped to your door. Chapter summaries, training prompts, weekly planning, reflection questions — designed to turn what you watch into what you do on the pitch.</p>
-              </div>
-            </div>
-            <div class="bump-price-tag">Add for just <span class="workbookPrice">£19</span> <span class="shipping">— includes shipping</span></div>
-          </label>
-
           <!-- PAYMENT INSTRUCTION -->
           <p class="pay-help">Pay securely with <strong>Credit Card</strong> or choose <strong>PayPal Pay Later</strong> to spread the cost in monthly instalments:</p>
 
@@ -417,6 +396,27 @@ metaCapi('InitiateCheckout',{content_name:'Senior Pro Masters Goalkeeper Coachin
             <div id="paypal-status" style="font-size:13px;color:var(--text-muted-dark);margin-top:8px;text-align:center;"></div>
           </div>
 
+          <!-- ORDER BUMP — last-chance upsell before pay button -->
+          <label class="bump" for="bump-workbook">
+            <span class="bump-tag">Recommended</span>
+            <div class="bump-row">
+              <input type="checkbox" id="bump-workbook" />
+              <div class="bump-text">
+                <div class="bump-title">Add the Printed Senior Pro Masters Goalkeeper Workbook</div>
+                <div class="bump-sub">Make Goalkeeper Coaching Practical, Not Just Drills</div>
+              </div>
+            </div>
+            <div class="bump-body">
+              <div class="bump-image">
+                <img src="https://learn.isspf.com/wp-content/uploads/2025/09/gksw.png" alt="Workbook" loading="lazy" onerror="this.style.display='none'" />
+              </div>
+              <div class="bump-desc">
+                <p>Professionally printed companion to the course, shipped to your door. Chapter summaries, training prompts, weekly planning, reflection questions — designed to turn what you watch into what you do on the pitch.</p>
+              </div>
+            </div>
+            <div class="bump-price-tag">Add for just <span class="workbookPrice">£19</span> <span class="shipping">— includes shipping</span></div>
+          </label>
+
           <!-- COUPON -->
           <div class="coupon-row">
             <button type="button" class="coupon-toggle" id="coupon-toggle">Have a discount code?</button>
@@ -429,7 +429,7 @@ metaCapi('InitiateCheckout',{content_name:'Senior Pro Masters Goalkeeper Coachin
           <button class="pay-button" id="pay-btn" disabled>Loading checkout…</button>
 
           <div class="below-button">
-            <strong>14-day money-back guarantee</strong> · Stripe-secured · 256-bit SSL
+            <strong>30-day money-back guarantee</strong> · Stripe-secured · 256-bit SSL
           </div>
 
         </div>
@@ -447,7 +447,7 @@ metaCapi('InitiateCheckout',{content_name:'Senior Pro Masters Goalkeeper Coachin
             <li><strong>Elite Faculty</strong>14 lecturers from Borussia Mönchengladbach, FC Barcelona, Nottingham Forest, and professional clubs across Europe.</li>
             <li><strong>Lifetime Access</strong>Log in any time on any device. Re-watch any module across every season.</li>
             <li><strong>Professional Certificate</strong>Awarded on completion. CV-ready.</li>
-            <li><strong>14-Day Money-Back Guarantee</strong>Watch the first modules. If it's not what we promised, full refund — no friction.</li>
+            <li><strong>30-Day Money-Back Guarantee</strong>Watch the first modules. If it's not what we promised, full refund — no friction.</li>
           </ul>
         </div>
       </div>
@@ -609,7 +609,7 @@ metaCapi('InitiateCheckout',{content_name:'Senior Pro Masters Goalkeeper Coachin
         });
         const d = await r.json();
         if (d.ok) {
-          window.location.href = '/checkout/thank-you/?pi=' + encodeURIComponent(data.orderID) + '&course=' + encodeURIComponent(PRODUCT.course_id) + '&currency=' + encodeURIComponent(activeCcy) + '&via=paypal';
+          window.location.href = '/smm/thank-you/?pi=' + encodeURIComponent(data.orderID) + '&course=' + encodeURIComponent(PRODUCT.course_id) + '&currency=' + encodeURIComponent(activeCcy) + '&via=paypal';
         } else {
           document.getElementById('paypal-status').textContent = 'PayPal capture failed: ' + (d.error || 'unknown') + '. Please contact support@isspf.com';
         }
@@ -759,7 +759,7 @@ metaCapi('InitiateCheckout',{content_name:'Senior Pro Masters Goalkeeper Coachin
 
       // 3) Success — redirect to thank-you
       if (result.paymentIntent && result.paymentIntent.status === 'succeeded') {
-        window.location.href = '/checkout/thank-you/?pi=' + encodeURIComponent(result.paymentIntent.id) + '&course=' + encodeURIComponent(PRODUCT.course_id) + '&currency=' + encodeURIComponent(activeCcy);
+        window.location.href = '/smm/thank-you/?pi=' + encodeURIComponent(result.paymentIntent.id) + '&course=' + encodeURIComponent(PRODUCT.course_id) + '&currency=' + encodeURIComponent(activeCcy);
       } else {
         btn.disabled = false;
         btn.textContent = 'Pay ' + fmt(getCurrentTotal()) + ' — Enrol now';

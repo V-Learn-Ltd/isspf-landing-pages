@@ -9,7 +9,7 @@
 ## File map
 
 ```
-/checkout/
+/smm/
   pro-youth-goalkeeper-coaching/index.html    # Pro-Youth checkout page
   pro-masters-goalkeeper-coaching/index.html  # Senior Pro Masters checkout
   thank-you/index.html                        # Stripe success destination
@@ -30,9 +30,9 @@ Pricing for both courses is defined in `_worker.js` → `COURSE_CONFIG`. Change 
 
 | Page | URL |
 |---|---|
-| Pro-Youth checkout | `https://go.isspf.com/checkout/pro-youth-goalkeeper-coaching/` |
-| Senior Pro Masters checkout | `https://go.isspf.com/checkout/pro-masters-goalkeeper-coaching/` |
-| Thank-you (Stripe success) | `https://go.isspf.com/checkout/thank-you/?session_id=...` |
+| Pro-Youth checkout | `https://go.isspf.com/smm/pro-youth-goalkeeper-coaching/` |
+| Senior Pro Masters checkout | `https://go.isspf.com/smm/pro-masters-goalkeeper-coaching/` |
+| Thank-you (Stripe success) | `https://go.isspf.com/smm/thank-you/?session_id=...` |
 | Stripe webhook endpoint | `https://go.isspf.com/api/stripe-webhook` |
 
 The two sales-page ENROL CTAs have been updated to point to the new checkout URLs (previously they pointed to `https://learn.isspf.com/smm/buy-gk-*-smm/` — the broken WordPress payment).
@@ -121,10 +121,10 @@ Then `git commit -am "Configure checkout env vars"` and `git push`. Cloudflare a
 ### Stripe test mode (do this first)
 
 1. Use Stripe test keys in env vars (`sk_test_...` / `pk_test_...` / `whsec_...` from a TEST webhook endpoint)
-2. Visit `https://go.isspf.com/checkout/pro-youth-goalkeeper-coaching/` in **incognito**
+2. Visit `https://go.isspf.com/smm/pro-youth-goalkeeper-coaching/` in **incognito**
 3. Click **Pay £49 — Enrol now**
 4. On Stripe page: use card `4242 4242 4242 4242`, any future expiry, any CVC, any postal code
-5. Should redirect to `/checkout/thank-you/` with a success state
+5. Should redirect to `/smm/thank-you/` with a success state
 6. Within 30 seconds, check WordPress admin → WishlistMember → Users → confirm the test email is enrolled at the right level
 7. Check WordPress admin → LearnDash → Users → confirm course access granted
 
@@ -170,7 +170,7 @@ Then `git commit -am "Configure checkout env vars"` and `git push`. Cloudflare a
 ```
 Buyer on /pro-youth-goalkeeper-coaching/
    ↓ clicks ENROL NOW
-   → /checkout/pro-youth-goalkeeper-coaching/
+   → /smm/pro-youth-goalkeeper-coaching/
        ↓ geoip → picks currency → displays £49
        ↓ buyer ticks bump (workbook, +£19)
        ↓ buyer clicks Pay £68
@@ -179,7 +179,7 @@ Buyer on /pro-youth-goalkeeper-coaching/
             → Returns Stripe-hosted checkout URL
        → Browser redirects to checkout.stripe.com
    → Buyer enters card, completes
-   → Stripe redirects to /checkout/thank-you/?session_id=...
+   → Stripe redirects to /smm/thank-you/?session_id=...
    → In parallel: Stripe fires checkout.session.completed webhook
        → POST /api/stripe-webhook
             → Worker verifies signature (HMAC-SHA256)
