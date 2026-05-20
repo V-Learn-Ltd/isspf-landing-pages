@@ -506,7 +506,9 @@ metaCapi('InitiateCheckout',{content_name:'Senior Pro Masters Goalkeeper Coachin
   let stripePublishableKey = null;
 
   function fmt(n) {
-    return activePricing.symbol + n.toLocaleString(activePricing.locale, { maximumFractionDigits: 0 });
+    // Show 0 decimals for whole numbers (£329) and 2 decimals for non-whole prices (£49.99)
+    const isWhole = Math.abs(n - Math.round(n)) < 0.005;
+    return activePricing.symbol + n.toLocaleString(activePricing.locale, isWhole ? { maximumFractionDigits: 0 } : { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   }
   function getCurrentTotal() {
     const afterCoupon = couponPercent > 0 ? Math.round(activePricing.price * (1 - couponPercent / 100)) : activePricing.price;
