@@ -75,11 +75,24 @@ export default {
       return new Response(null, { status: 204 });
     }
 
-    // ── /api/create-checkout-session — Stripe Checkout session creator ──
+    // ── /api/create-checkout-session — Stripe Checkout session creator (legacy redirect flow) ──
     if (url.pathname === '/api/create-checkout-session' && request.method === 'POST') {
       return await handleCreateCheckoutSession(request, env);
     }
     if (url.pathname === '/api/create-checkout-session' && request.method === 'OPTIONS') {
+      return new Response(null, { status: 204 });
+    }
+
+    // ── /api/stripe-config — returns publishable key for embedded Stripe Elements ──
+    if (url.pathname === '/api/stripe-config' && request.method === 'GET') {
+      return jsonResponse({ ok: true, publishable_key: env.STRIPE_PUBLISHABLE_KEY || null });
+    }
+
+    // ── /api/create-payment-intent — embedded Stripe Elements flow ──
+    if (url.pathname === '/api/create-payment-intent' && request.method === 'POST') {
+      return await handleCreatePaymentIntent(request, env);
+    }
+    if (url.pathname === '/api/create-payment-intent' && request.method === 'OPTIONS') {
       return new Response(null, { status: 204 });
     }
 
@@ -740,6 +753,103 @@ function courseIdToSlug(courseId) {
 
 
 // ─────────────────────────────────────────────────────────────
+// STRIPE PAYMENT INTENT (embedded Elements flow)
+// ─────────────────────────────────────────────────────────────
+
+async function handleCreatePaymentIntent(request, env) {
+  let body;
+  try { body = await request.json(); } catch (e) { return jsonResponse({ ok: false, error: 'invalid-json' }, 400); }
+
+  const courseId = String(body.course_id || '').trim();
+  const currency = String(body.currency || '').trim().toLowerCase();
+  const bump = !!body.bump;
+  const couponCode = body.coupon ? String(body.coupon).trim().toUpperCase() : null;
+  const email = String(body.email || '').trim();
+  const firstName = String(body.first_name || '').trim();
+  const lastName = String(body.last_name || '').trim();
+
+  if (!email) return jsonResponse({ ok: false, error: 'missing-email' }, 400);
+
+  const course = COURSE_CONFIG[courseId];
+  if (!course) return jsonResponse({ ok: false, error: 'unknown-course' }, 400);
+  const basePrice = course.prices[currency];
+  if (!basePrice) return jsonResponse({ ok: false, error: 'unsupported-currency' }, 400);
+
+  // Apply coupon
+  let unitAmount = basePrice;
+  let appliedCoupon = null;
+  if (couponCode) {
+    const coupon = COUPONS[couponCode];
+    if (coupon && (coupon.applies_to === 'all' || (Array.isArray(coupon.applies_to) && coupon.applies_to.includes(courseId)))) {
+      unitAmount = Math.round(unitAmount * (1 - coupon.percent / 100));
+      appliedCoupon = couponCode;
+    }
+  }
+
+  // Add bump
+  let total = unitAmount;
+  let bumpAmount = 0;
+  if (bump && course.workbook && course.workbook.prices[currency]) {
+    bumpAmount = course.workbook.prices[currency];
+    total += bumpAmount;
+  }
+
+  const stripeSecret = env.STRIPE_SECRET_KEY;
+  if (!stripeSecret) return jsonResponse({ ok: false, error: 'stripe-not-configured' }, 500);
+
+  // Build PaymentIntent request
+  const form = new URLSearchParams();
+  form.append('amount', String(total));
+  form.append('currency', currency);
+  form.append('receipt_email', email);
+  form.append('description', course.name + (bump ? ' + Workbook' : ''));
+  form.append('automatic_payment_methods[enabled]', 'true');
+  form.append('automatic_payment_methods[allow_redirects]', 'never');
+
+  // Metadata — read by the webhook to enrol the buyer in WLM
+  form.append('metadata[course_id]', courseId);
+  form.append('metadata[bump]', bump ? '1' : '0');
+  form.append('metadata[coupon]', appliedCoupon || '');
+  form.append('metadata[currency]', currency);
+  form.append('metadata[email]', email);
+  form.append('metadata[first_name]', firstName);
+  form.append('metadata[last_name]', lastName);
+  form.append('metadata[unit_amount]', String(unitAmount));
+  form.append('metadata[bump_amount]', String(bumpAmount));
+  if (body.affwp_affiliate_id) form.append('metadata[affwp_affiliate_id]', String(body.affwp_affiliate_id));
+  if (body.affwp_visit_id) form.append('metadata[affwp_visit_id]', String(body.affwp_visit_id));
+  if (body.fbp) form.append('metadata[fbp]', String(body.fbp));
+  if (body.fbc) form.append('metadata[fbc]', String(body.fbc));
+
+  try {
+    const resp = await fetch('https://api.stripe.com/v1/payment_intents', {
+      method: 'POST',
+      headers: {
+        'Authorization': 'Bearer ' + stripeSecret,
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: form.toString()
+    });
+    const data = await resp.json();
+    if (!resp.ok || !data.client_secret) {
+      console.error('[Stripe PI] Create failed:', JSON.stringify(data).substring(0, 500));
+      return jsonResponse({ ok: false, error: data.error?.message || 'stripe-error' }, 502);
+    }
+    return jsonResponse({
+      ok: true,
+      client_secret: data.client_secret,
+      payment_intent_id: data.id,
+      amount: total,
+      currency: currency
+    });
+  } catch (err) {
+    console.error('[Stripe PI] Request failed:', err.message);
+    return jsonResponse({ ok: false, error: 'request-failed', message: err.message }, 502);
+  }
+}
+
+
+// ─────────────────────────────────────────────────────────────
 // COUPON VALIDATION
 // ─────────────────────────────────────────────────────────────
 
@@ -787,56 +897,75 @@ async function handleStripeWebhook(request, env) {
     return new Response('Invalid JSON', { status: 400 });
   }
 
-  // Only act on completed checkout sessions
-  if (event.type !== 'checkout.session.completed') {
-    return jsonResponse({ ok: true, ignored: event.type });
+  // Handle both flows: Checkout Session (legacy redirect) + PaymentIntent (embedded Elements)
+  if (event.type === 'checkout.session.completed') {
+    const session = event.data.object;
+    return await processEnrolment(env, {
+      reference_id: session.id,
+      course_id: session.metadata?.course_id,
+      bump: session.metadata?.bump === '1',
+      email: session.customer_details?.email || session.customer_email,
+      name: session.customer_details?.name || ''
+    });
   }
 
-  const session = event.data.object;
-  const courseId = session.metadata?.course_id;
-  const bump = session.metadata?.bump === '1';
-  const email = session.customer_details?.email || session.customer_email;
-  const name = session.customer_details?.name || '';
+  if (event.type === 'payment_intent.succeeded') {
+    const intent = event.data.object;
+    const md = intent.metadata || {};
+    const name = [md.first_name, md.last_name].filter(Boolean).join(' ').trim();
+    return await processEnrolment(env, {
+      reference_id: intent.id,
+      course_id: md.course_id,
+      bump: md.bump === '1',
+      email: md.email || intent.receipt_email || '',
+      name: name
+    });
+  }
 
-  if (!courseId || !email) {
-    console.error('[Stripe webhook] Missing course_id or email in session', session.id);
+  return jsonResponse({ ok: true, ignored: event.type });
+}
+
+/**
+ * Shared enrolment handler — used for both Checkout Sessions and PaymentIntents.
+ */
+async function processEnrolment(env, opts) {
+  if (!opts.course_id || !opts.email) {
+    console.error('[Stripe webhook] Missing course_id or email', opts.reference_id);
     return jsonResponse({ ok: false, error: 'missing-data' }, 400);
   }
 
-  const course = COURSE_CONFIG[courseId];
+  const course = COURSE_CONFIG[opts.course_id];
   if (!course) {
-    console.error('[Stripe webhook] Unknown course_id', courseId);
+    console.error('[Stripe webhook] Unknown course_id', opts.course_id);
     return jsonResponse({ ok: false, error: 'unknown-course' }, 400);
   }
 
-  // Enrol in WishlistMember
   const levelId = env[course.wlm_level_env];
   if (!levelId) {
     console.error('[Stripe webhook] Missing WLM level env var', course.wlm_level_env);
     return jsonResponse({ ok: false, error: 'wlm-level-not-configured' }, 500);
   }
 
-  // Look up workbook level for THIS course (Youth and Senior have separate workbooks)
   const workbookLevelEnv = course.workbook?.wlm_level_env;
   const workbookLevelId = workbookLevelEnv ? env[workbookLevelEnv] : null;
 
   const enrolment = await enrollInWishlistMember(env, {
-    email: email,
-    name: name,
+    email: opts.email,
+    name: opts.name,
     levelId: levelId,
-    sessionId: session.id,
-    courseId: courseId,
-    addWorkbook: bump,
+    sessionId: opts.reference_id,
+    courseId: opts.course_id,
+    addWorkbook: opts.bump,
     workbookLevelId: workbookLevelId
   });
 
   if (!enrolment.ok) {
-    console.error('[Stripe webhook] WLM enrolment failed for session', session.id, enrolment.error);
+    console.error('[Stripe webhook] WLM enrolment failed for', opts.reference_id, enrolment.error);
     // Return 200 anyway so Stripe doesn't retry — log internally for manual follow-up
-    return jsonResponse({ ok: false, error: 'wlm-enrolment-failed', session_id: session.id, message: enrolment.error }, 200);
+    return jsonResponse({ ok: false, error: 'wlm-enrolment-failed', reference_id: opts.reference_id, message: enrolment.error }, 200);
   }
 
-  return jsonResponse({ ok: true, session_id: session.id, wlm_user_id: enrolment.user_id });
+  return jsonResponse({ ok: true, reference_id: opts.reference_id, wlm_user_id: enrolment.user_id });
 }
 
 async function verifyStripeSignature(signatureHeader, rawBody, secret) {
