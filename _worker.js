@@ -140,24 +140,6 @@ export default {
       return await handleAffwpConvertSale(request, env, cookies);
     }
 
-    // ── /smm/ CHECKOUT → REDIRECT TO WORDPRESS PAYMENT PAGES ──
-    // Per user directive 2026-05-20: while the embedded Stripe/PayPal flow is
-    // not yet tested end-to-end, send all /smm/ checkout traffic to the
-    // existing WordPress payment pages which are known working. The new
-    // /smm/ checkout pages remain in the repo (kept as Plan B) but the
-    // redirect short-circuits before they render.
-    // To re-enable the embedded checkout, remove this block.
-    const SMM_CHECKOUT_REDIRECTS = {
-      '/smm/pro-youth-goalkeeper-coaching':   'https://learn.isspf.com/smm/buy-gk-youth-smm/84qhnqg19r8pps3/',
-      '/smm/pro-masters-goalkeeper-coaching': 'https://learn.isspf.com/smm/buy-gk-senior-smm/83wjg2gjsxd8e/'
-    };
-    const redirectTarget = SMM_CHECKOUT_REDIRECTS[path];
-    if (redirectTarget) {
-      // Preserve any query params (utm, affiliate ref, etc.) onto the WP URL
-      const target = new URL(redirectTarget);
-      url.searchParams.forEach((v, k) => { if (!target.searchParams.has(k)) target.searchParams.set(k, v); });
-      return Response.redirect(target.toString(), 302);
-    }
 
     // ── Step 1: Resolve the response (A/B routing or pass-through) ──
     let response;
