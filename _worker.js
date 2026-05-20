@@ -88,6 +88,27 @@ export default {
       return jsonResponse({ ok: true, publishable_key: env.STRIPE_PUBLISHABLE_KEY || null });
     }
 
+    // ── /api/paypal-config — returns PayPal client ID + mode for SDK loader ──
+    if (url.pathname === '/api/paypal-config' && request.method === 'GET') {
+      return jsonResponse({ ok: true, client_id: env.PAYPAL_CLIENT_ID || null, mode: env.PAYPAL_MODE || 'live' });
+    }
+
+    // ── /api/paypal-create-order — creates a PayPal order, returns order ID ──
+    if (url.pathname === '/api/paypal-create-order' && request.method === 'POST') {
+      return await handlePaypalCreateOrder(request, env);
+    }
+    if (url.pathname === '/api/paypal-create-order' && request.method === 'OPTIONS') {
+      return new Response(null, { status: 204 });
+    }
+
+    // ── /api/paypal-capture-order — captures an approved PayPal order + enrols in WLM ──
+    if (url.pathname === '/api/paypal-capture-order' && request.method === 'POST') {
+      return await handlePaypalCaptureOrder(request, env);
+    }
+    if (url.pathname === '/api/paypal-capture-order' && request.method === 'OPTIONS') {
+      return new Response(null, { status: 204 });
+    }
+
     // ── /api/create-payment-intent — embedded Stripe Elements flow ──
     if (url.pathname === '/api/create-payment-intent' && request.method === 'POST') {
       return await handleCreatePaymentIntent(request, env);
@@ -845,6 +866,219 @@ async function handleCreatePaymentIntent(request, env) {
   } catch (err) {
     console.error('[Stripe PI] Request failed:', err.message);
     return jsonResponse({ ok: false, error: 'request-failed', message: err.message }, 502);
+  }
+}
+
+
+// ─────────────────────────────────────────────────────────────
+// PAYPAL (Smart Buttons — create + capture)
+// ─────────────────────────────────────────────────────────────
+
+/**
+ * PayPal API base. Switch by env.PAYPAL_MODE = 'sandbox' | 'live' (default live).
+ */
+function paypalBase(env) {
+  return (env.PAYPAL_MODE === 'sandbox')
+    ? 'https://api-m.sandbox.paypal.com'
+    : 'https://api-m.paypal.com';
+}
+
+/**
+ * Fetch a fresh OAuth access token (valid ~9h, but we don't cache — Worker reqs are short-lived).
+ */
+async function paypalAccessToken(env) {
+  const clientId = env.PAYPAL_CLIENT_ID;
+  const clientSecret = env.PAYPAL_CLIENT_SECRET;
+  if (!clientId || !clientSecret) throw new Error('paypal-not-configured');
+  const resp = await fetch(`${paypalBase(env)}/v1/oauth2/token`, {
+    method: 'POST',
+    headers: {
+      'Authorization': 'Basic ' + btoa(`${clientId}:${clientSecret}`),
+      'Accept': 'application/json',
+      'Content-Type': 'application/x-www-form-urlencoded'
+    },
+    body: 'grant_type=client_credentials'
+  });
+  const data = await resp.json();
+  if (!resp.ok || !data.access_token) throw new Error('paypal-auth-failed: ' + JSON.stringify(data).substring(0, 200));
+  return data.access_token;
+}
+
+/**
+ * Build the amount string PayPal expects ("49.00" not 4900 cents).
+ * PayPal accepts decimal amounts for currencies it supports.
+ */
+function paypalAmount(amountSmallestUnit, currency) {
+  // For zero-decimal currencies (JPY etc) PayPal doesn't use decimals.
+  // The currencies we support (gbp, usd, eur, aud, cad, myr, zar) are all 2-decimal.
+  return (amountSmallestUnit / 100).toFixed(2);
+}
+
+async function handlePaypalCreateOrder(request, env) {
+  let body;
+  try { body = await request.json(); } catch (e) { return jsonResponse({ ok: false, error: 'invalid-json' }, 400); }
+
+  const courseId = String(body.course_id || '').trim();
+  const currency = String(body.currency || '').trim().toLowerCase();
+  const bump = !!body.bump;
+  const couponCode = body.coupon ? String(body.coupon).trim().toUpperCase() : null;
+  const email = String(body.email || '').trim();
+  const firstName = String(body.first_name || '').trim();
+  const lastName = String(body.last_name || '').trim();
+
+  if (!email) return jsonResponse({ ok: false, error: 'missing-email' }, 400);
+
+  const course = COURSE_CONFIG[courseId];
+  if (!course) return jsonResponse({ ok: false, error: 'unknown-course' }, 400);
+  const basePrice = course.prices[currency];
+  if (!basePrice) return jsonResponse({ ok: false, error: 'unsupported-currency' }, 400);
+
+  // Apply coupon
+  let unitAmount = basePrice;
+  let appliedCoupon = null;
+  if (couponCode) {
+    const coupon = COUPONS[couponCode];
+    if (coupon && (coupon.applies_to === 'all' || (Array.isArray(coupon.applies_to) && coupon.applies_to.includes(courseId)))) {
+      unitAmount = Math.round(unitAmount * (1 - coupon.percent / 100));
+      appliedCoupon = couponCode;
+    }
+  }
+
+  // Build line items
+  const items = [{
+    name: course.name,
+    quantity: '1',
+    unit_amount: { currency_code: currency.toUpperCase(), value: paypalAmount(unitAmount, currency) },
+    category: 'DIGITAL_GOODS'
+  }];
+
+  let bumpAmount = 0;
+  if (bump && course.workbook && course.workbook.prices[currency]) {
+    bumpAmount = course.workbook.prices[currency];
+    items.push({
+      name: course.workbook.name,
+      quantity: '1',
+      unit_amount: { currency_code: currency.toUpperCase(), value: paypalAmount(bumpAmount, currency) },
+      category: 'PHYSICAL_GOODS'
+    });
+  }
+
+  const total = unitAmount + bumpAmount;
+
+  // Build order request
+  const purchaseUnit = {
+    reference_id: courseId,
+    description: course.name + (bump ? ' + Workbook' : ''),
+    amount: {
+      currency_code: currency.toUpperCase(),
+      value: paypalAmount(total, currency),
+      breakdown: {
+        item_total: { currency_code: currency.toUpperCase(), value: paypalAmount(total, currency) }
+      }
+    },
+    items: items,
+    custom_id: [courseId, bump ? '1' : '0', appliedCoupon || '', email].join('|').substring(0, 127)
+  };
+
+  const orderRequest = {
+    intent: 'CAPTURE',
+    purchase_units: [purchaseUnit],
+    payment_source: {
+      paypal: {
+        experience_context: {
+          brand_name: 'ISSPF',
+          shipping_preference: bump ? 'GET_FROM_FILE' : 'NO_SHIPPING',
+          user_action: 'PAY_NOW',
+          return_url: 'https://go.isspf.com/checkout/thank-you/',
+          cancel_url: 'https://go.isspf.com/checkout/' + courseIdToSlug(courseId) + '/'
+        }
+      }
+    }
+  };
+
+  try {
+    const token = await paypalAccessToken(env);
+    const resp = await fetch(`${paypalBase(env)}/v2/checkout/orders`, {
+      method: 'POST',
+      headers: {
+        'Authorization': 'Bearer ' + token,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=representation'
+      },
+      body: JSON.stringify(orderRequest)
+    });
+    const data = await resp.json();
+    if (!resp.ok || !data.id) {
+      console.error('[PayPal create] failed:', JSON.stringify(data).substring(0, 500));
+      return jsonResponse({ ok: false, error: data.message || 'paypal-create-failed', details: data }, 502);
+    }
+    return jsonResponse({ ok: true, order_id: data.id, amount: total, currency: currency });
+  } catch (err) {
+    console.error('[PayPal create] error:', err.message);
+    return jsonResponse({ ok: false, error: err.message }, 502);
+  }
+}
+
+async function handlePaypalCaptureOrder(request, env) {
+  let body;
+  try { body = await request.json(); } catch (e) { return jsonResponse({ ok: false, error: 'invalid-json' }, 400); }
+  const orderId = String(body.order_id || '').trim();
+  if (!orderId) return jsonResponse({ ok: false, error: 'missing-order-id' }, 400);
+
+  try {
+    const token = await paypalAccessToken(env);
+    const resp = await fetch(`${paypalBase(env)}/v2/checkout/orders/${encodeURIComponent(orderId)}/capture`, {
+      method: 'POST',
+      headers: {
+        'Authorization': 'Bearer ' + token,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=representation'
+      }
+    });
+    const data = await resp.json();
+    if (!resp.ok) {
+      console.error('[PayPal capture] failed:', JSON.stringify(data).substring(0, 500));
+      return jsonResponse({ ok: false, error: data.message || 'paypal-capture-failed', details: data }, 502);
+    }
+    if (data.status !== 'COMPLETED') {
+      console.error('[PayPal capture] status not completed:', data.status);
+      return jsonResponse({ ok: false, error: 'capture-not-completed', status: data.status }, 502);
+    }
+
+    // Parse the custom_id back to metadata
+    const unit = data.purchase_units?.[0];
+    const custom = (unit?.payments?.captures?.[0]?.custom_id || unit?.custom_id || '').split('|');
+    const courseId = custom[0] || '';
+    const bump = custom[1] === '1';
+    // const coupon = custom[2] || null;
+    const email = custom[3] || data.payer?.email_address || '';
+    const firstName = data.payer?.name?.given_name || '';
+    const lastName = data.payer?.name?.surname || '';
+    const name = [firstName, lastName].filter(Boolean).join(' ').trim();
+
+    // Enrol in WishlistMember (same path as the Stripe webhook)
+    const enrolResp = await processEnrolment(env, {
+      reference_id: orderId,
+      course_id: courseId,
+      bump: bump,
+      email: email,
+      name: name
+    });
+    // processEnrolment already returns a JSON response; we want to add the order details too.
+    const enrolJson = await enrolResp.json();
+
+    return jsonResponse({
+      ok: enrolJson.ok !== false,
+      order_id: orderId,
+      capture_id: unit?.payments?.captures?.[0]?.id || null,
+      course_id: courseId,
+      currency: (unit?.amount?.currency_code || '').toLowerCase(),
+      amount: parseFloat(unit?.amount?.value || '0'),
+      enrolment: enrolJson
+    });
+  } catch (err) {
+    console.error('[PayPal capture] error:', err.message);
+    return jsonResponse({ ok: false, error: err.message }, 502);
   }
 }
 

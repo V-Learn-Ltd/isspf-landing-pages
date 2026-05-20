@@ -58,6 +58,15 @@
     // Workbook levels — Youth and Senior have separate workbooks, separate WLM levels.
     // Leave either as "" if that workbook isn't a WLM level (e.g. delivered as a PDF download).
     "WLM_LEVEL_WORKBOOK_YOUTH": "1751653747",
-    "WLM_LEVEL_WORKBOOK_SENIOR": "1771499035"
+    "WLM_LEVEL_WORKBOOK_SENIOR": "1771499035",
+
+    // ── PAYPAL ────────────────────────────────────────────────────────
+    // Required SECRET (set in Cloudflare dashboard → Variables and Secrets → Encrypt):
+    //   PAYPAL_CLIENT_SECRET — from PayPal Developer Dashboard → My Apps → [your app] → Show
+    //
+    // PAYPAL_CLIENT_ID is public (gets embedded in the page via the SDK script tag).
+    // PAYPAL_MODE: "live" (default) or "sandbox" for testing.
+    "PAYPAL_CLIENT_ID": "REPLACE_WITH_PAYPAL_CLIENT_ID",
+    "PAYPAL_MODE": "live"
   }
 }

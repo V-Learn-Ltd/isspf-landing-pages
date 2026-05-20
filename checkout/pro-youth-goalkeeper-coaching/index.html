@@ -411,9 +411,10 @@ metaCapi('InitiateCheckout',{content_name:'Pro-Youth Goalkeeper Coaching Science
             <div class="stripe-error" id="card-error"></div>
           </div>
 
-          <!-- PAYPAL PLACEHOLDER -->
+          <!-- PAYPAL SMART BUTTONS -->
           <div id="paypal-container">
-            <div id="paypal-coming-soon">PayPal payments — full integration coming Wednesday. For now, use Card.</div>
+            <div id="paypal-buttons"></div>
+            <div id="paypal-status" style="font-size:13px;color:var(--text-muted-dark);margin-top:8px;text-align:center;"></div>
           </div>
 
           <!-- COUPON -->
@@ -539,6 +540,90 @@ metaCapi('InitiateCheckout',{content_name:'Pro-Youth Goalkeeper Coaching Science
   function boot() {
     recompute();
     initStripe();
+    initPayPal();
+  }
+
+  /* PAYPAL */
+  let paypalLoaded = false;
+  let paypalLoadingCurrency = null;
+  async function initPayPal() {
+    try {
+      const r = await fetch('/api/paypal-config');
+      const cfg = await r.json();
+      if (!cfg.ok || !cfg.client_id) {
+        document.getElementById('paypal-status').textContent = 'PayPal unavailable — please use Card.';
+        return;
+      }
+      // Load the PayPal SDK with the geoip-determined currency
+      loadPayPalSDK(cfg.client_id, activePricing.currency.toUpperCase());
+    } catch (e) {
+      console.error('PayPal config fetch failed:', e);
+      document.getElementById('paypal-status').textContent = 'PayPal unavailable — please use Card.';
+    }
+  }
+  function loadPayPalSDK(clientId, currency) {
+    if (paypalLoaded && paypalLoadingCurrency === currency) { renderPayPalButtons(); return; }
+    // Remove any previously-loaded SDK
+    const existing = document.getElementById('paypal-sdk');
+    if (existing) existing.remove();
+    if (window.paypal) { delete window.paypal; }
+    const s = document.createElement('script');
+    s.id = 'paypal-sdk';
+    s.src = `https://www.paypal.com/sdk/js?client-id=${encodeURIComponent(clientId)}&currency=${encodeURIComponent(currency)}&intent=capture&components=buttons&enable-funding=paylater`;
+    s.onload = () => { paypalLoaded = true; paypalLoadingCurrency = currency; renderPayPalButtons(); };
+    s.onerror = () => { document.getElementById('paypal-status').textContent = 'PayPal failed to load — please use Card.'; };
+    document.head.appendChild(s);
+  }
+  function renderPayPalButtons() {
+    const container = document.getElementById('paypal-buttons');
+    container.innerHTML = '';
+    if (!window.paypal || !window.paypal.Buttons) return;
+    window.paypal.Buttons({
+      style: { layout: 'vertical', color: 'gold', shape: 'rect', label: 'paypal', height: 45 },
+      createOrder: async (data, actions) => {
+        const email = document.getElementById('email').value.trim();
+        const firstName = document.getElementById('first-name').value.trim();
+        const lastName = document.getElementById('last-name').value.trim();
+        if (!email || !firstName) {
+          alert('Please enter your first name and email before paying with PayPal.');
+          throw new Error('missing-contact');
+        }
+        const r = await fetch('/api/paypal-create-order', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            course_id: PRODUCT.course_id, currency: activeCcy, bump: bumpChecked, coupon: appliedCoupon,
+            email, first_name: firstName, last_name: lastName
+          })
+        });
+        const d = await r.json();
+        if (!d.ok || !d.order_id) {
+          alert('Could not start PayPal order: ' + (d.error || 'unknown'));
+          throw new Error(d.error || 'paypal-create-failed');
+        }
+        metaCapi('AddPaymentInfo', { content_name: PRODUCT.course_name, content_ids: [PRODUCT.course_id], content_type: 'product', value: getCurrentTotal(), currency: activeCcy });
+        return d.order_id;
+      },
+      onApprove: async (data, actions) => {
+        document.getElementById('paypal-status').textContent = 'Processing your payment…';
+        const r = await fetch('/api/paypal-capture-order', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ order_id: data.orderID })
+        });
+        const d = await r.json();
+        if (d.ok) {
+          window.location.href = '/checkout/thank-you/?pi=' + encodeURIComponent(data.orderID) + '&course=' + encodeURIComponent(PRODUCT.course_id) + '&currency=' + encodeURIComponent(activeCcy) + '&via=paypal';
+        } else {
+          document.getElementById('paypal-status').textContent = 'PayPal capture failed: ' + (d.error || 'unknown') + '. Please contact support@isspf.com';
+        }
+      },
+      onError: (err) => {
+        console.error('PayPal error:', err);
+        document.getElementById('paypal-status').textContent = 'PayPal error: ' + (err?.message || 'unknown') + '. Please try Card instead.';
+      },
+      onCancel: () => {
+        document.getElementById('paypal-status').textContent = '';
+      }
+    }).render('#paypal-buttons');
   }
 
   /* STRIPE ELEMENTS */
@@ -579,6 +664,8 @@ metaCapi('InitiateCheckout',{content_name:'Pro-Youth Goalkeeper Coaching Science
       const isCard = e.target.value === 'card';
       document.getElementById('card-pane').style.display = isCard ? 'block' : 'none';
       document.getElementById('paypal-container').classList.toggle('shown', !isCard);
+      // Hide the main Pay button when PayPal is selected — PayPal has its own buttons
+      document.getElementById('pay-btn').style.display = isCard ? 'block' : 'none';
     });
   });
 
@@ -630,9 +717,6 @@ metaCapi('InitiateCheckout',{content_name:'Pro-Youth Goalkeeper Coaching Science
     const lastName = document.getElementById('last-name').value.trim();
     if (!email || !firstName) { alert('Please enter your first name and email.'); return; }
     if (!stripe || !cardElement) { alert('Payment system not ready. Please refresh.'); return; }
-
-    const method = document.querySelector('input[name="paymethod"]:checked').value;
-    if (method !== 'card') { alert('PayPal coming Wednesday. Please choose Card.'); return; }
 
     btn.disabled = true;
     btn.textContent = 'Processing payment…';
