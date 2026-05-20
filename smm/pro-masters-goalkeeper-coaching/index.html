@@ -496,6 +496,9 @@ metaCapi('InitiateCheckout',{content_name:'Senior Pro Masters Goalkeeper Coachin
     course_name: 'Senior Pro Masters Goalkeeper Coaching Science'
   };
 
+  // POST-PAYMENT REDIRECT — WordPress registration page that completes WLM/LearnDash signup
+  const POST_PAYMENT_URL = 'https://learn.isspf.com/smm/buy-gk-senior-smm/83wjg2gjsxd8e/';
+
   let activeCcy = DEFAULT_CCY;
   let activePricing = PRICING[DEFAULT_CCY];
   let bumpChecked = false;
@@ -612,7 +615,7 @@ metaCapi('InitiateCheckout',{content_name:'Senior Pro Masters Goalkeeper Coachin
         });
         const d = await r.json();
         if (d.ok) {
-          window.location.href = '/smm/thank-you/?pi=' + encodeURIComponent(data.orderID) + '&course=' + encodeURIComponent(PRODUCT.course_id) + '&currency=' + encodeURIComponent(activeCcy) + '&via=paypal';
+          window.location.href = POST_PAYMENT_URL;
         } else {
           document.getElementById('paypal-status').textContent = 'PayPal capture failed: ' + (d.error || 'unknown') + '. Please contact support@isspf.com';
         }
@@ -762,7 +765,7 @@ metaCapi('InitiateCheckout',{content_name:'Senior Pro Masters Goalkeeper Coachin
 
       // 3) Success — redirect to thank-you
       if (result.paymentIntent && result.paymentIntent.status === 'succeeded') {
-        window.location.href = '/smm/thank-you/?pi=' + encodeURIComponent(result.paymentIntent.id) + '&course=' + encodeURIComponent(PRODUCT.course_id) + '&currency=' + encodeURIComponent(activeCcy);
+        window.location.href = POST_PAYMENT_URL;
       } else {
         btn.disabled = false;
         btn.textContent = 'Pay ' + fmt(getCurrentTotal()) + ' — Enrol now';

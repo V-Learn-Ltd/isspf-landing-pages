@@ -496,6 +496,9 @@ metaCapi('InitiateCheckout',{content_name:'Pro-Youth Goalkeeper Coaching Science
     course_name: 'Pro-Youth Goalkeeper Coaching Science'
   };
 
+  // POST-PAYMENT REDIRECT — WordPress registration page that completes WLM/LearnDash signup
+  const POST_PAYMENT_URL = 'https://learn.isspf.com/smm/buy-gk-youth-smm/84qhnqg19r8pps3/';
+
   let activeCcy = DEFAULT_CCY;
   let activePricing = PRICING[DEFAULT_CCY];
   let bumpChecked = false;
@@ -614,7 +617,7 @@ metaCapi('InitiateCheckout',{content_name:'Pro-Youth Goalkeeper Coaching Science
         });
         const d = await r.json();
         if (d.ok) {
-          window.location.href = '/smm/thank-you/?pi=' + encodeURIComponent(data.orderID) + '&course=' + encodeURIComponent(PRODUCT.course_id) + '&currency=' + encodeURIComponent(activeCcy) + '&via=paypal';
+          window.location.href = POST_PAYMENT_URL;
         } else {
           document.getElementById('paypal-status').textContent = 'PayPal capture failed: ' + (d.error || 'unknown') + '. Please contact support@isspf.com';
         }
@@ -763,9 +766,9 @@ metaCapi('InitiateCheckout',{content_name:'Pro-Youth Goalkeeper Coaching Science
         return;
       }
 
-      // 3) Success — redirect to thank-you
+      // 3) Success — redirect to WP registration page that completes WLM/LearnDash signup
       if (result.paymentIntent && result.paymentIntent.status === 'succeeded') {
-        window.location.href = '/smm/thank-you/?pi=' + encodeURIComponent(result.paymentIntent.id) + '&course=' + encodeURIComponent(PRODUCT.course_id) + '&currency=' + encodeURIComponent(activeCcy);
+        window.location.href = POST_PAYMENT_URL;
       } else {
         btn.disabled = false;
         btn.textContent = 'Pay ' + fmt(getCurrentTotal()) + ' — Enrol now';

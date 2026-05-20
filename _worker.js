@@ -707,7 +707,8 @@ async function handleCreateCheckoutSession(request, env) {
   if (!stripeSecret) return jsonResponse({ ok: false, error: 'stripe-not-configured' }, 500);
 
   const origin = new URL(request.url).origin;
-  const successUrl = `${origin}/smm/thank-you/?session_id={CHECKOUT_SESSION_ID}&course=${encodeURIComponent(courseId)}&currency=${encodeURIComponent(currency)}`;
+  // After payment, send buyer to WP registration page that completes WLM/LearnDash signup
+  const successUrl = postPaymentUrl(courseId);
   const cancelUrl = `${origin}/smm/${courseIdToSlug(courseId)}/`;
 
   // Build Stripe Checkout Session via API
@@ -775,6 +776,19 @@ function courseIdToSlug(courseId) {
     'senior-pro-masters-gk': 'pro-masters-goalkeeper-coaching'
   };
   return map[courseId] || 'pro-youth-goalkeeper-coaching';
+}
+
+/**
+ * Post-payment redirect URL for a course — the unguessable WP/WLM registration
+ * page that completes signup and grants LearnDash access. These URLs are
+ * security-by-obscurity tokens that work for any post-payment buyer.
+ */
+function postPaymentUrl(courseId) {
+  const map = {
+    'pro-youth-gk':         'https://learn.isspf.com/smm/buy-gk-youth-smm/84qhnqg19r8pps3/',
+    'senior-pro-masters-gk':'https://learn.isspf.com/smm/buy-gk-senior-smm/83wjg2gjsxd8e/'
+  };
+  return map[courseId] || map['pro-youth-gk'];
 }
 
 
@@ -994,7 +1008,7 @@ async function handlePaypalCreateOrder(request, env) {
           brand_name: 'ISSPF',
           shipping_preference: bump ? 'GET_FROM_FILE' : 'NO_SHIPPING',
           user_action: 'PAY_NOW',
-          return_url: 'https://go.isspf.com/smm/thank-you/',
+          return_url: postPaymentUrl(courseId),
           cancel_url: 'https://go.isspf.com/smm/' + courseIdToSlug(courseId) + '/'
         }
       }
