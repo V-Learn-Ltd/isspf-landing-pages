@@ -605,6 +605,7 @@ const COURSE_CONFIG = {
       name: 'Pro-Youth Goalkeeper Science Workbook',
       description: 'Printed companion to the Pro-Youth course — shipped to your door. Chapter summaries, training prompts, weekly planning, reflection questions.',
       wlm_level_env: 'WLM_LEVEL_WORKBOOK_YOUTH',
+      statement_descriptor: 'ISSPF-GKYW', // for future standalone workbook checkout; bundled bumps use the course descriptor
       // Prices in smallest currency unit. Confirmed against WLM Edit Forms 2026-05-20.
       // UK £39.99 / US $49.99 / EUR €44.99 / AU $74.99 / CA $74.99 / MY RM199 / ZA R799
       prices: { gbp: 3999, usd: 4999, eur: 4499, aud: 7499, cad: 7499, myr: 19900, zar: 79900 }
@@ -628,6 +629,7 @@ const COURSE_CONFIG = {
       name: 'Senior Pro Masters Goalkeeper Science Workbook',
       description: 'Printed companion to the Senior Pro Masters course — shipped to your door. Chapter summaries, match-day prompts, weekly planning, reflection questions.',
       wlm_level_env: 'WLM_LEVEL_WORKBOOK_SENIOR',
+      statement_descriptor: 'ISSPF-GKSW', // for future standalone workbook checkout; bundled bumps use the course descriptor
       // Confirmed against WLM Edit Forms 2026-05-20.
       // UK £49.99 / US $69.99 / EUR €59.99 / AU $94.99 / CA $94.99 / MY RM259 / ZA R999
       prices: { gbp: 4999, usd: 6999, eur: 5999, aud: 9499, cad: 9499, myr: 25900, zar: 99900 }
