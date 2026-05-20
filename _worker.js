@@ -641,7 +641,8 @@ const COURSE_CONFIG = {
 const COUPONS = {
   // GKSCIENCE25 — 25% off both courses. Used in the email sequence.
   // Add an 'expires' ISO date if you want it to auto-disable.
-  'GKSCIENCE25': { percent: 25, applies_to: 'all' }
+  'GKSCIENCE25': { percent: 25, applies_to: 'all' },
+  'GKSCIENCE35': { percent: 35, applies_to: 'all' }
 };
 
 
