@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Enrol — Pro-Youth Goalkeeper Coaching Science | ISSPF</title>
+<meta name="description" content="Secure checkout for the Professional Certificate in Goalkeeper Coaching Science (Pro-Youth Level)." />
+<meta name="robots" content="noindex,nofollow" />
+
+<!-- Meta Pixel + CAPI -->
+<script>
+!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+fbq('init','856256648998431');
+window.metaCapi=function(eventName,customData,userData){var eid=(window.crypto&&crypto.randomUUID)?crypto.randomUUID():(Date.now()+'-'+Math.random().toString(36).slice(2));try{fbq('track',eventName,customData||{},{eventID:eid});}catch(e){}try{fetch('/api/meta-capi',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'same-origin',keepalive:true,body:JSON.stringify({event_name:eventName,event_id:eid,event_source_url:location.href,custom_data:customData||{},user_data:userData||undefined})});}catch(e){}};
+metaCapi('PageView');
+metaCapi('InitiateCheckout',{content_name:'Pro-Youth Goalkeeper Coaching Science',content_category:'Course',content_ids:['gk-youth-smm'],content_type:'product'});
+</script>
+<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=856256648998431&ev=PageView&noscript=1"/></noscript>
+
+<!-- MaxMind GeoIP for currency localisation -->
+<script src="//js.maxmind.com/js/apis/geoip2/v2.1/geoip2.js" type="text/javascript"></script>
+
+<!-- Stripe.js -->
+<script src="https://js.stripe.com/v3/"></script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+<style>
+  :root {
+    --bg-white: #ffffff;
+    --bg-stone: #f4f4f4;
+    --bg-dark: #0a0a0a;
+    --bg-dark-2: #141414;
+    --text-dark: #111111;
+    --text-muted-dark: #6b6b6b;
+    --text-cream: #ffffff;
+    --text-muted-light: #b8b8b8;
+    --accent-red: #ED1C24;
+    --accent-red-hover: #c8161d;
+    --accent-green: #1b8a4d;
+    --rule-dark: rgba(255,255,255,0.10);
+    --rule-light: rgba(0,0,0,0.10);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    color: var(--text-dark);
+    background: var(--bg-stone);
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 880px; margin: 0 auto; padding: 0 24px; }
+  .wrap-wide { max-width: 1320px; margin: 0 auto; padding: 0 24px; }
+
+  /* HEADER */
+  header {
+    background: var(--bg-white);
+    border-bottom: 1px solid var(--rule-light);
+    padding: 16px 0;
+  }
+  header .wrap-wide { display: flex; align-items: center; justify-content: space-between; }
+  .logo-img { height: 44px; width: auto; display: block; }
+  .header-meta {
+    font-size: 16px; font-weight: 800; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--accent-red);
+  }
+
+  /* MAIN */
+  main { padding: 48px 0 80px; }
+
+  .checkout-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+  @media (min-width: 880px) {
+    .checkout-grid {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 0 24px;
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+      gap: 48px;
+    }
+  }
+
+  .eyebrow {
+    display: inline-block;
+    font-size: 12px; font-weight: 700; letter-spacing: 0.16em;
+    text-transform: uppercase; color: var(--accent-red);
+    margin-bottom: 16px;
+  }
+
+  h1.hammer {
+    font-family: 'Anton', 'Inter', sans-serif;
+    font-weight: 400;
+    font-size: clamp(32px, 5.4vw, 52px);
+    line-height: 0.96;
+    letter-spacing: 0.005em;
+    text-transform: uppercase;
+    color: var(--text-dark);
+    margin: 0 0 16px;
+  }
+
+  .deck {
+    font-size: 17px; line-height: 1.5; color: var(--text-muted-dark);
+    margin: 0 0 32px;
+  }
+
+  /* ORDER CARD */
+  .order-card {
+    background: var(--bg-white);
+    border: 1px solid var(--rule-light);
+    border-radius: 12px;
+    padding: 28px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+  @media (min-width: 880px) { .order-card { position: sticky; top: 24px; } }
+
+  .order-card h2 {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-muted-dark);
+    margin: 0 0 16px;
+  }
+
+  .line-item {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--rule-light);
+  }
+  .line-item:last-child { border-bottom: none; }
+  .line-name { font-weight: 600; color: var(--text-dark); padding-right: 12px; }
+  .line-sub { font-size: 13px; color: var(--text-muted-dark); margin-top: 2px; }
+  .line-price { font-weight: 700; white-space: nowrap; }
+  .line-anchor { text-decoration: line-through; color: var(--text-muted-dark); font-weight: 500; font-size: 14px; margin-right: 6px; }
+  .line-savings { color: var(--accent-green); font-size: 13px; font-weight: 600; margin-top: 4px; }
+
+  /* BUMP — physical workbook */
+  .bump {
+    display: block;
+    background: #fffdf3;
+    border: 2px solid #e6b800;
+    border-radius: 12px;
+    padding: 20px;
+    margin: 20px 0;
+    cursor: pointer;
+    transition: background 0.15s, box-shadow 0.15s;
+  }
+  .bump:hover { background: #fffaeb; box-shadow: 0 4px 12px rgba(230,184,0,0.18); }
+  .bump-recommended {
+    display: inline-block;
+    background: var(--accent-red); color: white;
+    font-size: 10px; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase;
+    padding: 4px 10px; border-radius: 4px; margin-bottom: 10px;
+  }
+  .bump-headline-row {
+    display: flex; align-items: flex-start; gap: 12px; margin-bottom: 6px;
+  }
+  .bump-headline-row input[type=checkbox] {
+    width: 22px; height: 22px;
+    margin: 4px 0 0; flex-shrink: 0;
+    accent-color: var(--accent-red);
+    cursor: pointer;
+  }
+  .bump-title {
+    font-weight: 800; font-size: 17px; color: var(--text-dark);
+    line-height: 1.3; flex: 1;
+  }
+  .bump-subhead {
+    font-size: 14px; font-weight: 700; color: var(--text-dark);
+    margin: 8px 0 12px 34px; font-style: italic;
+  }
+  .bump-body { display: flex; gap: 16px; margin-left: 34px; margin-top: 8px; }
+  @media (max-width: 600px) { .bump-body { flex-direction: column; gap: 12px; } }
+  .bump-image {
+    flex: 0 0 110px; max-width: 110px;
+  }
+  .bump-image img {
+    width: 100%; height: auto; display: block;
+    border-radius: 4px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  }
+  .bump-text {
+    flex: 1; font-size: 13.5px; line-height: 1.55; color: var(--text-dark);
+  }
+  .bump-text p { margin: 0 0 10px; }
+  .bump-text ol { margin: 8px 0; padding-left: 20px; }
+  .bump-text ol li { margin-bottom: 6px; }
+  .bump-text .closer { font-weight: 600; margin-top: 10px; color: var(--text-dark); }
+  .bump-price-row {
+    margin-top: 14px; margin-left: 34px;
+    padding-top: 12px; border-top: 1px solid rgba(230,184,0,0.4);
+    font-size: 14px; font-weight: 800; color: var(--accent-red);
+  }
+  .bump-shipping-note {
+    font-size: 11px; font-weight: 600; color: var(--text-muted-dark);
+    text-transform: uppercase; letter-spacing: 0.06em;
+    margin-top: 4px; margin-left: 34px;
+  }
+
+  /* TOTAL */
+  .total-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 16px 0 8px;
+    border-top: 2px solid var(--text-dark);
+    margin-top: 8px;
+    font-size: 17px;
+    font-weight: 800;
+  }
+  .total-price { font-family: 'Anton', sans-serif; font-size: 28px; letter-spacing: 0.01em; }
+
+  /* BUTTONS */
+  .pay-stripe {
+    display: block;
+    width: 100%;
+    margin-top: 20px;
+    padding: 18px 24px;
+    background: var(--accent-red);
+    color: var(--text-cream);
+    border: none;
+    border-radius: 10px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 800;
+    font-size: 16px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.05s;
+  }
+  .pay-stripe:hover { background: var(--accent-red-hover); }
+  .pay-stripe:active { transform: translateY(1px); }
+  .pay-stripe:disabled { opacity: 0.6; cursor: wait; }
+
+  .pay-divider {
+    text-align: center;
+    margin: 16px 0;
+    font-size: 12px;
+    color: var(--text-muted-dark);
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    position: relative;
+  }
+  .pay-divider::before, .pay-divider::after {
+    content: ''; position: absolute; top: 50%; width: calc(50% - 30px); height: 1px; background: var(--rule-light);
+  }
+  .pay-divider::before { left: 0; }
+  .pay-divider::after { right: 0; }
+
+  #paypal-button-container { min-height: 50px; }
+
+  /* COUPON */
+  .coupon-row {
+    margin-top: 14px;
+    font-size: 13px;
+  }
+  .coupon-toggle {
+    background: none; border: none; padding: 0;
+    color: var(--accent-red); text-decoration: underline;
+    cursor: pointer; font-size: 13px; font-family: inherit;
+  }
+  .coupon-input {
+    display: none;
+    margin-top: 8px;
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--rule-light);
+    border-radius: 8px;
+    font-family: inherit; font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+  }
+  .coupon-input:focus { outline: 2px solid var(--accent-red); outline-offset: -1px; border-color: var(--accent-red); }
+  .coupon-input.shown { display: block; }
+  .coupon-applied { display: none; color: var(--accent-green); font-size: 13px; font-weight: 600; margin-top: 6px; }
+  .coupon-error { display: none; color: var(--accent-red); font-size: 13px; font-weight: 600; margin-top: 6px; }
+
+  /* TRUST */
+  .trust-block {
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid var(--rule-light);
+  }
+  .trust-row { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-muted-dark); margin-top: 8px; }
+  .trust-row svg { flex-shrink: 0; color: var(--accent-green); }
+
+  /* LEFT COLUMN */
+  .left-col {
+    background: var(--bg-white);
+    border: 1px solid var(--rule-light);
+    border-radius: 12px;
+    padding: 32px 28px;
+  }
+
+  .what-list { list-style: none; padding: 0; margin: 20px 0 0; }
+  .what-list li {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 8px 0;
+    font-size: 15px; line-height: 1.5;
+  }
+  .what-list li::before {
+    content: '✓';
+    color: var(--accent-green);
+    font-weight: 800;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .guarantee-block {
+    margin-top: 28px;
+    padding: 20px;
+    background: var(--bg-stone);
+    border-left: 4px solid var(--accent-red);
+    border-radius: 6px;
+  }
+  .guarantee-block h3 {
+    margin: 0 0 8px;
+    font-size: 15px;
+    font-weight: 800;
+    color: var(--text-dark);
+    letter-spacing: 0.02em;
+  }
+  .guarantee-block p {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--text-muted-dark);
+  }
+
+  .secured-row {
+    margin-top: 24px;
+    text-align: center;
+    font-size: 12px;
+    color: var(--text-muted-dark);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .secured-row strong { color: var(--text-dark); font-weight: 700; }
+
+  /* FOOTER */
+  footer {
+    background: var(--bg-dark);
+    color: var(--text-muted-light);
+    padding: 32px 0;
+    text-align: center;
+    font-size: 13px;
+  }
+  footer a { color: var(--text-muted-light); text-decoration: none; margin: 0 8px; }
+  footer a:hover { color: var(--text-cream); }
+  footer .tagline { font-style: italic; color: var(--accent-red); margin-top: 8px; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap-wide">
+    <div class="logo">
+      <img src="/pro-youth-goalkeeper-coaching/logo.jpg" alt="ISSPF" class="logo-img" onerror="this.classList.add('missing')" />
+    </div>
+    <div class="header-meta">SECURE CHECKOUT</div>
+  </div>
+</header>
+
+<main>
+  <div class="checkout-grid">
+
+    <!-- LEFT: What you're getting -->
+    <div class="left-col">
+      <div class="eyebrow">PRO-YOUTH LEVEL · COURSE BEHIND THE REPORT</div>
+      <h1 class="hammer">You're One Step Away From The Science Underneath The Position.</h1>
+      <p class="deck">The Professional Certificate in Goalkeeper Coaching Science (Pro-Youth Level). 10 modules. 9 faculty. The course behind The Goalkeeper Science Report.</p>
+
+      <ul class="what-list">
+        <li><strong>10 video modules</strong> across Training Environment and Game Environment — the full science the coaching chain left out.</li>
+        <li><strong>9 lecturers</strong> from FC Barcelona academy, Borussia Mönchengladbach, the Premier League, and elite international football.</li>
+        <li><strong>Lifetime access.</strong> Log in any time on any device. Watch at your pace. Return as your goalkeepers age up.</li>
+        <li><strong>Professional Certificate</strong> in Goalkeeper Coaching Science (Pro-Youth Level) on completion.</li>
+        <li><strong>Self-paced.</strong> No deadlines, no cohorts, no live sessions to miss.</li>
+      </ul>
+
+      <div class="guarantee-block">
+        <h3>14-Day Money-Back Guarantee</h3>
+        <p>Watch the first modules. If the course doesn't deliver the WHY-level science we promised — that you can't get from another GK course — email us within 14 days and we'll refund every penny. No questions, no friction.</p>
+      </div>
+    </div>
+
+    <!-- RIGHT: Order summary -->
+    <div class="order-card">
+      <h2>Your order</h2>
+
+      <div class="line-item">
+        <div>
+          <div class="line-name">Pro-Youth GK Coaching Science</div>
+          <div class="line-sub">10 modules · Lifetime access</div>
+        </div>
+        <div style="text-align: right;">
+          <span class="line-anchor"><span class="priceFull">£249</span></span>
+          <span class="line-price"><span class="priceDiscount">£49</span></span>
+          <div class="line-savings">You save <span class="priceSavings">£200</span></div>
+        </div>
+      </div>
+
+      <!-- BUMP OFFER — physical workbook, shipped to door -->
+      <label class="bump" for="bump-workbook">
+        <span class="bump-recommended">Recommended</span>
+        <div class="bump-headline-row">
+          <input type="checkbox" id="bump-workbook" />
+          <div class="bump-title">Add the Printed Pro-Youth Goalkeeper Workbook</div>
+        </div>
+        <div class="bump-subhead">Make Goalkeeper Coaching Practical, Not Just Drills</div>
+        <div class="bump-body">
+          <div class="bump-image">
+            <img src="/checkout/assets/workbook-youth-cover.png" alt="Pro-Youth Goalkeeper Workbook" onerror="this.style.display='none'" />
+          </div>
+          <div class="bump-text">
+            <p>Watching the course is useful, but real progress happens when you pause, reflect, and shape the ideas into sessions your goalkeepers can feel on the pitch.</p>
+            <p>This professionally printed workbook is shipped to your door. It supports modern youth goalkeeper coaching across the technical, tactical, physical, and psychological demands of the role:</p>
+            <ol>
+              <li>Clear chapter summaries to keep your approach consistent</li>
+              <li>Training prompts that connect technique to real game situations and decision making</li>
+              <li>Space to plan your goalkeeper week, from recovery to match preparation</li>
+              <li>Reflection questions to improve communication, analysis, and long term development</li>
+            </ol>
+            <p class="closer">It is more than a companion. It is a working playbook to help you build complete, confident young goalkeepers, and a coaching plan that stands up under match pressure.</p>
+          </div>
+        </div>
+        <div class="bump-price-row">Add for just <span class="workbookPrice">£19</span> — includes shipping</div>
+        <div class="bump-shipping-note">Shipping address collected at checkout</div>
+      </label>
+
+      <div class="total-row">
+        <span>Total today</span>
+        <span class="total-price"><span class="totalDisplay">£49</span></span>
+      </div>
+
+      <button class="pay-stripe" id="pay-stripe-btn" disabled>
+        Loading checkout…
+      </button>
+
+      <div class="pay-divider">or</div>
+
+      <div id="paypal-button-container">
+        <!-- PayPal Smart Button renders here (added Day 2) -->
+        <button class="pay-stripe" style="background: #ffc439; color: #003087;" disabled>
+          PayPal (coming Wednesday)
+        </button>
+      </div>
+
+      <div class="coupon-row">
+        <button type="button" class="coupon-toggle" id="coupon-toggle">Have a discount code?</button>
+        <input type="text" class="coupon-input" id="coupon-input" placeholder="ENTER CODE" maxlength="20" autocomplete="off" />
+        <div class="coupon-applied" id="coupon-applied"></div>
+        <div class="coupon-error" id="coupon-error"></div>
+      </div>
+
+      <div class="trust-block">
+        <div class="trust-row">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
+          Stripe-secured checkout · 256-bit SSL
+        </div>
+        <div class="trust-row">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
+          14-day money-back guarantee
+        </div>
+        <div class="trust-row">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
+          Instant access · login emailed within minutes
+        </div>
+      </div>
+
+      <div class="secured-row">
+        <strong>4.4 / 5</strong> from 76 Trustpilot reviews · <strong>70+ countries</strong>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<footer>
+  <div class="wrap-wide">
+    <div>&copy; <span id="year"></span> International Soccer Science &amp; Performance Federation</div>
+    <div style="margin-top: 8px;">
+      <a href="https://www.isspf.com/privacy/" target="_blank" rel="noopener">Privacy</a> ·
+      <a href="https://www.isspf.com/terms/" target="_blank" rel="noopener">Terms</a> ·
+      <a href="https://www.isspf.com/contact/" target="_blank" rel="noopener">Contact</a>
+    </div>
+    <div class="tagline">Drills fill a session. Science develops the goalkeeper.</div>
+  </div>
+</footer>
+
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  /* ─────────────────────────────────────────────────────────────
+   * PRICING TABLE — geoip-localised, matches existing isspf.com model
+   * Edit numbers here if Neil's team confirms a different price.
+   * Currency code is what we send to Stripe in lower-case.
+   * ──────────────────────────────────────────────────────────── */
+  const PRICING = {
+    GBP: { currency: 'gbp', symbol: '£', full: 249, discount: 49, workbook: 19, locale: 'en-GB' },
+    USD: { currency: 'usd', symbol: '$', full: 329, discount: 59, workbook: 24, locale: 'en-US' },
+    EUR: { currency: 'eur', symbol: '€', full: 299, discount: 49, workbook: 22, locale: 'en-IE' },
+    AUD: { currency: 'aud', symbol: 'AU$', full: 479, discount: 89, workbook: 35, locale: 'en-AU' },
+    CAD: { currency: 'cad', symbol: 'CA$', full: 479, discount: 79, workbook: 32, locale: 'en-CA' },
+    MYR: { currency: 'myr', symbol: 'RM', full: 1299, discount: 249, workbook: 99, locale: 'ms-MY' },
+    ZAR: { currency: 'zar', symbol: 'R', full: 4599, discount: 899, workbook: 349, locale: 'en-ZA' }
+  };
+  // Country → currency map
+  const COUNTRY_TO_CCY = {
+    GB:'GBP', IM:'GBP', JE:'GBP', GG:'GBP',
+    US:'USD',
+    AU:'AUD',
+    CA:'CAD',
+    MY:'MYR',
+    ZA:'ZAR',
+    AT:'EUR', BE:'EUR', CY:'EUR', DE:'EUR', DK:'EUR', EE:'EUR', FI:'EUR',
+    FR:'EUR', GR:'EUR', IS:'EUR', IE:'EUR', IT:'EUR', LV:'EUR', LT:'EUR',
+    LU:'EUR', PT:'EUR', SK:'EUR', SI:'EUR', NL:'EUR', NO:'EUR', ES:'EUR'
+  };
+  const DEFAULT_CCY = 'USD';
+
+  // Locked product config (matches Stripe Product/Price metadata)
+  const PRODUCT = {
+    course_id: 'pro-youth-gk',
+    course_name: 'Pro-Youth Goalkeeper Coaching Science',
+    workbook_id: 'gk-workbook'
+  };
+
+  let activeCcy = DEFAULT_CCY;
+  let activePricing = PRICING[DEFAULT_CCY];
+  let bumpChecked = false;
+  let appliedCoupon = null;
+  let couponPercent = 0;
+
+  function fmt(n) {
+    return activePricing.symbol + n.toLocaleString(activePricing.locale, { maximumFractionDigits: 0 });
+  }
+
+  function recompute() {
+    const courseAfterCoupon = couponPercent > 0
+      ? Math.round(activePricing.discount * (1 - couponPercent / 100))
+      : activePricing.discount;
+    const total = bumpChecked ? courseAfterCoupon + activePricing.workbook : courseAfterCoupon;
+
+    document.querySelectorAll('.priceFull').forEach(el => el.textContent = fmt(activePricing.full));
+    document.querySelectorAll('.priceDiscount').forEach(el => el.textContent = fmt(courseAfterCoupon));
+    document.querySelectorAll('.priceSavings').forEach(el => el.textContent = fmt(activePricing.full - courseAfterCoupon));
+    document.querySelectorAll('.workbookPrice').forEach(el => el.textContent = fmt(activePricing.workbook));
+    document.querySelectorAll('.totalDisplay').forEach(el => el.textContent = fmt(total));
+  }
+
+  function setCurrencyFromGeoIP() {
+    if (typeof geoip2 === 'undefined') {
+      activeCcy = DEFAULT_CCY;
+      activePricing = PRICING[DEFAULT_CCY];
+      recompute();
+      enableButton();
+      return;
+    }
+    geoip2.country(
+      function (loc) {
+        const code = (loc && loc.country && loc.country.iso_code) || '';
+        const ccy = COUNTRY_TO_CCY[code] || DEFAULT_CCY;
+        activeCcy = ccy;
+        activePricing = PRICING[ccy] || PRICING[DEFAULT_CCY];
+        recompute();
+        enableButton();
+      },
+      function () {
+        activeCcy = DEFAULT_CCY;
+        activePricing = PRICING[DEFAULT_CCY];
+        recompute();
+        enableButton();
+      }
+    );
+  }
+
+  function enableButton() {
+    const btn = document.getElementById('pay-stripe-btn');
+    btn.disabled = false;
+    btn.textContent = 'Pay ' + fmt(getCurrentTotal()) + ' — Enrol now';
+  }
+  function getCurrentTotal() {
+    const courseAfterCoupon = couponPercent > 0
+      ? Math.round(activePricing.discount * (1 - couponPercent / 100))
+      : activePricing.discount;
+    return bumpChecked ? courseAfterCoupon + activePricing.workbook : courseAfterCoupon;
+  }
+
+  // BUMP toggle
+  document.getElementById('bump-workbook').addEventListener('change', function (e) {
+    bumpChecked = e.target.checked;
+    recompute();
+    document.getElementById('pay-stripe-btn').textContent = 'Pay ' + fmt(getCurrentTotal()) + ' — Enrol now';
+  });
+
+  // COUPON toggle + apply
+  document.getElementById('coupon-toggle').addEventListener('click', function () {
+    document.getElementById('coupon-input').classList.toggle('shown');
+    document.getElementById('coupon-input').focus();
+  });
+  document.getElementById('coupon-input').addEventListener('change', async function (e) {
+    const code = (e.target.value || '').trim().toUpperCase();
+    const applied = document.getElementById('coupon-applied');
+    const errored = document.getElementById('coupon-error');
+    applied.style.display = 'none'; errored.style.display = 'none';
+    if (!code) { appliedCoupon = null; couponPercent = 0; recompute(); return; }
+    try {
+      const r = await fetch('/api/validate-coupon', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code: code, course_id: PRODUCT.course_id })
+      });
+      const data = await r.json();
+      if (data.ok && data.percent) {
+        appliedCoupon = code;
+        couponPercent = data.percent;
+        applied.textContent = code + ' applied — ' + data.percent + '% off';
+        applied.style.display = 'block';
+        recompute();
+        document.getElementById('pay-stripe-btn').textContent = 'Pay ' + fmt(getCurrentTotal()) + ' — Enrol now';
+      } else {
+        appliedCoupon = null; couponPercent = 0;
+        errored.textContent = data.message || 'Code not valid';
+        errored.style.display = 'block';
+        recompute();
+      }
+    } catch (err) {
+      appliedCoupon = null; couponPercent = 0;
+      errored.textContent = 'Could not validate code. Try again.';
+      errored.style.display = 'block';
+    }
+  });
+
+  // STRIPE CHECKOUT
+  document.getElementById('pay-stripe-btn').addEventListener('click', async function () {
+    const btn = this;
+    btn.disabled = true;
+    btn.textContent = 'Redirecting to secure checkout…';
+    metaCapi('AddToCart', {
+      content_name: PRODUCT.course_name,
+      content_ids: [PRODUCT.course_id],
+      content_type: 'product',
+      value: getCurrentTotal(),
+      currency: activeCcy
+    });
+    try {
+      const r = await fetch('/api/create-checkout-session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          course_id: PRODUCT.course_id,
+          currency: activeCcy,
+          bump: bumpChecked,
+          coupon: appliedCoupon,
+          // Pass through tracking
+          affwp_affiliate_id: getCookie('affwp_affiliate_id') || null,
+          affwp_visit_id: getCookie('affwp_visit_id') || null,
+          fbp: getCookie('_fbp') || null,
+          fbc: getCookie('_fbc') || null
+        })
+      });
+      const data = await r.json();
+      if (data.ok && data.url) {
+        window.location.href = data.url;
+      } else {
+        btn.disabled = false;
+        btn.textContent = 'Pay ' + fmt(getCurrentTotal()) + ' — Enrol now';
+        alert('Could not start checkout: ' + (data.error || 'unknown error') + '. Please refresh and try again.');
+      }
+    } catch (err) {
+      btn.disabled = false;
+      btn.textContent = 'Pay ' + fmt(getCurrentTotal()) + ' — Enrol now';
+      alert('Network error. Please refresh and try again.');
+    }
+  });
+
+  function getCookie(name) {
+    const m = document.cookie.match(new RegExp('(?:^|;\\s*)' + name + '=([^;]*)'));
+    return m ? decodeURIComponent(m[1]) : null;
+  }
+
+  // Boot
+  setCurrencyFromGeoIP();
+</script>
+
+</body>
+</html>

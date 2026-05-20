@@ -32,6 +32,32 @@
     // Optional secret (only during testing):
     //   META_TEST_EVENT_CODE — paste the test event code from Events Manager →
     //     Test Events; remove once verified to stop test-bucketing live events.
-    "META_PIXEL_ID": "856256648998431"
+    "META_PIXEL_ID": "856256648998431",
+
+    // ── CHECKOUT SYSTEM (added 2026-05-20) ────────────────────────────
+    // Stripe Checkout + WishlistMember auto-enrolment. See CHECKOUT-SETUP.md.
+    //
+    // Secrets (set in Cloudflare dashboard → Settings → Variables and Secrets,
+    // marked as "Encrypt" — DO NOT put here):
+    //   STRIPE_SECRET_KEY        — Stripe Dashboard → Developers → API keys (sk_live_... / sk_test_...)
+    //   STRIPE_WEBHOOK_SECRET    — Stripe Dashboard → Developers → Webhooks → [your endpoint] → Signing secret (whsec_...)
+    //   WLM_API_KEY              — WordPress → WishlistMember → Settings → Advanced → API → Generate Key
+    //
+    // Public/plain-text vars below. Edit the values, push, Cloudflare picks them up.
+    "STRIPE_PUBLISHABLE_KEY": "pk_live_iui4EATbJ7sfpGAbxPmnrYmb00DovbHcrT",
+
+    // WishlistMember REST API base URL. Standard format is /wlmapi/v1.0.
+    // Verify with: curl -H "WLM3-API-KEY: <key>" "<this_url>/users?email=contact@isspf.com"
+    "WLM_API_BASE_URL": "https://www.isspf.com/wlmapi/v1.0",
+
+    // WishlistMember level IDs (visible in WordPress → WishlistMember → Levels).
+    // Replace each REPLACE_... with the numeric ID.
+    "WLM_LEVEL_PRO_YOUTH": "1709752569",
+    "WLM_LEVEL_SENIOR": "1777616081",
+
+    // Workbook levels — Youth and Senior have separate workbooks, separate WLM levels.
+    // Leave either as "" if that workbook isn't a WLM level (e.g. delivered as a PDF download).
+    "WLM_LEVEL_WORKBOOK_YOUTH": "1751653747",
+    "WLM_LEVEL_WORKBOOK_SENIOR": "1771499035"
   }
 }

@@ -75,6 +75,37 @@ export default {
       return new Response(null, { status: 204 });
     }
 
+    // ── /api/create-checkout-session — Stripe Checkout session creator ──
+    if (url.pathname === '/api/create-checkout-session' && request.method === 'POST') {
+      return await handleCreateCheckoutSession(request, env);
+    }
+    if (url.pathname === '/api/create-checkout-session' && request.method === 'OPTIONS') {
+      return new Response(null, { status: 204 });
+    }
+
+    // ── /api/stripe-webhook — Stripe webhook receiver + WLM enrolment ──
+    if (url.pathname === '/api/stripe-webhook' && request.method === 'POST') {
+      return await handleStripeWebhook(request, env);
+    }
+
+    // ── /api/validate-coupon — Coupon code validator ──
+    if (url.pathname === '/api/validate-coupon' && request.method === 'POST') {
+      return await handleValidateCoupon(request, env);
+    }
+    if (url.pathname === '/api/validate-coupon' && request.method === 'OPTIONS') {
+      return new Response(null, { status: 204 });
+    }
+
+    // ── /api/get-order-summary — Order details for thank-you page ──
+    if (url.pathname === '/api/get-order-summary' && request.method === 'GET') {
+      return await handleGetOrderSummary(url, env);
+    }
+
+    // ── /api/affwp-convert-sale — Affiliate sale conversion (post-purchase) ──
+    if (url.pathname === '/api/affwp-convert-sale' && request.method === 'POST') {
+      return await handleAffwpConvertSale(request, env, cookies);
+    }
+
     // ── Step 1: Resolve the response (A/B routing or pass-through) ──
     let response;
     let isNewABAssignment = false;
@@ -505,4 +536,571 @@ function parseCookies(cookieStr) {
     }
   });
   return cookies;
+}
+
+
+// ─────────────────────────────────────────────────────────────
+// CHECKOUT + WISHLIST MEMBER CONFIG
+// ─────────────────────────────────────────────────────────────
+
+/**
+ * Course → WishlistMember level mapping + Stripe metadata.
+ * Neil edits this directly when level IDs are confirmed in WP admin.
+ * Stripe doesn't need price IDs because we send the amount inline per-currency
+ * (Stripe accepts ad-hoc prices via price_data on Checkout Session creation).
+ */
+const COURSE_CONFIG = {
+  'pro-youth-gk': {
+    name: 'Pro-Youth Goalkeeper Coaching Science',
+    description: 'Professional Certificate in Goalkeeper Coaching Science (Pro-Youth Level) — 10 modules, 9 faculty. Lifetime access.',
+    wlm_level_env: 'WLM_LEVEL_PRO_YOUTH',
+    prices: {
+      // currency: { full (anchor, for display only), unit (what we actually charge) }
+      gbp: { full: 24900, unit: 4900 },
+      usd: { full: 32900, unit: 5900 },
+      eur: { full: 29900, unit: 4900 },
+      aud: { full: 47900, unit: 8900 },
+      cad: { full: 47900, unit: 7900 },
+      myr: { full: 129900, unit: 24900 },
+      zar: { full: 459900, unit: 89900 }
+    },
+    workbook: {
+      name: 'Pro-Youth Goalkeeper Science Workbook',
+      description: 'Printable companion to the Pro-Youth course — diagnostic worksheets, session-planning frameworks, youth-LTAD trackers, four-stage save loop.',
+      wlm_level_env: 'WLM_LEVEL_WORKBOOK_YOUTH',
+      prices: { gbp: 1900, usd: 2400, eur: 2200, aud: 3500, cad: 3200, myr: 9900, zar: 34900 }
+    }
+  },
+  'senior-pro-masters-gk': {
+    name: 'Senior Pro Masters Goalkeeper Coaching Science',
+    description: 'Professional Certificate in Goalkeeper Coaching Science (Senior Pro Masters Level) — 19 modules, 14 faculty. Lifetime access.',
+    wlm_level_env: 'WLM_LEVEL_SENIOR',
+    prices: {
+      gbp: { full: 32900, unit: 4900 },
+      usd: { full: 44900, unit: 5900 },
+      eur: { full: 35900, unit: 4900 },
+      aud: { full: 65900, unit: 8900 },
+      cad: { full: 65900, unit: 7900 },
+      myr: { full: 169900, unit: 24900 },
+      zar: { full: 699900, unit: 89900 }
+    },
+    workbook: {
+      name: 'Senior Pro Masters Goalkeeper Science Workbook',
+      description: 'Printable companion to the Senior Pro Masters course — match-day frameworks, periodisation worksheets, decision-making diagnostics, set-play reference cards.',
+      wlm_level_env: 'WLM_LEVEL_WORKBOOK_SENIOR',
+      prices: { gbp: 1900, usd: 2400, eur: 2200, aud: 3500, cad: 3200, myr: 9900, zar: 34900 }
+    }
+  }
+};
+
+/**
+ * Coupon codes — keyed UPPERCASE.
+ * Add/remove codes here. Redeploy worker for changes to take effect.
+ * `applies_to`: 'all' or array of course_ids.
+ */
+const COUPONS = {
+  // GKSCIENCE25 is intentionally NOT here yet — Neil to confirm if it's still in play
+  // at the new £49 tripwire pricing. Tripwire prices may not warrant additional discount.
+  // Example for when Neil decides:
+  // 'GKSCIENCE25': { percent: 25, applies_to: 'all', expires: '2026-12-31' }
+};
+
+
+// ─────────────────────────────────────────────────────────────
+// STRIPE CHECKOUT SESSION CREATION
+// ─────────────────────────────────────────────────────────────
+
+async function handleCreateCheckoutSession(request, env) {
+  let body;
+  try { body = await request.json(); } catch (e) { return jsonResponse({ ok: false, error: 'invalid-json' }, 400); }
+
+  const courseId = String(body.course_id || '').trim();
+  const currency = String(body.currency || '').trim().toLowerCase();
+  const bump = !!body.bump;
+  const couponCode = body.coupon ? String(body.coupon).trim().toUpperCase() : null;
+
+  const course = COURSE_CONFIG[courseId];
+  if (!course) return jsonResponse({ ok: false, error: 'unknown-course' }, 400);
+
+  const priceRow = course.prices[currency];
+  if (!priceRow) return jsonResponse({ ok: false, error: 'unsupported-currency' }, 400);
+
+  // Apply coupon if valid
+  let unitAmount = priceRow.unit;
+  let appliedCoupon = null;
+  if (couponCode) {
+    const coupon = COUPONS[couponCode];
+    if (coupon && (coupon.applies_to === 'all' || (Array.isArray(coupon.applies_to) && coupon.applies_to.includes(courseId)))) {
+      unitAmount = Math.round(unitAmount * (1 - coupon.percent / 100));
+      appliedCoupon = couponCode;
+    }
+  }
+
+  const lineItems = [
+    {
+      price_data: {
+        currency: currency,
+        product_data: {
+          name: course.name,
+          description: course.description
+        },
+        unit_amount: unitAmount
+      },
+      quantity: 1
+    }
+  ];
+
+  if (bump && course.workbook && course.workbook.prices[currency]) {
+    lineItems.push({
+      price_data: {
+        currency: currency,
+        product_data: {
+          name: course.workbook.name,
+          description: course.workbook.description
+        },
+        unit_amount: course.workbook.prices[currency]
+      },
+      quantity: 1
+    });
+  }
+
+  const stripeSecret = env.STRIPE_SECRET_KEY;
+  if (!stripeSecret) return jsonResponse({ ok: false, error: 'stripe-not-configured' }, 500);
+
+  const origin = new URL(request.url).origin;
+  const successUrl = `${origin}/checkout/thank-you/?session_id={CHECKOUT_SESSION_ID}&course=${encodeURIComponent(courseId)}&currency=${encodeURIComponent(currency)}`;
+  const cancelUrl = `${origin}/checkout/${courseIdToSlug(courseId)}/`;
+
+  // Build Stripe Checkout Session via API
+  const form = new URLSearchParams();
+  form.append('mode', 'payment');
+  form.append('payment_method_types[]', 'card');
+  form.append('success_url', successUrl);
+  form.append('cancel_url', cancelUrl);
+  form.append('customer_creation', 'always');
+  form.append('billing_address_collection', 'required');
+  form.append('allow_promotion_codes', 'false');
+  form.append('metadata[course_id]', courseId);
+  form.append('metadata[bump]', bump ? '1' : '0');
+  form.append('metadata[coupon]', appliedCoupon || '');
+  form.append('metadata[currency]', currency);
+
+  // When workbook bump is in cart, collect shipping address (physical product, shipped).
+  // Country list mirrors the geoip-supported markets in the checkout page.
+  if (bump) {
+    const SHIPPING_COUNTRIES = [
+      'GB','IM','JE','GG','US','AU','CA',
+      'AT','BE','CY','DE','DK','EE','FI','FR','GR','IS','IE','IT',
+      'LV','LT','LU','NL','NO','PT','SK','SI','ES',
+      'MY','ZA'
+    ];
+    SHIPPING_COUNTRIES.forEach(c => form.append('shipping_address_collection[allowed_countries][]', c));
+  }
+  if (body.affwp_affiliate_id) form.append('metadata[affwp_affiliate_id]', String(body.affwp_affiliate_id));
+  if (body.affwp_visit_id) form.append('metadata[affwp_visit_id]', String(body.affwp_visit_id));
+  if (body.fbp) form.append('metadata[fbp]', String(body.fbp));
+  if (body.fbc) form.append('metadata[fbc]', String(body.fbc));
+
+  lineItems.forEach((li, idx) => {
+    form.append(`line_items[${idx}][quantity]`, String(li.quantity));
+    form.append(`line_items[${idx}][price_data][currency]`, li.price_data.currency);
+    form.append(`line_items[${idx}][price_data][product_data][name]`, li.price_data.product_data.name);
+    form.append(`line_items[${idx}][price_data][product_data][description]`, li.price_data.product_data.description);
+    form.append(`line_items[${idx}][price_data][unit_amount]`, String(li.price_data.unit_amount));
+  });
+
+  try {
+    const stripeResp = await fetch('https://api.stripe.com/v1/checkout/sessions', {
+      method: 'POST',
+      headers: {
+        'Authorization': 'Bearer ' + stripeSecret,
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: form.toString()
+    });
+    const stripeData = await stripeResp.json();
+    if (!stripeResp.ok || !stripeData.url) {
+      console.error('[Stripe] Session creation failed:', JSON.stringify(stripeData).substring(0, 500));
+      return jsonResponse({ ok: false, error: stripeData.error?.message || 'stripe-error' }, 502);
+    }
+    return jsonResponse({ ok: true, url: stripeData.url, session_id: stripeData.id });
+  } catch (err) {
+    console.error('[Stripe] Request failed:', err.message);
+    return jsonResponse({ ok: false, error: 'request-failed', message: err.message }, 502);
+  }
+}
+
+function courseIdToSlug(courseId) {
+  const map = {
+    'pro-youth-gk': 'pro-youth-goalkeeper-coaching',
+    'senior-pro-masters-gk': 'pro-masters-goalkeeper-coaching'
+  };
+  return map[courseId] || 'pro-youth-goalkeeper-coaching';
+}
+
+
+// ─────────────────────────────────────────────────────────────
+// COUPON VALIDATION
+// ─────────────────────────────────────────────────────────────
+
+async function handleValidateCoupon(request, env) {
+  let body;
+  try { body = await request.json(); } catch (e) { return jsonResponse({ ok: false, message: 'Invalid request' }, 400); }
+  const code = String(body.code || '').trim().toUpperCase();
+  const courseId = String(body.course_id || '').trim();
+  if (!code) return jsonResponse({ ok: false, message: 'No code provided' }, 400);
+  const coupon = COUPONS[code];
+  if (!coupon) return jsonResponse({ ok: false, message: 'Code not recognised' });
+  if (coupon.expires) {
+    const expiresAt = new Date(coupon.expires).getTime();
+    if (Date.now() > expiresAt) return jsonResponse({ ok: false, message: 'This code has expired' });
+  }
+  if (coupon.applies_to !== 'all') {
+    const list = Array.isArray(coupon.applies_to) ? coupon.applies_to : [coupon.applies_to];
+    if (!list.includes(courseId)) return jsonResponse({ ok: false, message: 'Code not valid for this course' });
+  }
+  return jsonResponse({ ok: true, percent: coupon.percent, code: code });
+}
+
+
+// ─────────────────────────────────────────────────────────────
+// STRIPE WEBHOOK HANDLER (verifies signature + enrols in WLM)
+// ─────────────────────────────────────────────────────────────
+
+async function handleStripeWebhook(request, env) {
+  const signatureHeader = request.headers.get('stripe-signature') || '';
+  const webhookSecret = env.STRIPE_WEBHOOK_SECRET;
+  if (!webhookSecret) {
+    console.error('[Stripe webhook] STRIPE_WEBHOOK_SECRET not configured');
+    return jsonResponse({ ok: false, error: 'webhook-not-configured' }, 500);
+  }
+
+  const rawBody = await request.text();
+  const verified = await verifyStripeSignature(signatureHeader, rawBody, webhookSecret);
+  if (!verified) {
+    console.error('[Stripe webhook] Signature verification failed');
+    return new Response('Signature verification failed', { status: 400 });
+  }
+
+  let event;
+  try { event = JSON.parse(rawBody); } catch (e) {
+    return new Response('Invalid JSON', { status: 400 });
+  }
+
+  // Only act on completed checkout sessions
+  if (event.type !== 'checkout.session.completed') {
+    return jsonResponse({ ok: true, ignored: event.type });
+  }
+
+  const session = event.data.object;
+  const courseId = session.metadata?.course_id;
+  const bump = session.metadata?.bump === '1';
+  const email = session.customer_details?.email || session.customer_email;
+  const name = session.customer_details?.name || '';
+
+  if (!courseId || !email) {
+    console.error('[Stripe webhook] Missing course_id or email in session', session.id);
+    return jsonResponse({ ok: false, error: 'missing-data' }, 400);
+  }
+
+  const course = COURSE_CONFIG[courseId];
+  if (!course) {
+    console.error('[Stripe webhook] Unknown course_id', courseId);
+    return jsonResponse({ ok: false, error: 'unknown-course' }, 400);
+  }
+
+  // Enrol in WishlistMember
+  const levelId = env[course.wlm_level_env];
+  if (!levelId) {
+    console.error('[Stripe webhook] Missing WLM level env var', course.wlm_level_env);
+    return jsonResponse({ ok: false, error: 'wlm-level-not-configured' }, 500);
+  }
+
+  // Look up workbook level for THIS course (Youth and Senior have separate workbooks)
+  const workbookLevelEnv = course.workbook?.wlm_level_env;
+  const workbookLevelId = workbookLevelEnv ? env[workbookLevelEnv] : null;
+
+  const enrolment = await enrollInWishlistMember(env, {
+    email: email,
+    name: name,
+    levelId: levelId,
+    sessionId: session.id,
+    courseId: courseId,
+    addWorkbook: bump,
+    workbookLevelId: workbookLevelId
+  });
+
+  if (!enrolment.ok) {
+    console.error('[Stripe webhook] WLM enrolment failed for session', session.id, enrolment.error);
+    // Return 200 anyway so Stripe doesn't retry — log internally for manual follow-up
+    return jsonResponse({ ok: false, error: 'wlm-enrolment-failed', session_id: session.id, message: enrolment.error }, 200);
+  }
+
+  return jsonResponse({ ok: true, session_id: session.id, wlm_user_id: enrolment.user_id });
+}
+
+async function verifyStripeSignature(signatureHeader, rawBody, secret) {
+  if (!signatureHeader) return false;
+  // Format: t=<timestamp>,v1=<signature>[,v1=<signature2>...]
+  const parts = signatureHeader.split(',');
+  let timestamp = null;
+  const signatures = [];
+  for (const part of parts) {
+    const [key, value] = part.split('=');
+    if (key === 't') timestamp = value;
+    if (key === 'v1') signatures.push(value);
+  }
+  if (!timestamp || signatures.length === 0) return false;
+
+  // Check timestamp within 5 minutes (replay protection)
+  const tsNum = parseInt(timestamp, 10);
+  if (Math.abs(Date.now() / 1000 - tsNum) > 300) return false;
+
+  const signedPayload = `${timestamp}.${rawBody}`;
+  const expected = await hmacSha256Hex(secret, signedPayload);
+
+  // Constant-time compare
+  for (const sig of signatures) {
+    if (constantTimeEquals(sig, expected)) return true;
+  }
+  return false;
+}
+
+async function hmacSha256Hex(key, message) {
+  const enc = new TextEncoder();
+  const cryptoKey = await crypto.subtle.importKey(
+    'raw',
+    enc.encode(key),
+    { name: 'HMAC', hash: 'SHA-256' },
+    false,
+    ['sign']
+  );
+  const sig = await crypto.subtle.sign('HMAC', cryptoKey, enc.encode(message));
+  return Array.from(new Uint8Array(sig)).map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+function constantTimeEquals(a, b) {
+  if (a.length !== b.length) return false;
+  let result = 0;
+  for (let i = 0; i < a.length; i++) result |= a.charCodeAt(i) ^ b.charCodeAt(i);
+  return result === 0;
+}
+
+
+// ─────────────────────────────────────────────────────────────
+// WISHLIST MEMBER ENROLMENT
+// ─────────────────────────────────────────────────────────────
+
+/**
+ * Enrol a buyer in a WishlistMember level via WLM's API.
+ *
+ * WLM API documentation: https://wishlistmember.com/wlm-api-overview/
+ * The "Add Member" endpoint expects POST to /wlmapi/v1.0/users with form data:
+ *   - email (required)
+ *   - levels (CSV of level IDs)
+ *   - first_name, last_name (optional)
+ *   - send_welcome_email (optional, 1/0)
+ *
+ * Env vars required:
+ *   WLM_API_BASE_URL — e.g. https://www.isspf.com/wlmapi/v1.0
+ *   WLM_API_KEY      — generated in WLM > Settings > Advanced > API
+ */
+async function enrollInWishlistMember(env, opts) {
+  const apiBase = (env.WLM_API_BASE_URL || '').replace(/\/$/, '');
+  const apiKey = env.WLM_API_KEY || '';
+  if (!apiBase || !apiKey) {
+    return { ok: false, error: 'wlm-not-configured' };
+  }
+
+  // Split name into first/last
+  const nameParts = (opts.name || '').trim().split(/\s+/);
+  const firstName = nameParts[0] || '';
+  const lastName = nameParts.slice(1).join(' ') || '';
+
+  // Build levels list (course + workbook if bump)
+  // workbookLevelId is now passed in from the caller (course-specific Youth vs Senior workbook)
+  const levels = [opts.levelId];
+  if (opts.addWorkbook && opts.workbookLevelId) levels.push(opts.workbookLevelId);
+
+  const form = new URLSearchParams();
+  form.append('email', opts.email);
+  form.append('levels', levels.join(','));
+  if (firstName) form.append('first_name', firstName);
+  if (lastName) form.append('last_name', lastName);
+  form.append('send_welcome_email', '1');
+  // Stripe session ID as a custom field for tracking — WLM may or may not store this depending on config
+  form.append('custom_field_stripe_session', opts.sessionId);
+
+  try {
+    const resp = await fetch(`${apiBase}/users`, {
+      method: 'POST',
+      headers: {
+        'WLM3-API-KEY': apiKey,
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Accept': 'application/json'
+      },
+      body: form.toString()
+    });
+    const text = await resp.text();
+    let data = null;
+    try { data = JSON.parse(text); } catch (e) { /* WLM may return non-JSON on error */ }
+
+    if (!resp.ok) {
+      console.error('[WLM] API error:', resp.status, text.substring(0, 400));
+
+      // If user already exists, try to add them to the level instead
+      if (text.includes('already') || text.includes('exists') || resp.status === 409) {
+        return await addExistingUserToLevel(env, opts.email, levels, opts.sessionId);
+      }
+
+      return { ok: false, error: 'wlm-api-error', status: resp.status, body: text.substring(0, 200) };
+    }
+
+    const userId = data?.user?.id || data?.id || data?.user_id || null;
+    return { ok: true, user_id: userId };
+  } catch (err) {
+    console.error('[WLM] Request failed:', err.message);
+    return { ok: false, error: 'wlm-request-failed', message: err.message };
+  }
+}
+
+/**
+ * Fallback when the user already exists in WLM — find them by email, then add the level.
+ */
+async function addExistingUserToLevel(env, email, levels, sessionId) {
+  const apiBase = (env.WLM_API_BASE_URL || '').replace(/\/$/, '');
+  const apiKey = env.WLM_API_KEY || '';
+
+  try {
+    // Lookup user by email
+    const lookupResp = await fetch(`${apiBase}/users?email=${encodeURIComponent(email)}`, {
+      headers: { 'WLM3-API-KEY': apiKey, 'Accept': 'application/json' }
+    });
+    if (!lookupResp.ok) return { ok: false, error: 'wlm-lookup-failed', status: lookupResp.status };
+    const lookupData = await lookupResp.json();
+    const user = lookupData?.users?.[0] || lookupData?.user || (Array.isArray(lookupData) ? lookupData[0] : null);
+    const userId = user?.id || user?.user_id || null;
+    if (!userId) return { ok: false, error: 'wlm-user-not-found' };
+
+    // Add each level
+    for (const levelId of levels) {
+      const addForm = new URLSearchParams();
+      addForm.append('level_id', String(levelId));
+      const addResp = await fetch(`${apiBase}/users/${userId}/levels`, {
+        method: 'POST',
+        headers: { 'WLM3-API-KEY': apiKey, 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: addForm.toString()
+      });
+      if (!addResp.ok) {
+        const errBody = await addResp.text();
+        console.error('[WLM] Add level failed:', addResp.status, errBody.substring(0, 200));
+      }
+    }
+    return { ok: true, user_id: userId, existing: true };
+  } catch (err) {
+    return { ok: false, error: 'wlm-fallback-failed', message: err.message };
+  }
+}
+
+
+// ─────────────────────────────────────────────────────────────
+// ORDER SUMMARY (for thank-you page)
+// ─────────────────────────────────────────────────────────────
+
+async function handleGetOrderSummary(url, env) {
+  const sessionId = url.searchParams.get('session_id') || '';
+  if (!sessionId.startsWith('cs_')) return jsonResponse({ ok: false, error: 'invalid-session-id' }, 400);
+  const stripeSecret = env.STRIPE_SECRET_KEY;
+  if (!stripeSecret) return jsonResponse({ ok: false, error: 'stripe-not-configured' }, 500);
+
+  try {
+    const resp = await fetch(`https://api.stripe.com/v1/checkout/sessions/${encodeURIComponent(sessionId)}`, {
+      headers: { 'Authorization': 'Bearer ' + stripeSecret }
+    });
+    if (!resp.ok) {
+      const body = await resp.text();
+      return jsonResponse({ ok: false, error: 'stripe-fetch-failed', status: resp.status, body: body.substring(0, 200) }, 502);
+    }
+    const session = await resp.json();
+    const courseId = session.metadata?.course_id || '';
+    const course = COURSE_CONFIG[courseId];
+
+    return jsonResponse({
+      ok: true,
+      session_id: session.id,
+      amount: (session.amount_total || 0) / 100,
+      currency: session.currency || '',
+      course_id: courseId,
+      course_name: course?.name || '',
+      user_data: session.customer_details?.email ? {
+        email: session.customer_details.email,
+        first_name: (session.customer_details.name || '').split(' ')[0] || undefined,
+        last_name: (session.customer_details.name || '').split(' ').slice(1).join(' ') || undefined
+      } : null
+    });
+  } catch (err) {
+    return jsonResponse({ ok: false, error: 'request-failed', message: err.message }, 502);
+  }
+}
+
+
+// ─────────────────────────────────────────────────────────────
+// AFFILIATEWP CONVERSION FOR PURCHASES
+// ─────────────────────────────────────────────────────────────
+
+/**
+ * Convert an affiliate-tracked visit into a SALE (not opt-in) referral.
+ * Called from the thank-you page once Stripe redirects back.
+ * Uses the Stripe session amount as the referral amount.
+ */
+async function handleAffwpConvertSale(request, env, cookies) {
+  let body;
+  try { body = await request.json(); } catch (e) { return jsonResponse({ ok: false, error: 'invalid-json' }, 400); }
+  const sessionId = String(body.session_id || '');
+  if (!sessionId.startsWith('cs_')) return jsonResponse({ ok: false, error: 'invalid-session-id' }, 400);
+
+  const affiliateId = cookies['affwp_affiliate_id'];
+  const visitId = cookies['affwp_visit_id'];
+  if (!affiliateId) return jsonResponse({ ok: true, skipped: 'no-affiliate' });
+
+  const stripeSecret = env.STRIPE_SECRET_KEY;
+  if (!stripeSecret) return jsonResponse({ ok: false, error: 'stripe-not-configured' }, 500);
+
+  // Fetch session to get amount
+  let amount = 0;
+  try {
+    const sessionResp = await fetch(`https://api.stripe.com/v1/checkout/sessions/${encodeURIComponent(sessionId)}`, {
+      headers: { 'Authorization': 'Bearer ' + stripeSecret }
+    });
+    if (sessionResp.ok) {
+      const session = await sessionResp.json();
+      amount = (session.amount_total || 0) / 100;
+    }
+  } catch (e) { /* continue with amount 0 */ }
+
+  const parentUrl = (env.AFFWP_PARENT_URL || '').replace(/\/$/, '');
+  const publicKey = env.AFFWP_PUBLIC_KEY || '';
+  const token = env.AFFWP_TOKEN || '';
+  if (!parentUrl || !publicKey || !token) return jsonResponse({ ok: false, error: 'affwp-not-configured' }, 500);
+
+  try {
+    const apiParams = new URLSearchParams({
+      affiliate_id: affiliateId,
+      amount: String(amount),
+      type: 'sale',
+      context: 'gk-course-purchase',
+      description: 'GK course purchase via Stripe (' + sessionId + ')',
+      status: 'unpaid'
+    });
+    if (visitId) apiParams.set('visit_id', visitId);
+
+    const apiUrl = `${parentUrl}/wp-json/affwp/v1/referrals?${apiParams.toString()}`;
+    const authHeader = 'Basic ' + btoa(`${publicKey}:${token}`);
+    const apiResp = await fetch(apiUrl, { method: 'POST', headers: { 'Authorization': authHeader, 'Content-Type': 'application/x-www-form-urlencoded' }, body: '' });
+    const text = await apiResp.text();
+    if (!apiResp.ok) return jsonResponse({ ok: false, error: 'affwp-api-error', status: apiResp.status, body: text.substring(0, 200) }, 502);
+    return jsonResponse({ ok: true, amount: amount });
+  } catch (err) {
+    return jsonResponse({ ok: false, error: 'request-failed', message: err.message }, 502);
+  }
 }
