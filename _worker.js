@@ -589,6 +589,7 @@ const COURSE_CONFIG = {
     name: 'Pro-Youth Goalkeeper Coaching Science',
     description: 'Professional Certificate in Goalkeeper Coaching Science (Pro-Youth Level) — 10 modules, 9 faculty. Lifetime access.',
     wlm_level_env: 'WLM_LEVEL_PRO_YOUTH',
+    statement_descriptor: 'ISSPF-GKYSMM', // appears on buyer's bank statement (max 22 chars)
     prices: {
       // currency: amount in smallest unit (pence/cents). Coupon (e.g. GKSCIENCE25)
       // discounts this server-side before sending to Stripe.
@@ -613,6 +614,7 @@ const COURSE_CONFIG = {
     name: 'Senior Pro Masters Goalkeeper Coaching Science',
     description: 'Professional Certificate in Goalkeeper Coaching Science (Senior Pro Masters Level) — 19 modules, 14 faculty. Lifetime access.',
     wlm_level_env: 'WLM_LEVEL_SENIOR',
+    statement_descriptor: 'ISSPF-GKSSMM', // appears on buyer's bank statement (max 22 chars)
     prices: {
       gbp: 32900,
       usd: 44900,
@@ -846,6 +848,9 @@ async function handleCreatePaymentIntent(request, env) {
   form.append('description', course.name + (bump ? ' + Workbook' : ''));
   form.append('automatic_payment_methods[enabled]', 'true');
   form.append('automatic_payment_methods[allow_redirects]', 'never');
+  if (course.statement_descriptor) {
+    form.append('statement_descriptor', course.statement_descriptor);
+  }
 
   // Metadata — read by the webhook to enrol the buyer in WLM
   form.append('metadata[course_id]', courseId);
@@ -989,6 +994,7 @@ async function handlePaypalCreateOrder(request, env) {
   const purchaseUnit = {
     reference_id: courseId,
     description: course.name + (bump ? ' + Workbook' : ''),
+    soft_descriptor: course.statement_descriptor || undefined, // appears on buyer's bank statement (max 22 chars)
     amount: {
       currency_code: currency.toUpperCase(),
       value: paypalAmount(total, currency),
