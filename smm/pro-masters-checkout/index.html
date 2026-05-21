@@ -13,7 +13,7 @@
 fbq('init','856256648998431');
 window.metaCapi=function(eventName,customData,userData){var eid=(window.crypto&&crypto.randomUUID)?crypto.randomUUID():(Date.now()+'-'+Math.random().toString(36).slice(2));try{fbq('track',eventName,customData||{},{eventID:eid});}catch(e){}try{fetch('/api/meta-capi',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'same-origin',keepalive:true,body:JSON.stringify({event_name:eventName,event_id:eid,event_source_url:location.href,custom_data:customData||{},user_data:userData||undefined})});}catch(e){}};
 metaCapi('PageView');
-metaCapi('InitiateCheckout',{content_name:'Senior Pro Masters Goalkeeper Coaching Science',content_category:'Course',content_ids:['gk-senior-smm'],content_type:'product'});
+metaCapi('InitiateCheckout',{content_name:'Senior Pro Masters Goalkeeper Coaching Science',content_category:'Course',content_ids:['gk-senior'],content_type:'product'});
 </script>
 <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=856256648998431&ev=PageView&noscript=1"/></noscript>
 

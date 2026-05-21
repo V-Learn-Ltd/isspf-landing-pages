@@ -140,6 +140,22 @@ export default {
       return await handleAffwpConvertSale(request, env, cookies);
     }
 
+    // ── LEGACY CHECKOUT SLUG REDIRECTS ──
+    // The /smm/ checkout folders were renamed 2026-05-21 from the long
+    // *-goalkeeper-coaching slugs to *-checkout. Any ads, emails or bookmarks
+    // still pointing at the old slugs land here and get 301'd to the new ones.
+    // Query params (utm, affiliate ref, etc.) are preserved.
+    const LEGACY_CHECKOUT_SLUGS = {
+      '/smm/pro-youth-goalkeeper-coaching':   '/smm/pro-youth-checkout/',
+      '/smm/pro-masters-goalkeeper-coaching': '/smm/pro-masters-checkout/'
+    };
+    const legacyTarget = LEGACY_CHECKOUT_SLUGS[path];
+    if (legacyTarget) {
+      const target = new URL(legacyTarget, url.origin);
+      url.searchParams.forEach((v, k) => target.searchParams.set(k, v));
+      return Response.redirect(target.toString(), 301);
+    }
+
 
     // ── Step 1: Resolve the response (A/B routing or pass-through) ──
     let response;
@@ -777,10 +793,10 @@ async function handleCreateCheckoutSession(request, env) {
 
 function courseIdToSlug(courseId) {
   const map = {
-    'pro-youth-gk': 'pro-youth-goalkeeper-coaching',
-    'senior-pro-masters-gk': 'pro-masters-goalkeeper-coaching'
+    'pro-youth-gk': 'pro-youth-checkout',
+    'senior-pro-masters-gk': 'pro-masters-checkout'
   };
-  return map[courseId] || 'pro-youth-goalkeeper-coaching';
+  return map[courseId] || 'pro-youth-checkout';
 }
 
 /**

@@ -30,8 +30,8 @@ Pricing for both courses is defined in `_worker.js` → `COURSE_CONFIG`. Change 
 
 | Page | URL |
 |---|---|
-| Pro-Youth checkout | `https://go.isspf.com/smm/pro-youth-goalkeeper-coaching/` |
-| Senior Pro Masters checkout | `https://go.isspf.com/smm/pro-masters-goalkeeper-coaching/` |
+| Pro-Youth checkout | `https://go.isspf.com/smm/pro-youth-checkout/` |
+| Senior Pro Masters checkout | `https://go.isspf.com/smm/pro-masters-checkout/` |
 | Thank-you (Stripe success) | `https://go.isspf.com/smm/thank-you/?session_id=...` |
 | Stripe webhook endpoint | `https://go.isspf.com/api/stripe-webhook` |
 
@@ -121,7 +121,7 @@ Then `git commit -am "Configure checkout env vars"` and `git push`. Cloudflare a
 ### Stripe test mode (do this first)
 
 1. Use Stripe test keys in env vars (`sk_test_...` / `pk_test_...` / `whsec_...` from a TEST webhook endpoint)
-2. Visit `https://go.isspf.com/smm/pro-youth-goalkeeper-coaching/` in **incognito**
+2. Visit `https://go.isspf.com/smm/pro-youth-checkout/` in **incognito**
 3. Click **Pay £49 — Enrol now**
 4. On Stripe page: use card `4242 4242 4242 4242`, any future expiry, any CVC, any postal code
 5. Should redirect to `/smm/thank-you/` with a success state
@@ -170,7 +170,7 @@ Then `git commit -am "Configure checkout env vars"` and `git push`. Cloudflare a
 ```
 Buyer on /pro-youth-goalkeeper-coaching/
    ↓ clicks ENROL NOW
-   → /smm/pro-youth-goalkeeper-coaching/
+   → /smm/pro-youth-checkout/
        ↓ geoip → picks currency → displays £49
        ↓ buyer ticks bump (workbook, +£19)
        ↓ buyer clicks Pay £68
