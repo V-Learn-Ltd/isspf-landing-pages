@@ -1791,11 +1791,12 @@ src="https://www.facebook.com/tr?id=856256648998431&ev=PageView&noscript=1"
 <script>
   // Meta Pixel + CAPI: InitiateCheckout on buy-button clicks.
   // Fires browser pixel + server-side CAPI (deduped by event_id) when a visitor
-  // clicks any link to the SMM checkout page on learn.isspf.com. metaCapi is
-  // fire-and-forget; the link still navigates normally.
+  // clicks any ENROL link on this sales page. metaCapi is fire-and-forget;
+  // the link still navigates normally. This event drives Facebook retargeting
+  // audiences for buyers who showed intent but haven't yet purchased.
   (function () {
     if (typeof window.metaCapi !== 'function') return;
-    document.querySelectorAll('a[href*="learn.isspf.com/smm/buy-gk-youth"]').forEach(function (btn) {
+    document.querySelectorAll('a[href*="/smm/pro-youth-goalkeeper-coaching/"], a[href*="learn.isspf.com/smm/buy-gk-youth"]').forEach(function (btn) {
       btn.addEventListener('click', function () {
         window.metaCapi('InitiateCheckout', {
           content_name: 'Professional Certificate in Goalkeeper Coaching Science (Pro-Youth Level)',
