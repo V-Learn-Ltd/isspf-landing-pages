@@ -73,6 +73,24 @@ All three forms on `gk-report` post to arpReach at `https://email.isspf.com/a.ph
 
 Migration to **SignalFlux** is planned — when it happens, every `<form action>` URL needs updating across all variants.
 
+## Uptime monitoring
+
+`monitor/` holds a **standalone** Cloudflare Worker that polls `www.isspf.com`,
+`learn.isspf.com`, and `go.isspf.com` every 5 minutes, classifies how they
+fail (Cloudflare 521/522/524, WordPress DB errors, timeouts), stores 90 days
+of history in KV, and alerts on state changes.
+
+It is deployed separately from this Pages project — Pages Functions can't run
+cron triggers — and is excluded from the Pages deploy via `.assetsignore`.
+See [`monitor/README.md`](monitor/README.md) to deploy it, and
+[`DOWNTIME-PLAYBOOK.md`](DOWNTIME-PLAYBOOK.md) for diagnosing the WordPress
+outages themselves.
+
+Note that `go.isspf.com` does **not** go down when WordPress does — it's
+static content on Cloudflare's edge. The landing pages do, however, hotlink
+around 25 images from `www.isspf.com/wp-content/uploads/`, so they render
+with broken images during an origin outage.
+
 ## Sibling repo
 
 [`urban-sketch-landing-pages`](https://github.com/V-Learn-Ltd/urban-sketch-landing-pages) — same architectural pattern, different brand, different Cloudflare account.

@@ -6,4 +6,6 @@ wrangler.jsonc
 .assetsignore
 README.md
 MORNING-CHECKLIST.md
+DOWNTIME-PLAYBOOK.md
+monitor
 .DS_Store

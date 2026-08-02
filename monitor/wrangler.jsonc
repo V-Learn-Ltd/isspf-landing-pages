@@ -1,0 +1,49 @@
+{
+  "$schema": "https://developers.cloudflare.com/schemas/wrangler.json",
+  "name": "isspf-uptime-monitor",
+  "main": "src/index.js",
+  "compatibility_date": "2026-04-25",
+
+  // Every 5 minutes. Cloudflare Pages Functions cannot do this — cron
+  // triggers are a Workers-only feature — which is why this is a separate
+  // Worker rather than part of the root `_worker.js`.
+  "triggers": {
+    "crons": ["*/5 * * * *"]
+  },
+
+  "observability": {
+    "enabled": true
+  },
+
+  // Create with:  npx wrangler kv namespace create MONITOR
+  // then paste the returned id below.
+  "kv_namespaces": [
+    {
+      "binding": "MONITOR",
+      "id": "REPLACE_WITH_KV_NAMESPACE_ID"
+    }
+  ],
+
+  "vars": {
+    // Hosts to poll. Omit to use the built-in defaults (www, learn, go).
+    "TARGETS": "[{\"name\":\"www\",\"url\":\"https://www.isspf.com/\"},{\"name\":\"learn\",\"url\":\"https://learn.isspf.com/\"},{\"name\":\"go\",\"url\":\"https://go.isspf.com/gk-report/\"}]",
+
+    // Abort a probe after this long and record it as a timeout. Cloudflare
+    // itself gives up at 100s (a 524), but 30s is already "down" to a visitor.
+    "TIMEOUT_MS": "30000",
+
+    // Responses slower than this are flagged "degraded" — still serving, but
+    // trending toward the timeouts that cause a 522/524.
+    "SLOW_MS": "5000",
+
+    // Shown in alert emails so you can jump straight to the dashboard.
+    "DASHBOARD_URL": "https://isspf-uptime-monitor.<your-subdomain>.workers.dev"
+
+    // ── OPTIONAL SECRETS (set via `wrangler secret put`, never here) ──
+    //   RESEND_API_KEY    — resend.com API key, for email alerts
+    //   ALERT_EMAIL_TO    — comma-separated recipients
+    //   ALERT_EMAIL_FROM  — verified sender, e.g. alerts@isspf.com
+    //   ALERT_WEBHOOK_URL — Slack or Discord incoming webhook
+    //   DASHBOARD_TOKEN   — if set, dashboard requires ?token=<value>
+  }
+}
