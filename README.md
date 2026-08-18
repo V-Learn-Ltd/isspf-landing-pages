@@ -56,12 +56,15 @@ Requires `brew install poppler webp`.
   when someone opens read mode.
 - **Read mode is where the book is actually read.** A whole A4 spread fitted to a
   laptop screen puts body text at roughly 9px, which is a property of the paper
-  size, not of the viewer — enlarging the book cannot fix it. Clicking any page
-  (or the "Read Full Size" button, or Enter) opens that page on its own, full
-  width and scrollable, which puts the same text at roughly 24px. Zoom steps go to
-  3x, arrows change page, Esc closes and returns the book to the page you stopped
-  on. A click only counts if the pointer barely moved, so dragging a corner still
-  turns the page instead of opening the reader.
+  size, not of the viewer — enlarging the book cannot fix it. The "Read Full Size"
+  button (or Enter) opens the current page on its own, full width and scrollable,
+  which puts the same text at roughly 24px. Zoom steps go to 3x, arrows change
+  page, Esc closes and returns the book to the page you stopped on.
+- **Clicking a page turns it, and only that.** An earlier version opened read mode
+  on any non-drag click, which stole StPageFlip's own click-to-turn: clicking
+  magnified instead of turning, and because the handler was always live, closing
+  the reader and clicking again just reopened it. Read mode is reached from the
+  button, never from the page.
 - The **aspect ratio is read from the source**, never hardcoded. A4 guidebooks
   (1:1.414) and US-Letter reports (1:1.294) both appear in this library, so a
   fixed ratio would letterbox or stretch half the catalogue.

@@ -318,21 +318,13 @@
     try { flip.turnToPage(read.page - 1); } catch (e) {}
   }
 
-  /* Clicking a page opens it. StPageFlip uses pointer drags to turn pages, so
-   * only treat it as a click when the pointer barely moved — otherwise every
-   * page turn would also fire read mode. */
-  var downAt = null;
-  elBook.addEventListener('pointerdown', function (e) { downAt = [e.clientX, e.clientY]; });
-  elBook.addEventListener('pointerup', function (e) {
-    if (!downAt) return;
-    var moved = Math.abs(e.clientX - downAt[0]) + Math.abs(e.clientY - downAt[1]);
-    downAt = null;
-    if (moved > 6) return;
-    var pageEl = e.target.closest('.page');
-    if (!pageEl) return;
-    var idx = imgs.indexOf(pageEl.querySelector('img'));
-    if (idx >= 0) openRead(idx + 1);
-  });
+  /* Read mode is opened by the button (or Enter), NEVER by clicking a page.
+   *
+   * An earlier version opened it on any click that did not drag. That quietly
+   * stole StPageFlip's own click-to-turn: clicking a page magnified it instead
+   * of turning it, and since the handler was always live, closing the reader and
+   * clicking again just reopened it. It felt like a trap with no way out.
+   * Clicking a page must do the one thing a book does when you click it. */
 
   var elRead = document.getElementById('fb-read-open');
   if (elRead) elRead.addEventListener('click', function () {

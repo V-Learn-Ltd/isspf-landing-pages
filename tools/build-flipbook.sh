@@ -341,7 +341,7 @@ cat > "$OUT/index.html" <<HTMLEOF
   <button class="fb-btn fb-btn-primary" id="fb-read-open" type="button">&#128269; Read Full Size</button>
 </div>
 
-<p class="fb-hint">Click any page to read it full size. Drag a corner to turn it, or use the arrow keys.</p>
+<p class="fb-hint">Click a page or drag its corner to turn it. Use Read Full Size to enlarge the text.</p>
 
 <noscript>
   <p class="fb-note">This reader needs JavaScript.$NOSCRIPT_PDF</p>

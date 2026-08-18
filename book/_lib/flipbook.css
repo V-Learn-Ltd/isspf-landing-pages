@@ -264,8 +264,9 @@ body.fb-reading { overflow: hidden; }
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
 }
 
-/* Affordance on the book itself. */
-#flipbook .page { cursor: zoom-in; }
+/* A page is clickable to TURN it, so it must not advertise zoom. Read mode is
+   reached from the button in the controls. */
+#flipbook .page { cursor: pointer; }
 
 @media (max-width: 720px) {
   .fb-read-bar { flex-wrap: wrap; row-gap: 8px; padding: 8px 10px; }
