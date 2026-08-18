@@ -1,0 +1,212 @@
+/* ISSPF Flipbook — chrome and theme.
+   Brand tokens lifted from the gk-report landing page so the reader feels like
+   the same property: Anton display, Inter body, ISSPF red on near-black.
+   The library's own geometry lives in stpageflip.css; nothing here touches it. */
+
+:root {
+  --isspf-red: #ed1c24;
+  --isspf-red-dark: #c8161d;
+  --ink: #111111;
+  --ink-2: #141414;
+  --paper: #ffffff;
+  --muted: #9aa3ab;
+  --line: rgba(255, 255, 255, 0.14);
+  --chrome-h: 64px;
+}
+
+* { box-sizing: border-box; }
+
+/* Applied by flipbook.js only when the library initialised. The fallback view
+   must keep normal document scrolling, so this never applies there. */
+body.fb-locked {
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Top bar ───────────────────────────────────────────────── */
+.fb-bar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  height: var(--chrome-h);
+  padding: 0 18px;
+  background: var(--ink-2);
+  border-bottom: 1px solid var(--line);
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+
+.fb-brand { display: flex; align-items: baseline; gap: 10px; min-width: 0; }
+
+.fb-title {
+  font-family: Anton, Impact, "Arial Narrow Bold", sans-serif;
+  font-size: 19px;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.fb-sub {
+  font-size: 12px;
+  color: var(--muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.fb-bar-actions { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+
+/* ── Buttons ───────────────────────────────────────────────── */
+.fb-btn {
+  appearance: none;
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--paper);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 9px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  text-decoration: none;
+  white-space: nowrap;
+  line-height: 1;
+  transition: background 0.15s ease, border-color 0.15s ease, opacity 0.15s ease;
+}
+.fb-btn:hover:not(:disabled) { background: rgba(255, 255, 255, 0.08); }
+.fb-btn:disabled { opacity: 0.35; cursor: default; }
+
+.fb-btn-primary {
+  background: var(--isspf-red);
+  border-color: var(--isspf-red);
+}
+.fb-btn-primary:hover { background: var(--isspf-red-dark); border-color: var(--isspf-red-dark); }
+
+/* ── Stage ─────────────────────────────────────────────────── */
+.fb-stage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 18px;
+}
+
+body.fb-locked .fb-stage { flex: 1 1 auto; min-height: 0; }
+body.fb-locked .fb-bar,
+body.fb-locked .fb-controls,
+body.fb-locked .fb-hint { flex: 0 0 auto; }
+
+/* max-width is overwritten inline by flipbook.js fit(), which derives the widest
+   the book can be without its height exceeding the stage. */
+.fb-book-wrap { width: 100%; max-width: 1180px; margin: 0 auto; }
+
+/* StPageFlip writes inline sizes onto this element; it must not be constrained
+   by a competing width here or the shadow geometry drifts on resize. */
+#flipbook { margin: 0 auto; }
+
+#flipbook .page {
+  background: var(--paper);
+  overflow: hidden;
+}
+
+#flipbook .page img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: contain;
+  background: var(--paper);
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* ── Bottom controls ───────────────────────────────────────── */
+.fb-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 0 18px 12px;
+}
+
+.fb-counter {
+  font-variant-numeric: tabular-nums;
+  font-size: 13px;
+  color: var(--muted);
+  min-width: 84px;
+  text-align: center;
+}
+
+/* ── Loading + fallback ────────────────────────────────────── */
+.fb-loading {
+  text-align: center;
+  color: var(--muted);
+  font-size: 14px;
+  padding: 90px 20px;
+}
+
+.fb-note {
+  max-width: 760px;
+  margin: 0 auto 22px;
+  padding: 12px 16px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--muted);
+  font-size: 13px;
+  text-align: center;
+}
+
+/* Fallback: a plain vertical scroll of the same images. Used when the library
+   fails to load or throws. Deliberately dependency-free. */
+.fb-fallback { max-width: 860px; margin: 0 auto; padding: 0 0 40px; }
+.fb-fallback img {
+  width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto 18px;
+  background: var(--paper);
+  border-radius: 3px;
+}
+
+.fb-hint { text-align: center; color: var(--muted); font-size: 12px; margin: 0; padding: 0 18px 16px; }
+
+@media (max-width: 720px) {
+  :root { --chrome-h: 56px; }
+
+  /* One row cannot hold a book title and two buttons at phone width — the title
+     was collapsing to "THE GOA…". Give the title its own row and let the actions
+     sit beneath it. The book is width-bound on a phone, not height-bound, so the
+     taller bar costs no page area. */
+  .fb-bar {
+    height: auto;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    padding: 10px 12px;
+    row-gap: 9px;
+  }
+  .fb-brand { flex: 1 1 100%; }
+  .fb-title { font-size: 15px; white-space: normal; }
+  .fb-sub { display: none; }
+
+  .fb-bar-actions { margin-left: 0; flex: 1 1 100%; }
+  .fb-bar-actions .fb-btn {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .fb-stage { padding: 14px 10px; }
+  .fb-btn { padding: 8px 11px; font-size: 12px; }
+}

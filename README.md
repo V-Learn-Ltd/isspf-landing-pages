@@ -12,6 +12,68 @@ Static landing pages for ISSPF (International Soccer Science & Performance Feder
 |---|---|---|---|
 | `gk-report` | https://go.isspf.com/gk-report/ | LIVE | Active — A/B on H1 hammer |
 
+The `/gk-report/thanks/` page delivers the report as a flipbook (see below), with
+the PDF download kept as a secondary link.
+
+## Flipbooks (`/book/<slug>/`)
+
+Any ISSPF PDF or folder of page exports can be published as a page-curl flipbook,
+so a report reads like a book in the browser instead of arriving as a 24MB
+download. Built with [StPageFlip](https://github.com/Nodlik/StPageFlip) (MIT),
+vendored locally — no CDN, no runtime dependency on anyone else's uptime.
+
+| Slug | Live URL | Source | Pages |
+|---|---|---|---|
+| `gk-science-report` | https://go.isspf.com/book/gk-science-report/ | GK Science Campaign PDF | 23 |
+
+### Add a book
+
+```bash
+# from a PDF
+./tools/build-flipbook.sh \
+  --pdf "/path/to/Report.pdf" \
+  --slug my-report \
+  --title "My Report" \
+  --subtitle "ISSPF · 40 pages" \
+  --pdf-url "https://www.isspf.com/wp-content/uploads/.../Report.pdf" \
+  --cta-text "See The Courses" \
+  --cta-url "https://go.isspf.com/smm/pro-youth-checkout/"
+
+# or from a folder of page exports (most of the Dropbox PDF library is
+# online-only, and some titles only exist as images)
+./tools/build-flipbook.sh --images "/path/to/Page exports/" --slug my-report --title "My Report"
+```
+
+Then `git push`. Cloudflare Pages picks it up like any other page.
+
+Requires `brew install poppler webp`.
+
+### How it works
+
+- Pages render to WebP at 1600px (desktop) and 900px (mobile), served via `srcset`.
+  The 23-page report is about 8MB of images total, but only the first few load up
+  front; the rest are lazy and warmed one spread ahead of the reader.
+- The **aspect ratio is read from the source**, never hardcoded. A4 guidebooks
+  (1:1.414) and US-Letter reports (1:1.294) both appear in this library, so a
+  fixed ratio would letterbox or stretch half the catalogue.
+- Cover and back cover are `data-density="hard"` so they behave as rigid boards.
+- The book is sized to fit the viewport height, so the controls are never pushed
+  below the fold.
+- **If the library fails to load, the page falls back to a plain vertical scroll
+  of the same images.** A reader who came for the report still gets it.
+
+The PDF is deliberately *not* copied into this repo: git is a poor home for a
+24MB binary and Cloudflare Pages caps one asset at 25MB. `--pdf-url` points the
+download button at wherever the file already lives. `--host-pdf` overrides that
+for small files.
+
+### Shared runtime
+
+`book/_lib/` holds `page-flip.browser.js` (vendored StPageFlip 2.0.7),
+`stpageflip.css`, `flipbook.css` and `flipbook.js`. Every book loads the same
+four files and differs only by the `window.BOOK_CONFIG` object the build script
+writes into its `index.html`, so adding a title is a script run, not a code change.
+
 ## Repo structure
 
 ```

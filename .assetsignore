@@ -5,5 +5,6 @@ wrangler.jsonc
 .gitignore
 .assetsignore
 README.md
+tools
 MORNING-CHECKLIST.md
 .DS_Store
