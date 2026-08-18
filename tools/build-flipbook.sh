@@ -40,7 +40,7 @@ set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
-PDF=""; IMAGES=""; SLUG=""; TITLE=""; SUBTITLE=""; PDF_URL=""; HOST_PDF=0
+PDF=""; IMAGES=""; HTML_ONLY=0; SLUG=""; TITLE=""; SUBTITLE=""; PDF_URL=""; HOST_PDF=0
 CTA_TEXT=""; CTA_URL=""; BACK_TEXT=""; BACK_URL=""; DESC=""
 WIDTH=1600; SMALL_WIDTH=900; ZOOM_WIDTH=2400; QUALITY=82
 
@@ -56,6 +56,7 @@ while [[ $# -gt 0 ]]; do
     --desc)        DESC="$2"; shift 2 ;;
     --pdf-url)     PDF_URL="$2"; shift 2 ;;
     --host-pdf)    HOST_PDF=1; shift ;;
+    --html-only)   HTML_ONLY=1; shift ;;
     --cta-text)    CTA_TEXT="$2"; shift 2 ;;
     --cta-url)     CTA_URL="$2"; shift 2 ;;
     --back-text)   BACK_TEXT="$2"; shift 2 ;;
@@ -68,17 +69,21 @@ while [[ $# -gt 0 ]]; do
 done
 
 if [[ -n "$PDF" && -n "$IMAGES" ]]; then die "pass either --pdf or --images, not both"; fi
-if [[ -z "$PDF" && -z "$IMAGES" ]]; then die "one of --pdf or --images is required"; fi
+if [[ "$HTML_ONLY" -eq 0 && -z "$PDF" && -z "$IMAGES" ]]; then
+  die "one of --pdf or --images is required (or --html-only to rewrite the page from existing images)"
+fi
 [[ -n "$SLUG"  ]] || die "--slug is required"
 [[ -n "$TITLE" ]] || die "--title is required"
 [[ "$SLUG" =~ ^[a-z0-9-]+$ ]] || die "--slug must be lowercase letters, digits and hyphens"
 
+if [[ "$HTML_ONLY" -eq 0 ]]; then
 command -v cwebp >/dev/null || die "cwebp not found — brew install webp"
+fi
 if [[ -n "$PDF" ]]; then
   command -v pdftoppm >/dev/null || die "pdftoppm not found — brew install poppler"
   command -v pdfinfo  >/dev/null || die "pdfinfo not found — brew install poppler"
   [[ -f "$PDF" ]] || die "PDF not found: $PDF"
-else
+elif [[ -n "$IMAGES" ]]; then
   [[ -d "$IMAGES" ]] || die "image directory not found: $IMAGES"
 fi
 
@@ -88,7 +93,18 @@ fi
 PDF_BYTES=0
 MANIFEST=""
 
-if [[ -n "$PDF" ]]; then
+if [[ "$HTML_ONLY" -eq 1 ]]; then
+  # Rewrite index.html from the images already rendered. Used to re-stamp the
+  # asset version or change a title without paying for a full re-render.
+  EXIST="$REPO_ROOT/book/$SLUG/pages"
+  [[ -d "$EXIST" ]] || die "--html-only needs book/$SLUG/pages to exist already"
+  PAGES=$(ls "$EXIST" | grep -c '\.webp$')
+  [[ "$PAGES" -gt 0 ]] || die "no page images in $EXIST"
+  FIRST_IMG="$EXIST/p-001.webp"
+  SRC_W=$(sips -g pixelWidth  "$FIRST_IMG" 2>/dev/null | awk '/pixelWidth/{print $2}')
+  SRC_H=$(sips -g pixelHeight "$FIRST_IMG" 2>/dev/null | awk '/pixelHeight/{print $2}')
+  [[ -n "$SRC_W" && -n "$SRC_H" ]] || die "could not read dimensions from $FIRST_IMG"
+elif [[ -n "$PDF" ]]; then
   # Dropbox serves most of this library as online-only placeholders that stat as
   # 0 bytes. Rendering one produces a silently empty book, so refuse up front and
   # say exactly how to fix it.
@@ -167,11 +183,16 @@ fi
 echo "   output   : $OUT"
 echo "──────────────────────────────────────────────"
 
+if [[ "$HTML_ONLY" -eq 0 ]]; then
 rm -rf "$OUT/pages"
 mkdir -p "$OUT/pages/sm" "$OUT/pages/xl"
+fi
 TMP="$(mktemp -d)"
 trap 'rm -rf "$TMP"; [[ -n "$MANIFEST" ]] && rm -f "$MANIFEST"' EXIT
 
+if [[ "$HTML_ONLY" -eq 1 ]]; then
+  echo "→ --html-only: reusing the ${PAGES} page images already on disk"
+else
 echo "→ rendering ${PAGES} pages at ${SMALL_WIDTH}px, ${WIDTH}px and ${ZOOM_WIDTH}px …"
 
 n=0
@@ -218,6 +239,7 @@ fi
 
 [[ "$n" -eq "$PAGES" ]] || die "wrote $n page images but the source reports $PAGES pages"
 [[ "$m" -eq "$PAGES" ]] || die "wrote $m mobile images but the source reports $PAGES pages"
+fi
 
 # Optionally serve the PDF from this domain too.
 if [[ "$HOST_PDF" -eq 1 ]]; then
@@ -230,6 +252,22 @@ if [[ "$HOST_PDF" -eq 1 ]]; then
   PDF_URL="$SLUG.pdf"
   echo "→ hosting PDF locally as $SLUG.pdf"
 fi
+
+# ── Cache-bust the shared runtime ───────────────────────────────
+# Cloudflare Pages serves these with `max-age=2678400, must-revalidate`, i.e. a
+# browser that already has flipbook.js keeps it for 31 days and never asks.
+# `must-revalidate` only applies once the max-age has expired, so a fix shipped
+# today would not reach a returning reader until September. Stamping a hash of
+# the runtime onto the URL changes the URL whenever the code changes, which is
+# what actually busts the cache. index.html itself is served max-age=0, so the
+# new stamp propagates immediately.
+LIB_DIR="$REPO_ROOT/book/_lib"
+LIB_VER=$(cat "$LIB_DIR/flipbook.js" "$LIB_DIR/flipbook.css" \
+              "$LIB_DIR/page-flip.browser.js" "$LIB_DIR/stpageflip.css" \
+          | md5 -q 2>/dev/null || cat "$LIB_DIR/flipbook.js" "$LIB_DIR/flipbook.css" \
+              "$LIB_DIR/page-flip.browser.js" "$LIB_DIR/stpageflip.css" | md5sum | cut -d' ' -f1)
+LIB_VER="${LIB_VER:0:10}"
+echo "→ runtime version: $LIB_VER"
 
 # ── Write index.html ────────────────────────────────────────────
 [[ -n "$DESC" ]] || DESC="$TITLE — read it as a flipbook. $PAGES pages, from ISSPF."
@@ -270,8 +308,8 @@ cat > "$OUT/index.html" <<HTMLEOF
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
-<link rel="stylesheet" href="../_lib/stpageflip.css" />
-<link rel="stylesheet" href="../_lib/flipbook.css" />
+<link rel="stylesheet" href="../_lib/stpageflip.css?v=$LIB_VER" />
+<link rel="stylesheet" href="../_lib/flipbook.css?v=$LIB_VER" />
 
 <link rel="preload" as="image" href="pages/p-001.webp" />
 </head>
@@ -323,8 +361,8 @@ cat > "$OUT/index.html" <<HTMLEOF
     zoomWidth: $ZOOM_WIDTH
   };
 </script>
-<script src="../_lib/page-flip.browser.js"></script>
-<script src="../_lib/flipbook.js"></script>
+<script src="../_lib/page-flip.browser.js?v=$LIB_VER"></script>
+<script src="../_lib/flipbook.js?v=$LIB_VER"></script>
 </body>
 </html>
 HTMLEOF
