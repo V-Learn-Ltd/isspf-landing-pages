@@ -141,27 +141,28 @@
    * backwards: take the height the stage actually has, and cap the wrapper
    * width to the widest book that still fits it. */
   var elWrap = elBook.parentElement;
-  var ratio = (cfg.pageHeight || 733) / (cfg.pageWidth || 550);
-  var HARD_MAX = 1180;
+  var HARD_MAX = 2000;   /* a 1000px page still downsamples from the 1600px tier */
 
-  /* fit() must CONVERGE, not just compute. Resizing the wrapper and calling
-   * flip.update() can re-enter through the library's own resize listener (and
-   * through CDP/devtools viewport changes), so an unguarded pair will thrash the
-   * renderer until it locks up. Returning false when the width is unchanged
-   * makes the second pass a no-op and breaks the cycle. */
+  /* Size the book to the WIDTH available and let the page scroll if the result
+   * is taller than the viewport. An earlier version fitted the whole spread on
+   * screen so the controls never moved, but that made the book about 70% of the
+   * width it could have been, which is the single biggest thing you notice.
+   * The controls stay reachable by sticking to the bottom instead.
+   *
+   * fit() must CONVERGE, not just compute: changing the wrapper width and
+   * calling flip.update() can re-enter through the library's own resize
+   * listener, and an unguarded pair thrashes the renderer until it locks up.
+   * Returning false when the width is unchanged breaks that cycle. */
   var lastWidth = -1;
 
   function fit() {
     var cs = window.getComputedStyle(elStage);
-    var avail = elStage.clientHeight -
-                parseFloat(cs.paddingTop || 0) -
-                parseFloat(cs.paddingBottom || 0);
+    var avail = elStage.clientWidth -
+                parseFloat(cs.paddingLeft || 0) -
+                parseFloat(cs.paddingRight || 0);
     if (!(avail > 0)) return false;
 
-    var across = 1;
-    try { across = flip.getOrientation() === 'portrait' ? 1 : 2; } catch (e) {}
-
-    var w = Math.max(240, Math.min(HARD_MAX, Math.floor((avail / ratio) * across)));
+    var w = Math.max(240, Math.min(HARD_MAX, Math.floor(avail)));
     if (w === lastWidth) return false;
 
     lastWidth = w;
@@ -195,8 +196,147 @@
 
   document.addEventListener('keydown', function (e) {
     if (e.metaKey || e.ctrlKey || e.altKey) return;
+
+    if (read.open) {
+      if (e.key === 'Escape') { closeRead(); e.preventDefault(); }
+      else if (e.key === 'ArrowLeft') { gotoRead(read.page - 1); e.preventDefault(); }
+      else if (e.key === 'ArrowRight') { gotoRead(read.page + 1); e.preventDefault(); }
+      else if (e.key === '+' || e.key === '=') { stepZoom(1); e.preventDefault(); }
+      else if (e.key === '-') { stepZoom(-1); e.preventDefault(); }
+      return;
+    }
+
     if (e.key === 'ArrowLeft') { flip.flipPrev(); e.preventDefault(); }
     else if (e.key === 'ArrowRight') { flip.flipNext(); e.preventDefault(); }
+    else if (e.key === 'Enter') { openRead(flip.getCurrentPageIndex() + 1); e.preventDefault(); }
+  });
+
+  /* ══════════════════════════════════════════════════════════
+   * READ MODE
+   * The flip view exists to make the book feel like an object. It cannot also
+   * be the place you read it: a whole A4 spread fitted to a laptop screen puts
+   * body text at ~9px. So reading gets its own view — one page, full width,
+   * scrolled vertically, using the 2400px tier so it stays sharp when enlarged.
+   * ══════════════════════════════════════════════════════════ */
+
+  var read = {
+    el: null, img: null, scroll: null, counter: null,
+    page: 1, zoom: 1, open: false
+  };
+
+  var ZOOM_STEPS = [1, 1.5, 2, 3];
+
+  function readSrc(n) {
+    return cfg.zoomWidth ? dir + 'xl/p-' + pad(n) + '.' + ext : srcFor(n);
+  }
+
+  function buildRead() {
+    var el = document.createElement('div');
+    el.className = 'fb-read';
+    el.innerHTML =
+      '<div class="fb-read-bar">' +
+        '<button class="fb-btn" data-act="prev" type="button">&#8249; Prev</button>' +
+        '<span class="fb-counter" data-el="counter"></span>' +
+        '<button class="fb-btn" data-act="next" type="button">Next &#8250;</button>' +
+        '<span class="fb-read-spacer"></span>' +
+        '<button class="fb-btn" data-act="out" type="button" aria-label="Zoom out">&#8722;</button>' +
+        '<button class="fb-btn" data-act="in" type="button" aria-label="Zoom in">+</button>' +
+        '<button class="fb-btn fb-btn-primary" data-act="close" type="button">Close &#10005;</button>' +
+      '</div>' +
+      '<div class="fb-read-scroll" data-el="scroll"><img alt=""></div>';
+    document.body.appendChild(el);
+
+    read.el = el;
+    read.img = el.querySelector('img');
+    read.scroll = el.querySelector('[data-el="scroll"]');
+    read.counter = el.querySelector('[data-el="counter"]');
+
+    el.addEventListener('click', function (e) {
+      var b = e.target.closest('[data-act]');
+      if (!b) return;
+      var a = b.getAttribute('data-act');
+      if (a === 'close') closeRead();
+      else if (a === 'prev') gotoRead(read.page - 1);
+      else if (a === 'next') gotoRead(read.page + 1);
+      else if (a === 'in') stepZoom(1);
+      else if (a === 'out') stepZoom(-1);
+    });
+
+    /* Re-fit on resize, but only while open. */
+    window.addEventListener('resize', function () { if (read.open) applyZoom(); });
+    return el;
+  }
+
+  /* Width at zoom 1 = fit the scroller, capped at the source width so we never
+   * upscale past the pixels we actually have. */
+  function baseWidth() {
+    var cs = window.getComputedStyle(read.scroll);
+    var inner = read.scroll.clientWidth -
+                parseFloat(cs.paddingLeft || 0) - parseFloat(cs.paddingRight || 0);
+    return Math.max(240, Math.min(inner, cfg.zoomWidth || cfg.width || 1600));
+  }
+
+  function applyZoom() {
+    read.img.style.width = Math.round(baseWidth() * read.zoom) + 'px';
+  }
+
+  function stepZoom(dir2) {
+    var i = ZOOM_STEPS.indexOf(read.zoom);
+    if (i < 0) i = 0;
+    i = Math.max(0, Math.min(ZOOM_STEPS.length - 1, i + dir2));
+    read.zoom = ZOOM_STEPS[i];
+    applyZoom();
+  }
+
+  function gotoRead(n) {
+    if (n < 1 || n > pageCount) return;
+    read.page = n;
+    read.img.src = readSrc(n);
+    read.img.alt = 'Page ' + n + ' of ' + pageCount;
+    read.counter.textContent = n + ' / ' + pageCount;
+    read.scroll.scrollTop = 0;
+    applyZoom();
+    read.el.querySelector('[data-act="prev"]').disabled = n <= 1;
+    read.el.querySelector('[data-act="next"]').disabled = n >= pageCount;
+  }
+
+  function openRead(n) {
+    if (!read.el) buildRead();
+    read.open = true;
+    read.zoom = 1;
+    read.el.classList.add('is-open');
+    document.body.classList.add('fb-reading');
+    gotoRead(n);
+  }
+
+  function closeRead() {
+    if (!read.el) return;
+    read.open = false;
+    read.el.classList.remove('is-open');
+    document.body.classList.remove('fb-reading');
+    /* Land the book on whatever page was last being read. */
+    try { flip.turnToPage(read.page - 1); } catch (e) {}
+  }
+
+  /* Clicking a page opens it. StPageFlip uses pointer drags to turn pages, so
+   * only treat it as a click when the pointer barely moved — otherwise every
+   * page turn would also fire read mode. */
+  var downAt = null;
+  elBook.addEventListener('pointerdown', function (e) { downAt = [e.clientX, e.clientY]; });
+  elBook.addEventListener('pointerup', function (e) {
+    if (!downAt) return;
+    var moved = Math.abs(e.clientX - downAt[0]) + Math.abs(e.clientY - downAt[1]);
+    downAt = null;
+    if (moved > 6) return;
+    var pageEl = e.target.closest('.page');
+    if (!pageEl) return;
+    var idx = imgs.indexOf(pageEl.querySelector('img'));
+    if (idx >= 0) openRead(idx + 1);
+  });
+
+  var elRead = document.getElementById('fb-read-open');
+  if (elRead) elRead.addEventListener('click', function () {
+    openRead(flip.getCurrentPageIndex() + 1);
   });
 
   /* size:'stretch' recalculates from the container, but only when told to. */

@@ -16,14 +16,12 @@
 
 * { box-sizing: border-box; }
 
-/* Applied by flipbook.js only when the library initialised. The fallback view
-   must keep normal document scrolling, so this never applies there. */
-body.fb-locked {
-  height: 100dvh;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
+/* Marks that the library initialised. Deliberately does NOT lock the viewport
+   height: an earlier version fitted the whole spread on screen, which kept the
+   controls visible but shrank the book to about 70% of the width available.
+   Sizing to WIDTH and letting the page scroll makes the book fill the screen;
+   the controls stay reachable by sticking to the bottom instead. */
+body.fb-locked { min-height: 100dvh; }
 
 html, body {
   margin: 0;
@@ -45,7 +43,7 @@ html, body {
   border-bottom: 1px solid var(--line);
   position: sticky;
   top: 0;
-  z-index: 20;
+  z-index: 30;
 }
 
 .fb-brand { display: flex; align-items: baseline; gap: 10px; min-width: 0; }
@@ -99,19 +97,14 @@ html, body {
 /* ── Stage ─────────────────────────────────────────────────── */
 .fb-stage {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
-  padding: 20px 18px;
+  padding: 16px 16px 0;
 }
 
-body.fb-locked .fb-stage { flex: 1 1 auto; min-height: 0; }
-body.fb-locked .fb-bar,
-body.fb-locked .fb-controls,
-body.fb-locked .fb-hint { flex: 0 0 auto; }
-
-/* max-width is overwritten inline by flipbook.js fit(), which derives the widest
-   the book can be without its height exceeding the stage. */
-.fb-book-wrap { width: 100%; max-width: 1180px; margin: 0 auto; }
+/* The book takes the width it is given, capped so a page never has to be
+   upscaled past the 1600px images we actually ship. */
+.fb-book-wrap { width: 100%; max-width: 2000px; margin: 0 auto; }
 
 /* StPageFlip writes inline sizes onto this element; it must not be constrained
    by a competing width here or the shadow geometry drifts on resize. */
@@ -137,8 +130,16 @@ body.fb-locked .fb-hint { flex: 0 0 auto; }
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 14px;
-  padding: 0 18px 12px;
+  gap: 12px;
+  padding: 12px 18px;
+  position: sticky;
+  bottom: 0;
+  z-index: 25;
+  /* Floats over the page rather than reserving a row of its own, so the book
+     keeps the height instead. */
+  background: linear-gradient(to top, rgba(17, 17, 17, 0.97) 55%, rgba(17, 17, 17, 0));
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
 }
 
 .fb-counter {
@@ -180,7 +181,7 @@ body.fb-locked .fb-hint { flex: 0 0 auto; }
   border-radius: 3px;
 }
 
-.fb-hint { text-align: center; color: var(--muted); font-size: 12px; margin: 0; padding: 0 18px 16px; }
+.fb-hint { text-align: center; color: var(--muted); font-size: 12px; margin: 0; padding: 4px 18px 18px; }
 
 @media (max-width: 720px) {
   :root { --chrome-h: 56px; }
@@ -207,6 +208,66 @@ body.fb-locked .fb-hint { flex: 0 0 auto; }
     text-overflow: ellipsis;
   }
 
-  .fb-stage { padding: 14px 10px; }
+  .fb-stage { padding: 10px 8px 0; }
   .fb-btn { padding: 8px 11px; font-size: 12px; }
+}
+
+/* ══════════════════════════════════════════════════════════
+   READ MODE
+   A spread that fits a laptop screen renders A4 body text at roughly 9px,
+   which is not readable — that is a property of the paper size, not of the
+   viewer, so no amount of enlarging the book fixes it. Read mode drops the
+   flip geometry entirely and shows one page as a plain image at full width,
+   scrolled vertically. At fit-width on a 1440px screen the same body text
+   lands around 24px.
+   ══════════════════════════════════════════════════════════ */
+
+.fb-read {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  background: #0b0b0b;
+  display: none;
+  flex-direction: column;
+}
+.fb-read.is-open { display: flex; }
+body.fb-reading { overflow: hidden; }
+
+.fb-read-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background: var(--ink-2);
+  border-bottom: 1px solid var(--line);
+  flex: 0 0 auto;
+}
+.fb-read-bar .fb-counter { min-width: 72px; }
+.fb-read-spacer { flex: 1 1 auto; }
+
+/* The scroller owns the scrollbars; the image inside is sized in JS. */
+.fb-read-scroll {
+  flex: 1 1 auto;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 16px;
+  text-align: center;
+}
+
+.fb-read-scroll img {
+  display: block;
+  margin: 0 auto;
+  max-width: none;          /* zoom past the viewport on purpose */
+  height: auto;
+  background: var(--paper);
+  border-radius: 2px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+}
+
+/* Affordance on the book itself. */
+#flipbook .page { cursor: zoom-in; }
+
+@media (max-width: 720px) {
+  .fb-read-bar { flex-wrap: wrap; row-gap: 8px; padding: 8px 10px; }
+  .fb-read-scroll { padding: 8px; }
 }

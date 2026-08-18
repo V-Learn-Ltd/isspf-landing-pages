@@ -42,7 +42,7 @@ REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
 PDF=""; IMAGES=""; SLUG=""; TITLE=""; SUBTITLE=""; PDF_URL=""; HOST_PDF=0
 CTA_TEXT=""; CTA_URL=""; BACK_TEXT=""; BACK_URL=""; DESC=""
-WIDTH=1600; SMALL_WIDTH=900; QUALITY=82
+WIDTH=1600; SMALL_WIDTH=900; ZOOM_WIDTH=2400; QUALITY=82
 
 die() { echo "ERROR: $*" >&2; exit 1; }
 
@@ -61,6 +61,7 @@ while [[ $# -gt 0 ]]; do
     --back-text)   BACK_TEXT="$2"; shift 2 ;;
     --back-url)    BACK_URL="$2"; shift 2 ;;
     --width)       WIDTH="$2"; shift 2 ;;
+    --zoom-width)  ZOOM_WIDTH="$2"; shift 2 ;;
     --quality)     QUALITY="$2"; shift 2 ;;
     *) die "unknown argument: $1" ;;
   esac
@@ -167,11 +168,11 @@ echo "   output   : $OUT"
 echo "──────────────────────────────────────────────"
 
 rm -rf "$OUT/pages"
-mkdir -p "$OUT/pages/sm"
+mkdir -p "$OUT/pages/sm" "$OUT/pages/xl"
 TMP="$(mktemp -d)"
 trap 'rm -rf "$TMP"; [[ -n "$MANIFEST" ]] && rm -f "$MANIFEST"' EXIT
 
-echo "→ rendering ${PAGES} pages at ${WIDTH}px and ${SMALL_WIDTH}px …"
+echo "→ rendering ${PAGES} pages at ${SMALL_WIDTH}px, ${WIDTH}px and ${ZOOM_WIDTH}px …"
 
 n=0
 m=0
@@ -179,6 +180,7 @@ m=0
 if [[ -n "$PDF" ]]; then
   pdftoppm -png -scale-to-x "$WIDTH"       -scale-to-y -1 "$PDF" "$TMP/lg"
   pdftoppm -png -scale-to-x "$SMALL_WIDTH" -scale-to-y -1 "$PDF" "$TMP/sm"
+  pdftoppm -png -scale-to-x "$ZOOM_WIDTH"  -scale-to-y -1 "$PDF" "$TMP/xl"
 
   # pdftoppm zero-pads to the width of the page count (01.. for 23 pages, 001..
   # for 100+). Normalise to a fixed 3-digit name so the runtime builds URLs blind.
@@ -190,6 +192,11 @@ if [[ -n "$PDF" ]]; then
     m=$((m + 1)); mm=$(printf '%03d' "$m")
     cwebp -quiet -q "$QUALITY" "$f" -o "$OUT/pages/sm/p-$mm.webp"
   done
+  x=0
+  for f in "$TMP"/xl-*.png; do
+    x=$((x + 1)); xx=$(printf '%03d' "$x")
+    cwebp -quiet -q "$QUALITY" "$f" -o "$OUT/pages/xl/p-$xx.webp"
+  done
 else
   while IFS= read -r f; do
     n=$((n + 1)); nn=$(printf '%03d' "$n")
@@ -197,9 +204,12 @@ else
       || die "could not resize $f"
     sips --resampleWidth "$SMALL_WIDTH" "$f" --out "$TMP/sm-$nn.png" >/dev/null 2>&1 \
       || die "could not resize $f"
+    sips --resampleWidth "$ZOOM_WIDTH"  "$f" --out "$TMP/xl-$nn.png" >/dev/null 2>&1 \
+      || die "could not resize $f"
     cwebp -quiet -q "$QUALITY" "$TMP/lg-$nn.png" -o "$OUT/pages/p-$nn.webp"
     cwebp -quiet -q "$QUALITY" "$TMP/sm-$nn.png" -o "$OUT/pages/sm/p-$nn.webp"
-    rm -f "$TMP/lg-$nn.png" "$TMP/sm-$nn.png"
+    cwebp -quiet -q "$QUALITY" "$TMP/xl-$nn.png" -o "$OUT/pages/xl/p-$nn.webp"
+    rm -f "$TMP/lg-$nn.png" "$TMP/sm-$nn.png" "$TMP/xl-$nn.png"
     printf '\r   %d/%d' "$n" "$PAGES"
   done < "$MANIFEST"
   echo
@@ -290,9 +300,10 @@ cat > "$OUT/index.html" <<HTMLEOF
   <button class="fb-btn" id="fb-prev" type="button">&#8249; Prev</button>
   <span class="fb-counter" id="fb-counter">1 / $PAGES</span>
   <button class="fb-btn" id="fb-next" type="button">Next &#8250;</button>
+  <button class="fb-btn fb-btn-primary" id="fb-read-open" type="button">&#128269; Read Full Size</button>
 </div>
 
-<p class="fb-hint">Drag a page corner to turn it, or use the arrow keys.</p>
+<p class="fb-hint">Click any page to read it full size. Drag a corner to turn it, or use the arrow keys.</p>
 
 <noscript>
   <p class="fb-note">This reader needs JavaScript.$NOSCRIPT_PDF</p>
@@ -308,7 +319,8 @@ cat > "$OUT/index.html" <<HTMLEOF
     pageHeight: $PAGE_H,
     width: $WIDTH,
     smallPages: true,
-    smallWidth: $SMALL_WIDTH
+    smallWidth: $SMALL_WIDTH,
+    zoomWidth: $ZOOM_WIDTH
   };
 </script>
 <script src="../_lib/page-flip.browser.js"></script>

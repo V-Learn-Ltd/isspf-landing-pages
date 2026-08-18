@@ -50,9 +50,18 @@ Requires `brew install poppler webp`.
 
 ### How it works
 
-- Pages render to WebP at 1600px (desktop) and 900px (mobile), served via `srcset`.
-  The 23-page report is about 8MB of images total, but only the first few load up
-  front; the rest are lazy and warmed one spread ahead of the reader.
+- Pages render to WebP at three tiers: 900px (mobile), 1600px (desktop flip view)
+  and 2400px (read mode). Only the first few load up front; the rest are lazy and
+  warmed one spread ahead of the reader, and the 2400px tier is only ever fetched
+  when someone opens read mode.
+- **Read mode is where the book is actually read.** A whole A4 spread fitted to a
+  laptop screen puts body text at roughly 9px, which is a property of the paper
+  size, not of the viewer — enlarging the book cannot fix it. Clicking any page
+  (or the "Read Full Size" button, or Enter) opens that page on its own, full
+  width and scrollable, which puts the same text at roughly 24px. Zoom steps go to
+  3x, arrows change page, Esc closes and returns the book to the page you stopped
+  on. A click only counts if the pointer barely moved, so dragging a corner still
+  turns the page instead of opening the reader.
 - The **aspect ratio is read from the source**, never hardcoded. A4 guidebooks
   (1:1.414) and US-Letter reports (1:1.294) both appear in this library, so a
   fixed ratio would letterbox or stretch half the catalogue.
