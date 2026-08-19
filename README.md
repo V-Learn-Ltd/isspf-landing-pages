@@ -26,7 +26,29 @@ vendored locally — no CDN, no runtime dependency on anyone else's uptime.
 |---|---|---|---|
 | `gk-science-report` | https://go.isspf.com/book/gk-science-report/ | GK Science Campaign PDF | 23 |
 
-### Add a book
+### Add books in bulk (the inbox)
+
+Drop PDFs into `~/V-Learn Dropbox/ISSPF/Flipbooks-Inbox/` and run:
+
+```bash
+./tools/build-all.sh
+```
+
+Each PDF becomes a book. The filename sets the slug and title, so
+`Soccer Load Management.pdf` becomes `/book/soccer-load-management/` titled
+"Soccer Load Management". Books already built are skipped unless the PDF is
+newer, so re-running is cheap; `--force` rebuilds everything. It builds and
+reports, it does not push — review the diff, then push.
+
+Per-book overrides go in a sidecar `.conf` with the same basename
+(`title`, `subtitle`, `slug`, `cta_text`, `cta_url`, `pdf_url`). The folder
+contains a plain-English README explaining all of this.
+
+Note: most ISSPF PDFs in Dropbox are online-only and stat as 0 bytes. The builder
+refuses those by name rather than producing an empty book; make them available
+offline in Finder first.
+
+### Add one book by hand
 
 ```bash
 # from a PDF
@@ -60,6 +82,15 @@ Requires `brew install poppler webp`.
   button (or Enter) opens the current page on its own, full width and scrollable,
   which puts the same text at roughly 24px. Zoom steps go to 3x, arrows change
   page, Esc closes and returns the book to the page you stopped on.
+- **Hyperlinks in the PDF stay clickable.** Pages are flat images, so any link
+  baked into the source would be a dead picture. The build script pulls each link
+  annotation's rectangle out of the PDF with `pypdf`, stores it as a fraction of
+  the page in `links.json`, and the runtime lays real `<a>` elements over the top.
+  Because the coordinates are fractional they scale with the book at any size, and
+  the same hotspots are used in read mode and in the fallback view. They open in a
+  new tab (`rel="noopener noreferrer"`), and swallow their own click events so a
+  link does not also turn the page. The GK Science Report carries three of its own
+  course CTAs this way; without this they did nothing.
 - **Clicking a page turns it, and only that.** An earlier version opened read mode
   on any non-drag click, which stole StPageFlip's own click-to-turn: clicking
   magnified instead of turning, and because the handler was always live, closing

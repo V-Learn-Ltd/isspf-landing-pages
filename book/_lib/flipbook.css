@@ -140,7 +140,12 @@ html, body {
   background: linear-gradient(to top, rgba(17, 17, 17, 0.97) 55%, rgba(17, 17, 17, 0));
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
+  /* The bar floats over the foot of the page, so its empty width would swallow
+     clicks on any link sitting low on that page — the GK report's "Buy the
+     2-course bundle" link is exactly there. Only the buttons take clicks. */
+  pointer-events: none;
 }
+.fb-controls > * { pointer-events: auto; }
 
 .fb-counter {
   font-variant-numeric: tabular-nums;
@@ -272,3 +277,38 @@ body.fb-reading { overflow: hidden; }
   .fb-read-bar { flex-wrap: wrap; row-gap: 8px; padding: 8px 10px; }
   .fb-read-scroll { padding: 8px; }
 }
+
+/* ══════════════════════════════════════════════════════════
+   LINK HOTSPOTS
+   Pages are flat images, so hyperlinks baked into the source PDF are dead
+   pictures. The build script pulls each link's rectangle out of the PDF as a
+   fraction of the page, and these sit on top as real anchors — so they scale
+   with the book at any size, and work in the reader and the fallback too.
+   ══════════════════════════════════════════════════════════ */
+
+.fb-link {
+  position: absolute;
+  display: block;
+  z-index: 4;
+  border-radius: 2px;
+  /* Invisible until pointed at: the page design already shows where the link is. */
+  background: transparent;
+  transition: background 0.12s ease, box-shadow 0.12s ease;
+  -webkit-tap-highlight-color: rgba(237, 28, 36, 0.3);
+}
+.fb-link:hover {
+  background: rgba(237, 28, 36, 0.16);
+  box-shadow: 0 0 0 1.5px rgba(237, 28, 36, 0.55);
+}
+.fb-link:focus-visible {
+  outline: 2px solid var(--isspf-red);
+  outline-offset: 1px;
+}
+
+/* Read mode needs a positioned box the same size as the image to hang them on. */
+.fb-read-figure { position: relative; display: inline-block; margin: 0 auto; }
+.fb-read-figure img { display: block; }
+
+/* Same for the fallback scroll view. */
+.fb-fallback .fb-page { position: relative; margin: 0 auto 18px; }
+.fb-fallback .fb-page img { margin: 0; }

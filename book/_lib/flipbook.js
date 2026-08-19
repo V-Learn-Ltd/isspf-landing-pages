@@ -28,6 +28,43 @@
   function pad(n) { return String(n).padStart(3, '0'); }
   function srcFor(n, small) { return dir + (small ? 'sm/' : '') + 'p-' + pad(n) + '.' + ext; }
 
+  /* Link hotspots pulled from the source PDF by tools/build-flipbook.sh.
+   * Populated asynchronously; pages already on screen get patched when it lands. */
+  var LINKS = {};
+
+  /* Build the anchors for one page into a positioned container.
+   * Every link opens in a new tab: the reader is mid-book, and taking them out of
+   * it to a course page would lose their place. rel=noopener because target=_blank
+   * without it hands the new tab a reference back to this window. */
+  function addLinks(container, pageNo) {
+    var list = LINKS[String(pageNo)];
+    if (!list || !list.length) return;
+    if (container.getAttribute('data-links-done') === '1') return;
+    container.setAttribute('data-links-done', '1');
+
+    for (var i = 0; i < list.length; i++) {
+      var L = list[i];
+      var a = document.createElement('a');
+      a.className = 'fb-link';
+      a.href = L.url;
+      a.target = '_blank';
+      a.rel = 'noopener noreferrer';
+      a.title = L.url;
+      a.style.left = (L.x * 100) + '%';
+      a.style.top = (L.y * 100) + '%';
+      a.style.width = (L.w * 100) + '%';
+      a.style.height = (L.h * 100) + '%';
+
+      /* The book turns the page on click, and the library listens on the book
+       * itself — so without this a link would navigate AND flip. */
+      ['click', 'mousedown', 'pointerdown', 'touchstart'].forEach(function (ev) {
+        a.addEventListener(ev, function (e) { e.stopPropagation(); }, { passive: true });
+      });
+
+      container.appendChild(a);
+    }
+  }
+
   /* Vertical-scroll fallback. No library, no canvas, no flip. */
   function fallback(reason) {
     if (window.console && reason) console.warn('[flipbook] falling back to scroll view:', reason);
@@ -35,11 +72,27 @@
     var html = '<div class="fb-note">Showing a simple scrolling view of this book.</div>' +
                '<div class="fb-fallback">';
     for (var i = 1; i <= pageCount; i++) {
-      html += '<img src="' + srcFor(i) + '" alt="Page ' + i + ' of ' + pageCount + '"' +
-              (i > 2 ? ' loading="lazy"' : '') + ' decoding="async">';
+      html += '<div class="fb-page" data-page="' + i + '">' +
+              '<img src="' + srcFor(i) + '" alt="Page ' + i + ' of ' + pageCount + '"' +
+              (i > 2 ? ' loading="lazy"' : '') + ' decoding="async"></div>';
     }
     html += '</div>';
     elStage.innerHTML = html;
+    loadLinks(function () {
+      var wraps = elStage.querySelectorAll('.fb-fallback .fb-page');
+      for (var j = 0; j < wraps.length; j++) {
+        addLinks(wraps[j], parseInt(wraps[j].getAttribute('data-page'), 10));
+      }
+    });
+  }
+
+  function loadLinks(then) {
+    if (!cfg.linksUrl) { then && then(); return; }
+    fetch(cfg.linksUrl, { cache: 'force-cache' })
+      .then(function (r) { return r.ok ? r.json() : {}; })
+      .then(function (j) { LINKS = j || {}; })
+      .catch(function () { LINKS = {}; })
+      .then(function () { then && then(); });
   }
 
   if (!pageCount || !elStage) { fallback('no pages configured'); return; }
@@ -175,6 +228,13 @@
   warm(1, 6);
   reveal();
 
+  /* Pages are already in the DOM, so patch them all as soon as the links land. */
+  loadLinks(function () {
+    var pages = elBook.querySelectorAll('.page');
+    for (var i = 0; i < pages.length; i++) addLinks(pages[i], i + 1);
+    if (read.open) applyReadLinks();
+  });
+
   /* ── Controls ─────────────────────────────────────────────── */
   function render() {
     var current = flip.getCurrentPageIndex() + 1;
@@ -220,9 +280,19 @@
    * ══════════════════════════════════════════════════════════ */
 
   var read = {
-    el: null, img: null, scroll: null, counter: null,
+    el: null, img: null, figure: null, scroll: null, counter: null,
     page: 1, zoom: 1, open: false
   };
+
+  /* The figure is sized by the image, so hotspot percentages land correctly at
+   * any zoom level without recomputing anything. */
+  function applyReadLinks() {
+    if (!read.figure) return;
+    var old = read.figure.querySelectorAll('.fb-link');
+    for (var i = 0; i < old.length; i++) old[i].remove();
+    read.figure.removeAttribute('data-links-done');
+    addLinks(read.figure, read.page);
+  }
 
   var ZOOM_STEPS = [1, 1.5, 2, 3];
 
@@ -243,11 +313,14 @@
         '<button class="fb-btn" data-act="in" type="button" aria-label="Zoom in">+</button>' +
         '<button class="fb-btn fb-btn-primary" data-act="close" type="button">Close &#10005;</button>' +
       '</div>' +
-      '<div class="fb-read-scroll" data-el="scroll"><img alt=""></div>';
+      '<div class="fb-read-scroll" data-el="scroll">' +
+        '<div class="fb-read-figure" data-el="figure"><img alt=""></div>' +
+      '</div>';
     document.body.appendChild(el);
 
     read.el = el;
     read.img = el.querySelector('img');
+    read.figure = el.querySelector('[data-el="figure"]');
     read.scroll = el.querySelector('[data-el="scroll"]');
     read.counter = el.querySelector('[data-el="counter"]');
 
@@ -277,7 +350,9 @@
   }
 
   function applyZoom() {
-    read.img.style.width = Math.round(baseWidth() * read.zoom) + 'px';
+    var w = Math.round(baseWidth() * read.zoom);
+    read.img.style.width = w + 'px';
+    if (read.figure) read.figure.style.width = w + 'px';
   }
 
   function stepZoom(dir2) {
@@ -296,6 +371,7 @@
     read.counter.textContent = n + ' / ' + pageCount;
     read.scroll.scrollTop = 0;
     applyZoom();
+    applyReadLinks();
     read.el.querySelector('[data-act="prev"]').disabled = n <= 1;
     read.el.querySelector('[data-act="next"]').disabled = n >= pageCount;
   }
@@ -342,6 +418,13 @@
 
   warm(1, 6);
   reveal();
+
+  /* Pages are already in the DOM, so patch them all as soon as the links land. */
+  loadLinks(function () {
+    var pages = elBook.querySelectorAll('.page');
+    for (var i = 0; i < pages.length; i++) addLinks(pages[i], i + 1);
+    if (read.open) applyReadLinks();
+  });
     }, 200);
   });
 })();

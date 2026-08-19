@@ -253,6 +253,59 @@ if [[ "$HOST_PDF" -eq 1 ]]; then
   echo "→ hosting PDF locally as $SLUG.pdf"
 fi
 
+# ── Extract link annotations ────────────────────────────────────
+# The pages are flat images, so any hyperlink baked into the PDF is dead unless
+# we put a real <a> back on top of it. The GK Science Report carries its own
+# course CTAs this way, so without this the lead magnet's sales links do nothing.
+# Rectangles are stored as fractions of the page, so they scale with the book at
+# any size and work in the reader and the fallback too.
+if [[ "$HTML_ONLY" -eq 0 && -n "$PDF" ]]; then
+  python3 - "$PDF" "$OUT/links.json" <<'PYEOF' || echo "   (link extraction skipped: $?)"
+import json, sys
+try:
+    from pypdf import PdfReader
+except ImportError:
+    sys.stderr.write("pypdf not installed — no links extracted (pip3 install pypdf)\n")
+    open(sys.argv[2], "w").write("{}")
+    raise SystemExit(0)
+
+src, out = sys.argv[1], sys.argv[2]
+links, total = {}, 0
+for pno, page in enumerate(PdfReader(src).pages, 1):
+    box = page.mediabox
+    pw, ph = float(box.width), float(box.height)
+    if not pw or not ph:
+        continue
+    for a in (page.get("/Annots") or []):
+        try:
+            o = a.get_object()
+            if o.get("/Subtype") != "/Link":
+                continue
+            uri = (o.get("/A") or {}).get("/URI")
+            if not uri:
+                continue
+            x0, y0, x1, y1 = [float(v) for v in o["/Rect"]]
+        except Exception:
+            continue
+        # PDF space is bottom-left origin; the page images are top-left.
+        left, right = min(x0, x1) / pw, max(x0, x1) / pw
+        top, bottom = 1 - (max(y0, y1) / ph), 1 - (min(y0, y1) / ph)
+        if right - left <= 0 or bottom - top <= 0:
+            continue
+        links.setdefault(str(pno), []).append({
+            "x": round(left, 5), "y": round(top, 5),
+            "w": round(right - left, 5), "h": round(bottom - top, 5),
+            "url": str(uri),
+        })
+        total += 1
+json.dump(links, open(out, "w"), separators=(",", ":"))
+print("   links: %d across %d page(s)" % (total, len(links)))
+PYEOF
+elif [[ "$HTML_ONLY" -eq 0 ]]; then
+  echo "{}" > "$OUT/links.json"
+  echo "   links: none (image source carries no annotations)"
+fi
+
 # ── Cache-bust the shared runtime ───────────────────────────────
 # Cloudflare Pages serves these with `max-age=2678400, must-revalidate`, i.e. a
 # browser that already has flipbook.js keeps it for 31 days and never asks.
@@ -358,7 +411,8 @@ cat > "$OUT/index.html" <<HTMLEOF
     width: $WIDTH,
     smallPages: true,
     smallWidth: $SMALL_WIDTH,
-    zoomWidth: $ZOOM_WIDTH
+    zoomWidth: $ZOOM_WIDTH,
+    linksUrl: "links.json?v=$LIB_VER"
   };
 </script>
 <script src="../_lib/page-flip.browser.js?v=$LIB_VER"></script>
