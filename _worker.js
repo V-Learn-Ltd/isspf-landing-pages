@@ -147,7 +147,11 @@ export default {
     // Query params (utm, affiliate ref, etc.) are preserved.
     const LEGACY_CHECKOUT_SLUGS = {
       '/smm/pro-youth-goalkeeper-coaching':   '/smm/pro-youth-checkout/',
-      '/smm/pro-masters-goalkeeper-coaching': '/smm/pro-masters-checkout/'
+      '/smm/pro-masters-goalkeeper-coaching': '/smm/pro-masters-checkout/',
+      // Sales-page slug that was never deployed but was given to the ad team
+      // in the 2026-06-18 retargeting handoff. The live page is
+      // /pro-youth-goalkeeper-coaching/. Added 2026-09-13.
+      '/youth-gk-coaching-course':             '/pro-youth-goalkeeper-coaching/'
     };
     const legacyTarget = LEGACY_CHECKOUT_SLUGS[path];
     if (legacyTarget) {
