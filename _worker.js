@@ -212,7 +212,24 @@ export default {
     const needsAffiliate = affiliateId && isHtml;
     const needsABCookie = isNewABAssignment;
 
-    if (!needsAffiliate && !needsABCookie) {
+    // Paid traffic carries utm_campaign but NO affiliate ref on the click, so
+    // needsAffiliate is false on every Meta click and this handler returned
+    // early — meaning affwp_campaign was never set for exactly the traffic we
+    // pay for. It matters downstream: the platform falls back to this cookie
+    // when the checkout URL itself has no campaign on it (a sale two pages
+    // after the landing page), so without it the campaign reaches the VISIT
+    // but never the SALE.
+    //
+    // NO visit is created here: visit creation stays gated on a real affiliate
+    // ref below, so affiliate reporting is untouched. Respects
+    // AFFWP_CREDIT_LAST the same way the affiliate cookie does — on a
+    // first-touch brand an existing campaign cookie is not overwritten.
+    const creditLastForCampaign = (env.AFFWP_CREDIT_LAST || 'false') === 'true';
+    const needsCampaignCookie =
+      campaign && isHtml && !needsAffiliate
+      && (creditLastForCampaign || !cookies['affwp_campaign']);
+
+    if (!needsAffiliate && !needsABCookie && !needsCampaignCookie) {
       return response;
     }
 
@@ -229,6 +246,14 @@ export default {
       }
       newResponse.headers.set('x-ab-variant', abVariant);
       newResponse.headers.set('x-ab-test', abCookieName);
+    }
+
+    if (needsCampaignCookie) {
+      const campaignDays = parseInt(env.AFFWP_COOKIE_DAYS || '365', 10);
+      newResponse.headers.append(
+        'set-cookie',
+        `affwp_campaign=${encodeURIComponent(campaign)}; Path=/; Max-Age=${campaignDays * 86400}; SameSite=Lax; Secure`
+      );
     }
 
     // Attach affiliate cookies + create visit
