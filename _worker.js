@@ -194,7 +194,14 @@ export default {
     // ── Step 2: Decide if any post-processing is needed ──
     const refVar = env.AFFWP_REF_VAR || 'a';
     const affiliateId = url.searchParams.get(refVar);
-    const campaign = url.searchParams.get('campaign') || '';
+    // Meta sends `utm_campaign`, never a bare `campaign`. Reading only
+    // `campaign` is why cached_visits.campaign was empty on 27,941 of 27,941
+    // ISSPF visits (measured 2026-09-17, every month since tracking began).
+    // The value is Meta's campaign ID, not its name. USC hit the identical
+    // bug and fixed it 2026-08-25; this worker never received that fix.
+    const campaign = url.searchParams.get('campaign')
+      || url.searchParams.get('utm_campaign')
+      || '';
 
     const contentType = response.headers.get('content-type') || '';
     const pathname = url.pathname;
@@ -395,7 +402,12 @@ async function createAffiliateVisit(request, url, env, affiliateId, campaign) {
     || request.headers.get('x-forwarded-for')?.split(',')[0]?.trim()
     || '0.0.0.0';
 
-  const landingUrl = url.origin + url.pathname;
+  // KEEP THE QUERY STRING. Dropping it is why only 0.6% of ISSPF visits
+  // carried one (159 of 27,941, measured 2026-09-17) — the ad tags were on
+  // the click all along; this line removed them before the visit was
+  // recorded. USC spent two sessions concluding no ad tag could ever reach
+  // the dashboard before finding the same line.
+  const landingUrl = url.href;
   const referrer = request.headers.get('referer') || '';
 
   try {
