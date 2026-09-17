@@ -194,7 +194,14 @@ export default {
     // ── Step 2: Decide if any post-processing is needed ──
     const refVar = env.AFFWP_REF_VAR || 'a';
     const affiliateId = url.searchParams.get(refVar);
-    const campaign = url.searchParams.get('campaign') || '';
+    // Meta sends `utm_campaign`, never a bare `campaign`. Reading only
+    // `campaign` is why cached_visits.campaign was empty on 27,941 of 27,941
+    // ISSPF visits (measured 2026-09-17, every month since tracking began).
+    // The value is Meta's campaign ID, not its name. USC hit the identical
+    // bug and fixed it 2026-08-25; this worker never received that fix.
+    const campaign = url.searchParams.get('campaign')
+      || url.searchParams.get('utm_campaign')
+      || '';
 
     const contentType = response.headers.get('content-type') || '';
     const pathname = url.pathname;
@@ -205,7 +212,24 @@ export default {
     const needsAffiliate = affiliateId && isHtml;
     const needsABCookie = isNewABAssignment;
 
-    if (!needsAffiliate && !needsABCookie) {
+    // Paid traffic carries utm_campaign but NO affiliate ref on the click, so
+    // needsAffiliate is false on every Meta click and this handler returned
+    // early — meaning affwp_campaign was never set for exactly the traffic we
+    // pay for. It matters downstream: the platform falls back to this cookie
+    // when the checkout URL itself has no campaign on it (a sale two pages
+    // after the landing page), so without it the campaign reaches the VISIT
+    // but never the SALE.
+    //
+    // NO visit is created here: visit creation stays gated on a real affiliate
+    // ref below, so affiliate reporting is untouched. Respects
+    // AFFWP_CREDIT_LAST the same way the affiliate cookie does — on a
+    // first-touch brand an existing campaign cookie is not overwritten.
+    const creditLastForCampaign = (env.AFFWP_CREDIT_LAST || 'false') === 'true';
+    const needsCampaignCookie =
+      campaign && isHtml && !needsAffiliate
+      && (creditLastForCampaign || !cookies['affwp_campaign']);
+
+    if (!needsAffiliate && !needsABCookie && !needsCampaignCookie) {
       return response;
     }
 
@@ -222,6 +246,14 @@ export default {
       }
       newResponse.headers.set('x-ab-variant', abVariant);
       newResponse.headers.set('x-ab-test', abCookieName);
+    }
+
+    if (needsCampaignCookie) {
+      const campaignDays = parseInt(env.AFFWP_COOKIE_DAYS || '365', 10);
+      newResponse.headers.append(
+        'set-cookie',
+        `affwp_campaign=${encodeURIComponent(campaign)}; Path=/; Max-Age=${campaignDays * 86400}; SameSite=Lax; Secure`
+      );
     }
 
     // Attach affiliate cookies + create visit
@@ -395,7 +427,12 @@ async function createAffiliateVisit(request, url, env, affiliateId, campaign) {
     || request.headers.get('x-forwarded-for')?.split(',')[0]?.trim()
     || '0.0.0.0';
 
-  const landingUrl = url.origin + url.pathname;
+  // KEEP THE QUERY STRING. Dropping it is why only 0.6% of ISSPF visits
+  // carried one (159 of 27,941, measured 2026-09-17) — the ad tags were on
+  // the click all along; this line removed them before the visit was
+  // recorded. USC spent two sessions concluding no ad tag could ever reach
+  // the dashboard before finding the same line.
+  const landingUrl = url.href;
   const referrer = request.headers.get('referer') || '';
 
   try {
