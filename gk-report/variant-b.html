@@ -143,6 +143,13 @@ src="https://www.facebook.com/tr?id=856256648998431&ev=PageView&noscript=1"
   }
   .hero-copy { min-width: 0; }
   .hero-aside { min-width: 0; display: flex; flex-direction: column; gap: 24px; }
+  /* Mobile: report cover above the headline, opt-in form stays below the copy */
+  @media (max-width: 879px) {
+    .hero-aside { display: contents; }
+    .hero-aside .cover-stage { order: -1; margin: 0 auto; max-width: 340px; }
+    .hero-copy { order: 0; }
+    .hero-aside .opt-in { order: 1; }
+  }
 
   .eyebrow {
     display: inline-block;
