@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Secure Enrolment — Pro-Youth Goalkeeper Coaching Science | ISSPF</title>
-<meta name="description" content="Secure enrolment for the Professional Masters in Goalkeeper Coaching Science (Pro-Youth Level)." />
+<title>Secure Enrolment | Pro-Youth Goalkeeper Coaching Science | ISSPF</title>
+<meta name="description" content="Secure enrolment for the Professional Certificate in Goalkeeper Coaching Science (Pro-Youth Level)." />
 <meta name="robots" content="noindex,nofollow" />
 
 <!-- Meta Pixel + CAPI -->
@@ -352,7 +352,7 @@ metaCapi('InitiateCheckout',{content_name:'Pro-Youth Goalkeeper Coaching Science
       <div class="form-card">
         <div class="course-banner">
           <div class="course-title">
-            Professional Masters in Goalkeeper Coaching Science (Pro-Youth Level)
+            Professional Certificate in Goalkeeper Coaching Science (Pro-Youth Level)
             <small>Secure Enrolment Form</small>
           </div>
         </div>
@@ -411,10 +411,10 @@ metaCapi('InitiateCheckout',{content_name:'Pro-Youth Goalkeeper Coaching Science
                 <img src="https://learn.isspf.com/wp-content/uploads/2025/07/GCY-workbook.png" alt="Workbook" loading="lazy" onerror="this.style.display='none'" />
               </div>
               <div class="bump-desc">
-                <p>Professionally printed companion to the course, shipped to your door. Chapter summaries, training prompts, weekly planning, reflection questions — designed to turn what you watch into what you do on the pitch.</p>
+                <p>Professionally printed companion to the course, shipped to your door. Chapter summaries, training prompts, weekly planning, reflection questions. Designed to turn what you watch into what you do on the pitch.</p>
               </div>
             </div>
-            <div class="bump-price-tag">Add for just <span class="workbookPrice">£19</span> <span class="shipping">— includes shipping</span></div>
+            <div class="bump-price-tag">Add for just <span class="workbookPrice">£19</span> <span class="shipping">(includes shipping)</span></div>
           </label>
 
           <!-- COUPON -->
@@ -443,11 +443,11 @@ metaCapi('InitiateCheckout',{content_name:'Pro-Youth Goalkeeper Coaching Science
         <div class="benefits-card">
           <h3>What You Get Today:</h3>
           <ul class="benefits-list">
-            <li><strong>Pro-Youth Goalkeeper Coaching Science</strong>10 modules of WHY-level science the coaching chain left out.</li>
-            <li><strong>Elite Faculty</strong>Lecturers from FC Barcelona academy, Borussia Mönchengladbach, the Premier League, and elite international football.</li>
+            <li><strong>Pro-Youth Goalkeeper Coaching Science</strong>10 modules of WHY-level science that drill videos and session plans leave out.</li>
+            <li><strong>Elite Faculty</strong>Lecturers whose roles have included FC Barcelona academy, Borussia Mönchengladbach, the Premier League, and elite international football.</li>
             <li><strong>Lifetime Access</strong>Log in any time on any device. Return to any module as your goalkeepers age up.</li>
             <li><strong>Professional Certificate</strong>Awarded on completion. CV-ready.</li>
-            <li><strong>30-Day Money-Back Guarantee</strong>Watch the first modules. If it's not what we promised, full refund — no friction.</li>
+            <li><strong>30-Day Money-Back Guarantee</strong>Watch the first modules. If it's not what we promised, full refund, no friction.</li>
           </ul>
         </div>
       </div>
@@ -527,7 +527,7 @@ metaCapi('InitiateCheckout',{content_name:'Pro-Youth Goalkeeper Coaching Science
     document.querySelectorAll('.workbookPrice').forEach(el => el.textContent = fmt(activePricing.workbook));
     document.getElementById('line-anchor').style.display = couponActive ? 'inline-block' : 'none';
     document.getElementById('line-savings').classList.toggle('shown', couponActive);
-    document.getElementById('pay-btn').textContent = 'Pay ' + fmt(getCurrentTotal()) + ' — Enrol now';
+    document.getElementById('pay-btn').textContent = 'Pay ' + fmt(getCurrentTotal()) + ' · Enrol now';
   }
 
   /* GEOIP */
@@ -557,14 +557,14 @@ metaCapi('InitiateCheckout',{content_name:'Pro-Youth Goalkeeper Coaching Science
       const r = await fetch('/api/paypal-config');
       const cfg = await r.json();
       if (!cfg.ok || !cfg.client_id) {
-        document.getElementById('paypal-status').textContent = 'PayPal unavailable — please use Card.';
+        document.getElementById('paypal-status').textContent = 'PayPal unavailable. Please use Card.';
         return;
       }
       // Load the PayPal SDK with the geoip-determined currency
       loadPayPalSDK(cfg.client_id, activePricing.currency.toUpperCase());
     } catch (e) {
       console.error('PayPal config fetch failed:', e);
-      document.getElementById('paypal-status').textContent = 'PayPal unavailable — please use Card.';
+      document.getElementById('paypal-status').textContent = 'PayPal unavailable. Please use Card.';
     }
   }
   function loadPayPalSDK(clientId, currency) {
@@ -577,7 +577,7 @@ metaCapi('InitiateCheckout',{content_name:'Pro-Youth Goalkeeper Coaching Science
     s.id = 'paypal-sdk';
     s.src = `https://www.paypal.com/sdk/js?client-id=${encodeURIComponent(clientId)}&currency=${encodeURIComponent(currency)}&intent=capture&components=buttons&enable-funding=paylater`;
     s.onload = () => { paypalLoaded = true; paypalLoadingCurrency = currency; renderPayPalButtons(); };
-    s.onerror = () => { document.getElementById('paypal-status').textContent = 'PayPal failed to load — please use Card.'; };
+    s.onerror = () => { document.getElementById('paypal-status').textContent = 'PayPal failed to load. Please use Card.'; };
     document.head.appendChild(s);
   }
   function renderPayPalButtons() {
@@ -657,10 +657,10 @@ metaCapi('InitiateCheckout',{content_name:'Pro-Youth Goalkeeper Coaching Science
         else { err.classList.remove('shown'); }
       });
       document.getElementById('pay-btn').disabled = false;
-      document.getElementById('pay-btn').textContent = 'Pay ' + fmt(getCurrentTotal()) + ' — Enrol now';
+      document.getElementById('pay-btn').textContent = 'Pay ' + fmt(getCurrentTotal()) + ' · Enrol now';
     } catch (err) {
       console.error('Stripe init failed:', err);
-      document.getElementById('pay-btn').textContent = 'Payment unavailable — please refresh';
+      document.getElementById('pay-btn').textContent = 'Payment unavailable. Please refresh';
     }
   }
 
@@ -700,7 +700,7 @@ metaCapi('InitiateCheckout',{content_name:'Pro-Youth Goalkeeper Coaching Science
       const data = await r.json();
       if (data.ok && data.percent) {
         appliedCoupon = code; couponPercent = data.percent;
-        applied.textContent = code + ' applied — ' + data.percent + '% off';
+        applied.textContent = code + ' applied: ' + data.percent + '% off';
         applied.style.display = 'block';
         recompute();
       } else {
@@ -744,7 +744,7 @@ metaCapi('InitiateCheckout',{content_name:'Pro-Youth Goalkeeper Coaching Science
       const data = await r.json();
       if (!data.ok || !data.client_secret) {
         btn.disabled = false;
-        btn.textContent = 'Pay ' + fmt(getCurrentTotal()) + ' — Enrol now';
+        btn.textContent = 'Pay ' + fmt(getCurrentTotal()) + ' · Enrol now';
         alert('Could not start payment: ' + (data.error || 'unknown'));
         return;
       }
@@ -759,7 +759,7 @@ metaCapi('InitiateCheckout',{content_name:'Pro-Youth Goalkeeper Coaching Science
 
       if (result.error) {
         btn.disabled = false;
-        btn.textContent = 'Pay ' + fmt(getCurrentTotal()) + ' — Enrol now';
+        btn.textContent = 'Pay ' + fmt(getCurrentTotal()) + ' · Enrol now';
         const err = document.getElementById('card-error');
         err.textContent = result.error.message;
         err.classList.add('shown');
@@ -771,12 +771,12 @@ metaCapi('InitiateCheckout',{content_name:'Pro-Youth Goalkeeper Coaching Science
         window.location.href = POST_PAYMENT_URL;
       } else {
         btn.disabled = false;
-        btn.textContent = 'Pay ' + fmt(getCurrentTotal()) + ' — Enrol now';
+        btn.textContent = 'Pay ' + fmt(getCurrentTotal()) + ' · Enrol now';
         alert('Payment status: ' + (result.paymentIntent?.status || 'unknown') + '. Please contact support@isspf.com');
       }
     } catch (err) {
       btn.disabled = false;
-      btn.textContent = 'Pay ' + fmt(getCurrentTotal()) + ' — Enrol now';
+      btn.textContent = 'Pay ' + fmt(getCurrentTotal()) + ' · Enrol now';
       alert('Network error. Please try again.');
     }
   });
