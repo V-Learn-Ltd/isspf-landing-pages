@@ -308,7 +308,7 @@ src="https://www.facebook.com/tr?id=856256648998431&ev=PageView&noscript=1"
   .price-was .priceFull { font-weight: 700; color: var(--text-dark); white-space: nowrap; }
   .price-code-label { text-align: center; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted-dark); margin: 0 0 6px; }
   .price-display { text-align: center; margin: 0 0 18px; }
-  .price-display .priceCode {
+  .price-display .priceFull, .price-display .priceCode {
     font-family: 'Anton', sans-serif; font-weight: 400; font-size: clamp(52px, 8.5vw, 80px); line-height: 1;
     color: var(--accent-red); display: block;
   }
@@ -398,10 +398,28 @@ src="https://www.facebook.com/tr?id=856256648998431&ev=PageView&noscript=1"
   .sticky-cta .cta-button { padding: 12px 22px; font-size: 13px; flex-shrink: 0; }
   body.sticky-active { padding-bottom: 72px; }
 
+  /* ---------- 2b. WHY DO I NEED THIS? ---------- */
+  .why-sec { padding: 80px 0 72px; background: var(--bg-white); border-bottom: 1px solid var(--rule-light); }
+  .why-intro { font-size: 18px; line-height: 1.65; margin: 0 0 28px; max-width: 760px; }
+  .why-list { list-style: none; padding: 0; margin: 0 0 28px; display: grid; gap: 12px; }
+  .why-list li {
+    position: relative; padding: 16px 20px 16px 48px; font-size: 16px; line-height: 1.6;
+    background: var(--bg-stone); border-left: 4px solid var(--accent-red); border-radius: 4px;
+  }
+  .why-list li::before {
+    content: ""; position: absolute; left: 18px; top: 22px; width: 14px; height: 14px; border-radius: 50%;
+    background: var(--accent-red); box-shadow: 0 0 0 4px rgba(237, 28, 36, 0.15);
+  }
+  .why-list li strong { display: block; font-size: 17px; font-weight: 800; color: var(--text-dark); margin-bottom: 2px; }
+  .why-close { font-size: 18px; line-height: 1.6; font-weight: 700; margin: 0; padding-top: 20px; border-top: 2px solid var(--accent-red); max-width: 760px; }
+
   /* ---------- MOBILE ---------- */
   @media (max-width: 600px) {
     .hero { padding: 44px 0 52px; }
-    .enables-sec, .details, .modules, .pricing, .faq, .testimonials { padding: 56px 0; }
+    .enables-sec, .details, .modules, .pricing, .faq, .testimonials, .why-sec { padding: 56px 0; }
+    .why-list li { padding: 14px 16px 14px 42px; }
+    .why-list li::before { left: 15px; top: 20px; }
+    .why-intro, .why-close { font-size: 17px; }
     .accred-sec { padding: 52px 0; }
     .logo-img { height: 36px; }
     .header-meta { display: none; }
@@ -457,12 +475,28 @@ src="https://www.facebook.com/tr?id=856256648998431&ev=PageView&noscript=1"
   <div class="wrap-wide">
     <ul class="facts-grid">
       <li><span class="fact-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg></span><div><strong>Online</strong>Study around your fixtures</div></li>
-      <li><span class="fact-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span><div><strong>Self-paced</strong>No deadlines and no live classes</div></li>
+      <li><span class="fact-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span><div><strong>Self-paced</strong>Work at your own pace, on your own schedule</div></li>
       <li><span class="fact-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg></span><div><strong>Language</strong>Taught in English, with subtitles in six languages</div></li>
       <li><span class="fact-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V3h6v1M9 13l2 2 4-4"/></svg></span><div><strong>Assessment</strong>A short test after each module, and a tutor-assessed assignment</div></li>
       <li><span class="fact-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="9" r="6"/><path d="M8.5 14 7 22l5-3 5 3-1.5-8"/></svg></span><div><strong>Certificate</strong>Certificate of Achievement</div></li>
       <li><span class="fact-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6z"/><path d="m9 12 2 2 4-4"/></svg></span><div><strong>Recognition</strong>ISSPF courses are accredited or endorsed by football federations and universities</div></li>
     </ul>
+  </div>
+</section>
+
+<!-- 2b. WHY DO I NEED THIS? -->
+<section class="why-sec" id="why">
+  <div class="wrap">
+    <h2>Why do I need this?</h2>
+    <p class="why-intro">If you coach goalkeepers, you've probably pieced your coaching together yourself. There's no shortage of drills. What's missing is a clear path for developing a young keeper.</p>
+    <ul class="why-list">
+      <li><strong>Drills come without the why.</strong> Clips, reels and session-plan sites show you a drill, but rarely what it's building towards.</li>
+      <li><strong>General courses can't stay with one keeper.</strong> Badges and youth courses cover every position at once, with little room for one keeper and one skill.</li>
+      <li><strong>The keeper in front of you doesn't fit the plan.</strong> When he's sharp in training but not on match day, or a skill won't stick, it's hard to know what to change.</li>
+      <li><strong>Someone always asks why.</strong> A parent or head coach asks why he's doing that work, and "it's a good drill" only goes so far.</li>
+      <li><strong>The cost shows up late.</strong> A keeper can do the wrong work for seasons and look fine, and by the time it shows, he's moved on.</li>
+    </ul>
+    <p class="why-close">This course gives you the whole path: drills and sessions from professional goalkeeping coaches, with the why behind them.</p>
   </div>
 </section>
 
@@ -508,7 +542,7 @@ src="https://www.facebook.com/tr?id=856256648998431&ev=PageView&noscript=1"
         <h3 class="panel-heading">Who it's for</h3>
         <ul>
           <li>You coach young goalkeepers, in your child's team, across a club's age groups or in an academy.</li>
-          <li>You've got plenty of drills, and you want to know which one this keeper needs next.</li>
+          <li>You want to know what this keeper needs next, and why.</li>
           <li>You want his training to show up in his matches.</li>
         </ul>
         <p>It works one keeper and one skill at a time, so it fits a single keeper as well as a squad.</p>
@@ -528,14 +562,14 @@ src="https://www.facebook.com/tr?id=856256648998431&ev=PageView&noscript=1"
       <div class="tab-panel" role="tabpanel" id="panel-accreditation" aria-labelledby="tab-accreditation">
         <h3 class="panel-heading">Accreditation</h3>
         <p>ISSPF courses are accredited or endorsed by football federations and universities. The current list is at <a href="https://www.isspf.com/accreditations/" target="_blank" rel="noopener">https://www.isspf.com/accreditations/</a>.</p>
-        <p>It's a professional certificate to hold alongside a UEFA, FA or federation licence. It doesn't replace one, and it isn't a degree.</p>
+        <p>It's a professional certificate you hold alongside your UEFA, FA or federation licence.</p>
       </div>
     </div>
 
     <div class="short-faq faq-list">
       <details class="faq-item">
         <summary>How is the course delivered?</summary>
-        <div class="faq-body"><p>Online and self-paced, with no deadlines and no live classes. It's taught in English, with subtitles in English, Spanish, French, Dutch, German and Italian.</p></div>
+        <div class="faq-body"><p>Online and self-paced, so you study on your own schedule. It's taught in English, with subtitles in English, Spanish, French, Dutch, German and Italian.</p></div>
       </details>
       <details class="faq-item">
         <summary>What will I get from each module?</summary>
@@ -551,7 +585,7 @@ src="https://www.facebook.com/tr?id=856256648998431&ev=PageView&noscript=1"
       </details>
       <details class="faq-item">
         <summary>Are there live sessions or a group?</summary>
-        <div class="faq-body"><p>No cohort, no live calls and no forum. You work through the modules on your own schedule.</p></div>
+        <div class="faq-body"><p>It's self-paced rather than live. You work through the modules on your own schedule, whenever it suits you.</p></div>
       </details>
     </div>
   </div>
@@ -596,7 +630,7 @@ src="https://www.facebook.com/tr?id=856256648998431&ev=PageView&noscript=1"
       <div class="mod-coach">
         <div class="who"><span class="name">Fraser Stewart</span><span class="role">Has been head of goalkeeping at Kilmarnock and worked in coach education at the Scottish FA</span></div>
       </div>
-      <p class="mod-desc">What it means to be a specialist goalkeeping coach, and what to think about in training and on match day.</p>
+      <p class="mod-desc">You'll learn what it means to be a specialist goalkeeping coach, and what to weigh up for your keeper in training and on match day.</p>
     </article>
 
     <article class="module">
@@ -605,7 +639,7 @@ src="https://www.facebook.com/tr?id=856256648998431&ev=PageView&noscript=1"
         <img src="https://learn.isspf.com/wp-content/uploads/2020/09/AlexSegovia_thumbnail.jpg" alt="Alex Segovia Vilchez" loading="lazy" width="56" height="56" />
         <div class="who"><span class="name">Alex Segovia Vilchez</span><span class="role">Has led performance at Singapore's national development centre</span></div>
       </div>
-      <p class="mod-desc">A model for developing physical qualities, and how exercise progresses through youth development.</p>
+      <p class="mod-desc">You'll learn a model for developing physical qualities, where mechanical and functional activities fit, and how exercise progresses through youth development.</p>
     </article>
 
     <article class="module">
@@ -614,7 +648,7 @@ src="https://www.facebook.com/tr?id=856256648998431&ev=PageView&noscript=1"
         <img src="https://learn.isspf.com/wp-content/uploads/2022/02/IvanKovcic_thumbnail.jpg" alt="Ivan Kovčić" loading="lazy" width="56" height="56" />
         <div class="who"><span class="name">Ivan Kovčić</span><span class="role">Has headed Dinamo Zagreb's academy goalkeeping programme</span></div>
       </div>
-      <p class="mod-desc">When a keeper trains on his own and when he trains with the team, and how to spot his problems in football situations. You'll also get a simple test: work on what keeps happening, not on a one-off.</p>
+      <p class="mod-desc">You'll learn when a keeper should train on his own and when with the team, and how to spot his problems in football situations. You'll also get a simple test for what to work on: what keeps happening, not a one-off.</p>
     </article>
 
     <article class="module">
@@ -623,7 +657,7 @@ src="https://www.facebook.com/tr?id=856256648998431&ev=PageView&noscript=1"
         <img src="https://learn.isspf.com/wp-content/uploads/2020/07/JackChristopher_thumbnail.jpg" alt="Jack Christopher" loading="lazy" width="56" height="56" />
         <div class="who"><span class="name">Jack Christopher</span><span class="role">Has been head of performance support in Chelsea's academy</span></div>
       </div>
-      <p class="mod-desc">How nutrition supports a young player through his development, as he grows and matures.</p>
+      <p class="mod-desc">You'll learn how nutrition supports a young player through each phase of his development, as he grows and matures.</p>
     </article>
 
     <article class="module">
@@ -632,16 +666,16 @@ src="https://www.facebook.com/tr?id=856256648998431&ev=PageView&noscript=1"
         <img src="https://learn.isspf.com/wp-content/uploads/2022/02/EduardoCachulo_thumbnail.jpg" alt="Eduardo Cachulo" loading="lazy" width="56" height="56" />
         <div class="who"><span class="name">Eduardo Cachulo</span><span class="role">Has worked in NEOM's goalkeeping academy and with Real Valladolid's senior goalkeepers</span></div>
       </div>
-      <p class="mod-desc">The goalkeeper coach's place in a club's technical department, the markers of success in the position, and the move from youth to senior football.</p>
+      <p class="mod-desc">You'll learn where the goalkeeper coach fits in a club's technical department, what marks success in the position, and how a young keeper makes the move from youth to senior football.</p>
     </article>
 
     <article class="module">
       <h3 class="mod-title"><span class="mod-num">Module 6:</span> Goalkeeping Expectations: Roles of the GK within the function of the game</h3>
       <div class="mod-coach">
         <img src="https://learn.isspf.com/wp-content/uploads/2020/12/JeffR_thumbnail.jpg" alt="Jeff Richardson" loading="lazy" width="56" height="56" />
-        <div class="who"><span class="name">Jeff Richardson</span></div>
+        <div class="who"><span class="name">Jeff Richardson</span><span class="role">Has coached academy goalkeepers at Brentford</span></div>
       </div>
-      <p class="mod-desc">The keeper's job when his team attacks, defends and transitions, plus communication and the key situations he has to deal with.</p>
+      <p class="mod-desc">You'll learn how to coach the keeper's job when his team attacks, defends and transitions, including his communication and the key situations he has to deal with.</p>
     </article>
 
     <article class="module">
@@ -650,7 +684,7 @@ src="https://www.facebook.com/tr?id=856256648998431&ev=PageView&noscript=1"
         <img src="https://learn.isspf.com/wp-content/uploads/2022/03/DanielTB_thumb.jpg" alt="Daniel Tumelty-Bevan" loading="lazy" width="56" height="56" />
         <div class="who"><span class="name">Daniel Tumelty-Bevan</span><span class="role">Has led academy goalkeeping at Birmingham City</span></div>
       </div>
-      <p class="mod-desc">How a keeper learns a new skill, and when to use repetition or practice that looks like the game. You'll learn to use how often he gets it right as your signal to move him on.</p>
+      <p class="mod-desc">You'll learn how a keeper learns a new skill, and when to use repetition or practice that looks like the game. How often he gets it right becomes your signal to move him on.</p>
     </article>
 
     <article class="module">
@@ -659,16 +693,16 @@ src="https://www.facebook.com/tr?id=856256648998431&ev=PageView&noscript=1"
         <img src="https://learn.isspf.com/wp-content/uploads/2022/02/GraemeSmith_thumbnail.jpg" alt="Graeme Smith" loading="lazy" width="56" height="56" />
         <div class="who"><span class="name">Graeme Smith</span><span class="role">Played the game professionally</span></div>
       </div>
-      <p class="mod-desc">The types of goalkeeper analysis used in youth football, and how they shape a goalkeeping curriculum. In one example, a goal that looks like a lost header turns out to come from his positioning and his judgement of the cross.</p>
+      <p class="mod-desc">You'll learn which types of goalkeeper analysis are used in youth football, and how they shape a goalkeeping curriculum. In one example, a goal that looks like a lost header turns out to come from his positioning and his judgement of the cross.</p>
     </article>
 
     <article class="module">
       <h3 class="mod-title"><span class="mod-num">Module 9:</span> Managing Pressure: Emotion, Anxiety and Coping, Part A</h3>
       <div class="mod-coach">
         <img src="https://learn.isspf.com/wp-content/uploads/2020/12/JeffR_thumbnail.jpg" alt="Jeff Richardson" loading="lazy" width="56" height="56" />
-        <div class="who"><span class="name">Jeff Richardson</span><span class="role">Has coached academy goalkeepers at Brentford</span></div>
+        <div class="who"><span class="name">Jeff Richardson</span></div>
       </div>
-      <p class="mod-desc">How emotion and anxiety affect a keeper, how he sees a big moment, and how he prepares mentally before a game. For the keeper who's sharp in training and different on match day.</p>
+      <p class="mod-desc">You'll learn how emotion and anxiety affect a keeper, how he sees a big moment, and how to prepare him mentally before a game. It's for the keeper who's sharp in training and different on match day.</p>
     </article>
 
     <article class="module">
@@ -677,7 +711,7 @@ src="https://www.facebook.com/tr?id=856256648998431&ev=PageView&noscript=1"
         <img src="https://learn.isspf.com/wp-content/uploads/2022/03/Dani_ortiz.jpg" alt="Dani Ortiz" loading="lazy" width="56" height="56" />
         <div class="who"><span class="name">Dani Ortiz</span><span class="role">Has coached goalkeepers in FC Barcelona's academy</span></div>
       </div>
-      <p class="mod-desc">How the academy builds distribution: the keeper and his outfielders beating a high press together, the weaker foot as a real option, and keepers rating their own passes like a traffic light. You'll see one skill built step by step, from the basics into the game.</p>
+      <p class="mod-desc">You'll learn how FC Barcelona's academy builds distribution: the keeper and his outfielders beating a high press together, the weaker foot as a real option, and keepers rating their own passes like a traffic light. You'll see one skill built step by step, from the basics into the game.</p>
     </article>
 
     <p class="gloss">LTAD stands for long-term athletic development: how a young player's training builds over the years.</p>
@@ -699,24 +733,19 @@ src="https://www.facebook.com/tr?id=856256648998431&ev=PageView&noscript=1"
       <div class="price-card-body">
         <h3 class="price-card-name">Professional Certificate in Goalkeeper Coaching Science (Pro-Youth Level)</h3>
 
-        <p class="price-was">Course price <span class="price priceFull">£249</span></p>
-
-        <p class="price-code-label">With code GKSCIENCE35</p>
+        <p class="price-code-label">Course price</p>
         <div class="price-display">
-          <span class="priceCode">£161.85</span>
-          <span class="off">35% off</span>
+          <span class="price priceFull">£249</span>
         </div>
 
-        <p class="geo-fallback" id="geoFallback">Your price shows in your own currency at checkout. Enter GKSCIENCE35 there for 35% off.</p>
-        <noscript><p class="geo-fallback show">Your price shows in your own currency at checkout. Enter GKSCIENCE35 there for 35% off.</p></noscript>
-
-        <p class="code-line">GKSCIENCE35 is only available here, on the goalkeeper course pages. It isn't offered anywhere else on ISSPF.</p>
+        <p class="geo-fallback" id="geoFallback">Your price shows in your own currency at checkout.</p>
+        <noscript><p class="geo-fallback show">Your price shows in your own currency at checkout.</p></noscript>
 
         <p class="pay-line">Paid in one go, by card or PayPal, with PayPal Pay Later offered at checkout.</p>
 
-        <a class="cta-button large" href="/smm/pro-youth-checkout/">Enrol with GKSCIENCE35</a>
+        <a class="cta-button large" href="/smm/pro-youth-checkout/">Enrol now</a>
 
-        <p class="guarantee"><strong>30-day money-back guarantee.</strong> Terms: <a href="https://www.isspf.com/terms-and-condition/" target="_blank" rel="noopener">https://www.isspf.com/terms-and-condition/</a></p>
+        <p class="guarantee"><strong>30-day money-back guarantee.</strong></p>
       </div>
     </div>
 
@@ -747,15 +776,15 @@ src="https://www.facebook.com/tr?id=856256648998431&ev=PageView&noscript=1"
       </details>
       <details class="faq-item">
         <summary>Isn't there plenty of this on YouTube?</summary>
-        <div class="faq-body"><p>There are plenty of drills, and many are good. A clip shows a drill, but it can't tell you whether your keeper is ready for it yet. That call is what the course teaches. You'll see sessions in the modules, and the drills themselves are easy to find elsewhere.</p></div>
+        <div class="faq-body"><p>There are plenty of drill clips, and some are good. A clip shows you one drill. It can't tell you whether your keeper is ready for it, what comes next or why. This course gives you both: drills and sessions from professional goalkeeping coaches, and how to choose, progress and explain them for the keeper in front of you.</p></div>
       </details>
       <details class="faq-item">
-        <summary>How soon will I see a difference in my keeper?</summary>
-        <div class="faq-body"><p>The course can't promise a timescale. How quickly a skill comes is down to the keeper and the work he puts in. What you get is a clear basis for every change you make to his work. It makes no promise about a keeper's career or your next job.</p></div>
+        <summary>How soon will I see a difference?</summary>
+        <div class="faq-body"><p>In your next session. You'll be coaching with the methods of professional goalkeeping coaches and performance specialists from the top level of the game: the academies of FC Barcelona, Chelsea, Brentford, Birmingham City and Dinamo Zagreb, Kilmarnock's goalkeeping department and Real Valladolid's senior goalkeepers. What you learn goes straight into your sessions: what each keeper should be working on, how to progress his skills and when to move him on. Every session gets a clear purpose, and each keeper moves on at his own pace.</p></div>
       </details>
       <details class="faq-item">
         <summary>Will clubs and federations recognise it?</summary>
-        <div class="faq-body"><p>ISSPF courses are accredited or endorsed by football federations and universities. The current list is at <a href="https://www.isspf.com/accreditations/" target="_blank" rel="noopener">https://www.isspf.com/accreditations/</a>. It's a professional certificate to hold alongside a UEFA, FA or federation licence. It doesn't replace one, and it isn't a degree.</p></div>
+        <div class="faq-body"><p>ISSPF courses are accredited or endorsed by football federations and universities. The current list is at <a href="https://www.isspf.com/accreditations/" target="_blank" rel="noopener">https://www.isspf.com/accreditations/</a>. It's a professional certificate you hold alongside your UEFA, FA or federation licence.</p></div>
       </details>
       <details class="faq-item">
         <summary>What about senior keepers?</summary>
