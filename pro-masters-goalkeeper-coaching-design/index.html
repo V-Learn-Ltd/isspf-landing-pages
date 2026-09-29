@@ -163,6 +163,9 @@
     text-transform: uppercase; color: #fff; margin: 0 0 26px; max-width: 19ch;
     text-wrap: balance;
   }
+
+  /* Senior: longer H1, so a smaller size and a wider measure keep it to about 3-4 lines */
+  .hero .hammer { font-size: clamp(34px, 4.4vw, 56px); max-width: 24ch; }
   .subhead {
     font-size: clamp(18px, 2vw, 21px); line-height: 1.6; color: #d4d5da;
     max-width: 58ch; margin: 0 0 34px; font-weight: 400;
@@ -673,6 +676,11 @@
   .review-grid.single { grid-template-columns: 1fr; }
   .review-grid.trio { grid-template-columns: 1fr; }
   @media (min-width: 980px) { .review-grid.trio { grid-template-columns: repeat(3, 1fr); } }
+  .mod-group { position: relative; z-index: 2; margin: 18px 0 2px; padding: 20px 22px; background: var(--ink); color: #fff; border-radius: var(--radius-l); box-shadow: var(--shadow-m); }
+  .mod-group::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 5px; background: var(--red); border-radius: var(--radius-l) 0 0 var(--radius-l); }
+  .mod-group-title { font-family: 'Anton', sans-serif; font-weight: 400; font-size: clamp(24px, 3vw, 32px); line-height: 1.1; text-transform: uppercase; letter-spacing: .01em; margin: 0 0 6px; color: #fff; }
+  .mod-group-line { margin: 0; font-size: 15.5px; line-height: 1.55; color: #d4d5da; max-width: 68ch; }
+  @media (min-width: 760px) { .mod-group { margin-left: 124px; padding: 24px 30px; } }
   footer .brand { font-family: 'Anton', sans-serif; font-weight: 400; font-size: clamp(20px, 2.6vw, 26px); line-height: 1.15; text-transform: uppercase; color: #fff; letter-spacing: .01em; max-width: 30ch; }
 </style>
 </head>
@@ -699,16 +707,16 @@
   <div class="wrap-wide">
   <div class="hero-inner">
     <p class="eyebrow reveal">For anyone who coaches senior goalkeepers, at any level</p>
-    <h1 class="hammer reveal">Send your keeper out ready.</h1>
-    <p class="deck reveal">A warm-up set up for them to succeed, and a job for each situation the next opponent brings.</p>
-    <p class="subhead reveal">The Professional Masters in Goalkeeper Coaching Science (Senior Pro Level): how professional goalkeeping coaches run match day, plan the week before it, and train the decisions a keeper makes before the save.</p>
+    <h1 class="hammer reveal">Build your keeper's technique and decisions in training, and prepare them for every opponent they face.</h1>
+    <p class="deck reveal">Training is where your keeper learns, so it should be demanding and full of decisions. Match day is where they perform, so your job turns to this opponent and to sending them out confident. The course teaches both jobs, in the training environment and the game environment.</p>
+    <p class="subhead reveal">The Professional Masters in Goalkeeper Coaching Science (Senior Pro Level) covers every part of the job, from planning the week to analysing the match. It includes a UEFA A goalkeeper coach's real two-match week, planned session by session from how the next opponent scores.</p>
     <ul class="badges reveal">
-      <li>A plan for every opponent</li>
-      <li>A training week your keeper learns from</li>
-      <li>Decisions trained before the save</li>
+      <li>The training week and match day</li>
+      <li>Reading the play, trained with the technique</li>
+      <li>A plan for each opponent</li>
       <li>CPD-certified course</li>
     </ul>
-    <p class="faculty-line reveal">Taught by goalkeeping coaches and specialists from the professional game, whose roles have included Brentford, Stoke City, Red Bull Salzburg, Dinamo Zagreb, Real Valladolid, Cardiff City, Fortuna Düsseldorf, Kilmarnock, San Jose Earthquakes and the Estonian Football Association.</p>
+    <p class="faculty-line reveal">Taught by goalkeeping coaches and specialists from the professional game, whose roles have included Brentford, Stoke City, Red Bull Salzburg, Dinamo Zagreb, Real Valladolid, Cardiff City, Fortuna Düsseldorf, Kilmarnock, San Jose Earthquakes and the Estonian Football Association. What they teach goes straight into your keeper's next session.</p>
   </div>
   </div>
 </section>
@@ -718,10 +726,10 @@
   <div class="wrap-wide">
     <ul class="facts-grid reveal">
       <li><span class="fact-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg></span><div><strong>Online</strong>Study on any device, around your fixtures</div></li>
-      <li><span class="fact-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span><div><strong>Self-paced</strong>Work at your own pace, on your own schedule</div></li>
+      <li><span class="fact-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span><div><strong>Self-paced</strong>Start and stop around your coaching</div></li>
       <li><span class="fact-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"/><circle cx="17" cy="9" r="2.5"/><path d="M16.5 14.2c2.9.3 5 2.4 5 5.8"/></svg></span><div><strong>Faculty</strong>Taught by 14 goalkeeping coaches and specialists</div></li>
-      <li><span class="fact-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg></span><div><strong>Language</strong>Taught in English, with subtitles in six languages</div></li>
-      <li><span class="fact-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V3h6v1M9 13l2 2 4-4"/></svg></span><div><strong>Assessment</strong>A short test after each module, and a tutor-assessed assignment</div></li>
+      <li><span class="fact-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg></span><div><strong>Language</strong>Subtitles in six languages, modules in English</div></li>
+      <li><span class="fact-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V3h6v1M9 13l2 2 4-4"/></svg></span><div><strong>Assessment</strong>Module tests and one tutor-assessed assignment</div></li>
       <li><span class="fact-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6z"/><path d="m9 12 2 2 4-4"/></svg></span><div><strong>Accreditation</strong>CPD-certified course</div></li>
     </ul>
   </div>
@@ -731,15 +739,15 @@
 <section class="why-sec" id="why">
   <div class="wrap">
     <h2>Why do I need this?</h2>
-    <p class="why-intro">If you coach senior goalkeepers, you've probably pieced your coaching together yourself. There's no shortage of drills. What's missing is a plan that links each session to your keeper's next match.</p>
+    <p class="why-intro">Senior goalkeeper coaching is usually learned a piece at a time: clips, other coaches' sessions, and your own time in goal if you played there. Each piece helps. What's often missing is how they fit together, from the first session of the week to the match.</p>
     <ul class="why-list reveal">
-      <li><strong>Drills arrive without their day.</strong> Clips, reels and other coaches' sessions show you a drill, but not which day it belongs on or what it's building towards.</li>
-      <li><strong>Good sessions don't add up to a match.</strong> Your keeper can have a run of sessions that each went well and were never built around the team they're about to face.</li>
-      <li><strong>A flat session leaves you guessing.</strong> Without knowing what a session was for, you're left guessing what to change it to.</li>
-      <li><strong>Someone always asks why.</strong> The head coach stops the video on a goal and asks why your keeper started from there. Something about decision-making doesn't answer it.</li>
-      <li><strong>The warm-up turns into one more session.</strong> It's a natural habit from the training week, but match day asks for a keeper who walks out ready.</li>
+      <li><strong>A drill comes without its reason.</strong> A clip shows a keeper diving and catching. It doesn't show whether they're reading anything, or which day of the week the drill belongs on.</li>
+      <li><strong>Clean handling that fades in the match.</strong> If your keeper always knows where the ball is going, they never practise reading it. A match makes them read first, and that's the part the course shows you how to train.</li>
+      <li><strong>The week isn't built for the next opponent.</strong> Good sessions run one after another, and none of them is planned around how your next opponent creates chances.</li>
+      <li><strong>The rest of the job needs a plan too.</strong> Pressure, a lost place in the team, fuel for the week and set plays all shape a keeper's matches, and each has its own module here.</li>
+      <li><strong>The head coach asks why.</strong> They stop the video on a goal and ask why your keeper started from there. &quot;Decision-making&quot; doesn't answer it.</li>
     </ul>
-    <p class="why-close reveal">This course gives you the whole plan: drills and sessions from professional goalkeeping coaches, with the reasoning behind each day, so you send your keeper out ready and can explain every session to anyone who asks.</p>
+    <p class="why-close reveal">This course covers all of it, in order: drills and sessions from goalkeeping coaches and specialists, each with its reason, so you send your keeper out ready and can explain everything you did that week.</p>
   </div>
 </section>
 
@@ -748,21 +756,21 @@
   <div class="wrap-wide">
     <h2>This course enables you to:</h2>
     <ul class="enables reveal">
-      <li>Run a match warm-up that gives your keeper a lot of success, so they walk out ready</li>
-      <li>Coach the decisions a keeper makes before the save: what to look at as play develops, where to stand and which action to choose, as well as the technique of the stop</li>
-      <li>Give your keeper a job for each situation the next opponent is likely to create</li>
-      <li>Build the training week from how the next opponent scores</li>
-      <li>Put the high-intensity work early in the week, so your keeper arrives fresh on match day</li>
-      <li>Know what each session is for, so you know what to change when one falls flat</li>
-      <li>Design drills and sessions that make your keeper read the game, as well as repeat a movement</li>
-      <li>Judge your keeper's decisions by what they could see at the time, not by what you saw from the side</li>
-      <li>Prepare your keeper for set plays, and organise the defence against them</li>
+      <li>Coach what your keeper looks for as play develops, so they pick their position and their action before the shot comes</li>
+      <li>Build technique that holds up in a match, by training it in sessions where your keeper doesn't know what's coming and has to decide</li>
+      <li>Coach your keeper inside the team's small-sided games, so team sessions become goalkeeper training too</li>
+      <li>Plan your keeper's training week so each session has a clear purpose, and know what to change when one falls flat</li>
+      <li>Build the week from how the next opponent scores: if they like to cut inside and finish, that's a session of shot-stopping on angles</li>
+      <li>Put the hardest work early in the week, so your keeper arrives fresh for the match. Keepers do more explosive work in training than in matches</li>
+      <li>Run a match warm-up built from a study of how professional goalkeeping coaches warm their keepers up, so your keeper walks out ready to perform</li>
+      <li>Prepare your keeper for set plays and organise the defence around them, so they know where to start and every player knows their job</li>
+      <li>Review the match against the job your keeper was given, and judge their decisions by what they could see at the time, not by what you saw from the side</li>
       <li>Support your keeper through pressure, setbacks and the nutritional plan that prepares them for match day</li>
     </ul>
   </div>
 </section>
 
-<!-- 4. COURSE DETAILS TABS (the short FAQ moved to the bottom FAQ, as on Youth)
+<!-- 4. COURSE DETAILS TABS (no short FAQ here; its questions are in the main FAQ)
      No JS: all four panels show, each with its own heading. With JS: tab buttons appear, headings hide. -->
 <section class="details">
   <div class="wrap">
@@ -776,10 +784,12 @@
 
       <div class="tab-panel" role="tabpanel" id="panel-overview" aria-labelledby="tab-overview">
         <h3 class="panel-heading">Overview</h3>
-        <p><strong>Your keeper walks out ready, and you know what the half hour before kick-off is for.</strong></p>
-        <p>Match day is a different job from the training week. In the week, training should be complex, because that's where your keeper learns. Before kick-off, you do the opposite: a warm-up set up so your keeper gets a lot of success, and a clear job for each situation this opponent is likely to create.</p>
-        <p>The training week is also where decisions are built. Most drills and tutorials teach the technique of the save. This course trains what comes before it too: what your keeper looks at as play develops, where they stand, and which action they choose.</p>
-        <p>You'll learn it all from goalkeeping coaches who've worked in the professional game, with the drills, the sessions and the reasoning behind each one.</p>
+        <p><strong>You coach two different jobs every week, and this course covers both.</strong></p>
+        <p>Match day is a different job from the training week. In the week, training should be complex, because that's where your keeper learns. Before kick-off, you do the opposite: a warm-up built to send your keeper out confident, and a clear job for each situation this opponent is likely to create.</p>
+        <p>The training week is also where decisions are built. Plenty of drills work on the save itself. This course trains what comes before it too: what your keeper looks at as play develops, where they stand, and which action they choose.</p>
+        <p>You'll see it done. A UEFA A goalkeeper coach walks through a real week with two matches in it: a session for each way the next opponent scores, crosses worked against opposition and tackle bags because the league is physical, and a check after the match on whether the week's aims showed up.</p>
+        <p>In another, GPS data shows keepers do more explosive work in training than in matches. That's why the hardest work goes early in the week.</p>
+        <p>You'll learn it all from goalkeeping coaches and specialists who've worked in the professional game, with the drills, the sessions and the reasoning behind each one.</p>
       </div>
 
       <div class="tab-panel" role="tabpanel" id="panel-who" aria-labelledby="tab-who">
@@ -790,26 +800,26 @@
           <li>the goalkeeper coach at a semi-professional club</li>
           <li>the specialist at a professional one</li>
         </ul>
-        <p>You might see your keeper once a week or every day. Either way, you're usually there on match day, and that's where this course starts.</p>
+        <p>You might see your keeper once a week or every day. Either way, the course covers the sessions you run and the match days you're there for.</p>
         <p>&quot;Senior Pro Level&quot; describes the course, not your club. Coach mostly young keepers? The <a href="/pro-youth-goalkeeper-coaching/">Professional Certificate in Goalkeeper Coaching Science (Pro-Youth Level)</a> is built for you.</p>
       </div>
 
       <div class="tab-panel" role="tabpanel" id="panel-outcomes" aria-labelledby="tab-outcomes">
         <h3 class="panel-heading">Outcomes</h3>
         <ul>
-          <li><strong>A warm-up with a purpose.</strong> You'll run the half hour before kick-off so your keeper walks out feeling ready.</li>
-          <li><strong>Decisions trained before the save.</strong> Your sessions will build how your keeper reads play, takes up position and picks the action, alongside the technique of the stop.</li>
+          <li><strong>Decisions trained with the technique.</strong> Your sessions will build how your keeper reads play, takes up position and picks the action, so their technique holds up in a match.</li>
+          <li><strong>A training week with a purpose.</strong> You'll plan each session for a reason, and put the hardest work early so your keeper arrives fresh for the match.</li>
           <li><strong>A plan for every opponent.</strong> You'll turn what you know about the next team, however little, into a few plain jobs your keeper can take onto the pitch.</li>
-          <li><strong>A training week your keeper learns from.</strong> You'll plan sessions that teach your keeper to read the game, with the high-intensity work early so they're fresh for the match.</li>
-          <li><strong>An answer when a session falls flat.</strong> You'll know what each session is there to do, so you'll know what to change.</li>
-          <li><strong>Your keeper supported as a whole.</strong> You'll cover fuel, pressure and setbacks such as losing their place, with specialists in each.</li>
+          <li><strong>A match day you've prepared for.</strong> You'll have a warm-up that sends your keeper out confident, and a plan for the set plays they'll face.</li>
+          <li><strong>A fair look at the match.</strong> You'll check the match against the job your keeper was given, and judge their decisions by what they could see.</li>
+          <li><strong>Support beyond the pitch.</strong> You'll cover nutrition, pressure and setbacks such as losing their place, including how to explain a selection to a keeper you've left out.</li>
         </ul>
       </div>
 
       <div class="tab-panel" role="tabpanel" id="panel-accreditation" aria-labelledby="tab-accreditation">
         <h3 class="panel-heading">Accreditation</h3>
         <p>A CPD-certified course. <a href="https://www.isspf.com/accreditations/" target="_blank" rel="noopener">See which football associations and universities recognise ISSPF courses</a></p>
-        <p>It's a professional certificate you hold alongside your UEFA, FA or federation licence.</p>
+        <p>It sits alongside your UEFA, FA or federation licence as a professional certificate.</p>
       </div>
     </div>
 
@@ -817,11 +827,11 @@
 </section>
 
 
-<!-- 7. COURSE MODULES (introduction unnumbered, then Module 1-18 in the isspf.com order, as the copy gives them) -->
+<!-- 7. COURSE MODULES (introduction unnumbered, then the two environment headings over Module 1-9 and 10-18, isspf.com order) -->
 <section class="modules" id="modules">
   <div class="wrap">
     <h2>Course modules</h2>
-    <p class="intro">Taught by goalkeeping coaches and specialists from the professional game. Each module is a video lesson with reading references, and they open in order.</p>
+    <p class="intro">Taught by goalkeeping coaches and specialists from the professional game. The modules run in the course's two environments, training first, then the game. Each is a video lesson with reading references, and they open in order.</p>
 
     <div class="mod-list">
     <article class="module mod-intro reveal">
@@ -830,8 +840,13 @@
         <span class="ph-crop"><img src="https://imagedelivery.net/BvUWK2_IC7HBmkQJfvYgIQ/4a237af1-cf66-4543-c20d-a43847306d00/public" alt="Fraser Stewart" loading="lazy" /></span>
         <div class="who"><span class="name">Fraser Stewart</span><span class="role">Has been head of goalkeeping at Kilmarnock and worked in coach education for the Scottish FA</span></div>
       </div>
-      <p class="mod-desc">You'll learn what the course covers and how it runs.</p>
+      <p class="mod-desc">You'll learn how the course runs, and how its two environments fit together.</p>
     </article>
+
+    <div class="mod-group reveal">
+      <h3 class="mod-group-title">Training environment</h3>
+      <p class="mod-group-line">Where your keeper's technique and decisions are built, along with the week's plan, their nutrition and how they handle pressure.</p>
+    </div>
 
     <article class="module reveal">
       <h3 class="mod-title"><span class="mod-num">Module 1:</span> The role of the Goalkeeper Coach</h3>
@@ -839,7 +854,7 @@
         <span class="ph-crop"><img src="https://imagedelivery.net/BvUWK2_IC7HBmkQJfvYgIQ/4a237af1-cf66-4543-c20d-a43847306d00/public" alt="Fraser Stewart" loading="lazy" /></span>
         <div class="who"><span class="name">Fraser Stewart</span></div>
       </div>
-      <p class="mod-desc">You'll learn what the goalkeeper coach's job involves, set out by a coach educator.</p>
+      <p class="mod-desc">You'll learn what the goalkeeper coach's job involves, and why every choice you make should start from your keeper.</p>
     </article>
 
     <article class="module reveal">
@@ -856,7 +871,7 @@
       <div class="mod-coach">
         <div class="who"><span class="name">Dr Fabian Otte</span><span class="role">A researcher in how players learn skills, whose roles have included goalkeeping work in the professional game</span></div>
       </div>
-      <p class="mod-desc">You'll learn how goalkeepers are trained today, and why a drill has to ask for the reading a match needs if it's going to carry into one.</p>
+      <p class="mod-desc">You'll learn how goalkeepers are trained today, and why a drill carries into a match only when your keeper has to read the play in it.</p>
     </article>
 
     <article class="module reveal">
@@ -864,7 +879,7 @@
       <div class="mod-coach">
         <div class="who"><span class="name">Aleksa Boskovic</span><span class="role">Has worked across Europe, the Gulf and Asia</span></div>
       </div>
-      <p class="mod-desc">You'll learn movement preparation for footballers in general: mobility, activation and how players get their bodies ready to move efficiently.</p>
+      <p class="mod-desc">You'll learn how footballers prepare their bodies to move efficiently, through mobility and activation work.</p>
     </article>
 
     <article class="module reveal">
@@ -873,7 +888,7 @@
         <img src="https://learn.isspf.com/wp-content/uploads/2022/10/dean-santangelo.webp" alt="Dean Santangelo" loading="lazy" width="56" height="56" />
         <div class="who"><span class="name">Dean Santangelo</span><span class="role">Has been a first-team goalkeeping coach and holds a UEFA A goalkeeping licence</span></div>
       </div>
-      <p class="mod-desc">You'll learn how to shape a goalkeeper training philosophy, plan the week, and keep training game-realistic so technique holds up in a match.</p>
+      <p class="mod-desc">You'll learn how to shape a goalkeeper training philosophy, plan the week between two matches, and keep training close to a real match so technique holds up in games.</p>
     </article>
 
     <article class="module reveal">
@@ -899,7 +914,7 @@
         <img src="https://learn.isspf.com/wp-content/uploads/2020/12/JeffR_thumbnail.jpg" alt="Jeff Richardson" loading="lazy" width="56" height="56" />
         <div class="who"><span class="name">Jeff Richardson</span><span class="role">Has coached academy goalkeepers at Brentford</span></div>
       </div>
-      <p class="mod-desc">You'll learn what causes choking under pressure, and how self-talk, awareness and resilience help a keeper cope.</p>
+      <p class="mod-desc">You'll learn why a keeper can make the right decision and still fumble it under pressure, and how self-talk and coping routines before and during a match help them recover.</p>
     </article>
 
     <article class="module reveal">
@@ -911,13 +926,18 @@
       <p class="mod-desc">You'll learn how to build technique that holds up when a match situation arrives, with sessions that train decision-making alongside technical skill.</p>
     </article>
 
+    <div class="mod-group reveal">
+      <h3 class="mod-group-title">Game environment</h3>
+      <p class="mod-group-line">Preparing your keeper for each opponent: the week before the match, the warm-up, set plays, analysis and the setbacks a season brings.</p>
+    </div>
+
     <article class="module reveal">
       <h3 class="mod-title"><span class="mod-num">Module 10:</span> Goalkeeper Decision Making and Anticipation - Game references</h3>
       <div class="mod-coach">
         <img src="https://learn.isspf.com/wp-content/uploads/2022/07/Jyri-Nieminen_thumb.jpg" alt="Jyri Nieminen" loading="lazy" width="56" height="56" />
         <div class="who"><span class="name">Jyri Nieminen</span><span class="role">Has been head of goalkeeping at the Estonian Football Association and first-team assistant and goalkeeper coach at San Jose Earthquakes</span></div>
       </div>
-      <p class="mod-desc">You'll learn what a keeper should scan for as play develops, how game references shape their decisions, and how to judge those decisions fairly.</p>
+      <p class="mod-desc">You'll learn what a keeper should scan for as play develops, how those cues shape their decisions, and how to judge those decisions fairly.</p>
     </article>
 
     <article class="module reveal">
@@ -926,7 +946,7 @@
         <img src="https://learn.isspf.com/wp-content/uploads/2022/07/Lee-Baxter_thumb.jpg" alt="Lee Baxter" loading="lazy" width="56" height="56" />
         <div class="who"><span class="name">Lee Baxter</span><span class="role">A UEFA A goalkeeper coach who has worked in Turkey, Denmark and South Africa, including national team duty</span></div>
       </div>
-      <p class="mod-desc">You'll learn how a real training week with two matches in it is built from how the next opponent scores.</p>
+      <p class="mod-desc">You'll see a real training week with two matches in it, built session by session from how the next opponent scores. If they like to cut inside and finish, one session is shot-stopping from those angles.</p>
     </article>
 
     <article class="module reveal">
@@ -943,7 +963,7 @@
       <div class="mod-coach">
         <div class="who"><span class="name">Dr Fabian Otte</span></div>
       </div>
-      <p class="mod-desc">You'll learn what the match warm-up is for, and how to run it so your keeper walks out ready.</p>
+      <p class="mod-desc">You'll learn what the match warm-up is for, from observing professional goalkeepers' warm-ups and talking to their coaches, and how to run yours so your keeper goes into the match ready.</p>
     </article>
 
     <article class="module reveal">
@@ -961,7 +981,7 @@
         <img src="https://learn.isspf.com/wp-content/uploads/2013/07/Tanga_ISSPF_thumbnail.jpg" alt="Dr Tanja Simone Ecken" loading="lazy" width="56" height="56" />
         <div class="who"><span class="name">Dr Tanja Simone Ecken</span><span class="role">Has been Head Sport Psychologist at Fortuna Düsseldorf</span></div>
       </div>
-      <p class="mod-desc">You'll learn how to help a keeper through setbacks, such as losing their place in the team.</p>
+      <p class="mod-desc">You'll learn how to help a keeper through setbacks such as losing their place, including how to explain a selection and keep a dropped keeper involved.</p>
     </article>
 
     <article class="module reveal">
@@ -979,7 +999,7 @@
         <img src="https://learn.isspf.com/wp-content/uploads/2022/07/Andy-Quy_thumb.jpg" alt="Andy Quy" loading="lazy" width="56" height="56" />
         <div class="who"><span class="name">Andy Quy</span></div>
       </div>
-      <p class="mod-desc">You'll learn how to organise your defence against set plays.</p>
+      <p class="mod-desc">You'll learn how to organise your defence against set plays, including where your keeper starts and what they're responsible for.</p>
     </article>
 
     <article class="module reveal">
@@ -988,7 +1008,7 @@
         <img src="https://learn.isspf.com/wp-content/uploads/2019/12/Matt_thumb.jpg" alt="Matt Newton" loading="lazy" width="56" height="56" />
         <div class="who"><span class="name">Matt Newton</span><span class="role">Has been Lead Academy Sports Scientist at Cardiff City</span></div>
       </div>
-      <p class="mod-desc">You'll learn what GPS data shows about a keeper's training load, and why the high-intensity work comes early in the week.</p>
+      <p class="mod-desc">You'll learn what GPS data shows about a keeper's training load, why keepers do more explosive work in training than in matches, and why the high-intensity work comes early in the week.</p>
     </article>
     </div>
   </div>
@@ -997,7 +1017,7 @@
 <!-- 8. PRICE + 9. WHAT YOU GET (retail price only; no code, no discount, no Terms link) -->
 <section class="pricing" id="enrol">
   <div class="wrap">
-    <h2>Enrol on the course</h2>
+    <h2>Start preparing your keeper for every opponent</h2>
 
     <div class="price-card reveal">
       <div class="price-card-banner">Senior Pro Level</div>
@@ -1024,9 +1044,9 @@
     <div class="what-you-get reveal">
       <h3>What you get with your enrolment:</h3>
       <ul class="included-list">
-        <li>Video modules from 14 goalkeeping coaches and specialists, with reading references</li>
-        <li>Self-paced online study on any device, with subtitles in six languages</li>
-        <li>A short test after each module and a tutor-assessed assignment</li>
+        <li>Video modules from 14 goalkeeping coaches and specialists, covering the training environment and the game environment</li>
+        <li>Reading references before and after each module, and a short test at the end of it</li>
+        <li>A tutor-assessed assignment</li>
         <li>A certificate when you reach the pass grade</li>
       </ul>
     </div>
@@ -1034,62 +1054,66 @@
 </section>
 
 
-<!-- 10. FAQ (main items, then the short FAQ moved from the details section) -->
+<!-- 10. FAQ (order as the R4 copy gives it) -->
 <section class="faq">
   <div class="wrap">
     <h2>Frequently asked questions</h2>
     <div class="faq-list">
       <details class="faq-item">
         <summary>Is it only for coaches at professional clubs?</summary>
-        <div class="faq-body"><p>It's for anyone who coaches senior goalkeepers, at any level. &quot;Senior&quot; means adult keepers, and &quot;Senior Pro Level&quot; is the level of the course. The examples come from the professional game, and they carry across because the shape of the job is the same everywhere: every keeper warms up, every match has an opponent, and every week has at least one session before it.</p></div>
+        <div class="faq-body"><p>It's for anyone who coaches senior goalkeepers, at any level. &quot;Senior&quot; means adult keepers, and &quot;Senior Pro Level&quot; is the level of the course. The examples come from the professional game, and they carry across because the shape of the job is the same everywhere: every keeper trains, every match has an opponent, and every keeper warms up before it.</p></div>
       </details>
       <details class="faq-item">
         <summary>I'm a volunteer and see my keeper once a week. Is it worth it?</summary>
-        <div class="faq-body"><p>Yes. Match day is the other time you're with your keeper, so the half hour before kick-off counts for even more. You'll also see how to coach your keeper inside the small-sided games you already run with the team, so your one session goes further.</p></div>
+        <div class="faq-body"><p>Yes. With one session, every minute has to count, so you'll see how to train decisions and technique together instead of one after the other. You'll also see how to coach your keeper inside the small-sided games you already run with the team, and match day gives you a second chance to prepare them.</p></div>
+      </details>
+      <details class="faq-item">
+        <summary>Can't I find this on YouTube?</summary>
+        <div class="faq-body"><p>Clips are useful for ideas. The course gives you what they leave out: which day of the week a drill belongs on, what the next opponent changes, and how to run match day. The drills and sessions come from goalkeeping coaches and specialists, each with its reason, in the order you'll use them.</p></div>
       </details>
       <details class="faq-item">
         <summary>What if I know very little about the opponent?</summary>
-        <div class="faq-body"><p>Use what you have, even if it's a result and what you saw last time you played them. The less you know, the fewer jobs you give your keeper, and the more the warm-up does the work. Whatever you know about how they score becomes a job for your keeper.</p></div>
+        <div class="faq-body"><p>Use what you have, even if it's a result and what you saw last time you played them. The less you know, the fewer jobs you give your keeper. Whatever you know about how they score becomes a job for your keeper.</p></div>
       </details>
       <details class="faq-item">
-        <summary>Is it all about match day?</summary>
-        <div class="faq-body"><p>Match day is where the course starts, and the modules go well past it. You'll plan the training week, build sessions that train your keeper's decisions, judge those decisions fairly, and help your keeper through pressure and setbacks such as losing their place.</p></div>
+        <summary>What does each environment cover?</summary>
+        <div class="faq-body"><p>The course runs in two environments, in this order. The training environment covers the coach's role, what a match asks of a keeper, how to train decisions and technique together, the training week, nutrition and pressure. The game environment covers decisions and anticipation, a real two-match week built around the next opponent, the warm-up, set plays, setbacks, match analysis and training load. Match day sits inside the game environment, alongside the work in the days before it.</p></div>
       </details>
       <details class="faq-item">
-        <summary>How soon will I see a difference?</summary>
-        <div class="faq-body"><p>From your next match day. You'll be coaching with the methods of goalkeeping coaches and specialists whose roles have included Brentford, Stoke City, Red Bull Salzburg, Dinamo Zagreb, Real Valladolid and the Estonian Football Association. What you learn goes straight into your next warm-up, your next opponent plan and your next training week. Every session gets a clear purpose, and your keeper develops at their own pace.</p></div>
-      </details>
-      <details class="faq-item">
-        <summary>How does it sit with my coaching licence?</summary>
-        <div class="faq-body"><p>It's a professional certificate you hold alongside your UEFA, FA or federation licence. &quot;Masters&quot; names the level of the course. <a href="https://www.isspf.com/accreditations/" target="_blank" rel="noopener">See which football associations and universities recognise ISSPF courses</a></p></div>
-      </details>
-      <details class="faq-item">
-        <summary>What if it isn't right for me?</summary>
-        <div class="faq-body"><p>You're covered by a 30-day money-back guarantee. See the refund terms.</p></div>
-      </details>
-      <details class="faq-item">
-        <summary>How is the course delivered?</summary>
-        <div class="faq-body"><p>Through video modules from every goalkeeping coach and specialist who teaches on it, with reading references before and after each one. It's fully online, so you study wherever and whenever suits you.</p></div>
-      </details>
-      <details class="faq-item">
-        <summary>Can I fit it round a season?</summary>
-        <div class="faq-body"><p>Yes. It's self-paced and works on any device, so you can pause a module and pick it up when your fixtures allow.</p></div>
+        <summary>When will I see it in my coaching?</summary>
+        <div class="faq-body"><p>From your next session. The methods come from goalkeeping coaches and specialists whose roles have included Brentford, Stoke City, Red Bull Salzburg, Dinamo Zagreb, Real Valladolid and the Estonian Football Association. What you learn goes straight into your next training week, your next opponent plan and your next warm-up.</p></div>
       </details>
       <details class="faq-item">
         <summary>Do I need a science background?</summary>
         <div class="faq-body"><p>It's built for coaches. You'll hear goalkeeping coaches and specialists explain their reasoning in football terms, and you work through it at your own pace.</p></div>
       </details>
       <details class="faq-item">
+        <summary>How does the course work?</summary>
+        <div class="faq-body"><p>You work through video modules from every goalkeeping coach and specialist who teaches on it, with reading references before and after each one. It's all online, so you study wherever and whenever suits you.</p></div>
+      </details>
+      <details class="faq-item">
+        <summary>Can I fit it round a season?</summary>
+        <div class="faq-body"><p>Yes. It's self-paced and works on any device, so you can pause a module and pick it up when your fixtures allow.</p></div>
+      </details>
+      <details class="faq-item">
         <summary>What order do the modules run in?</summary>
-        <div class="faq-body"><p>They open in order, each one after a short test on the module before.</p></div>
+        <div class="faq-body"><p>They open in order, each one after a short test on the module before. The training environment comes first, then the game environment.</p></div>
       </details>
       <details class="faq-item">
         <summary>Is it in my language?</summary>
-        <div class="faq-body"><p>It's taught in English, with subtitles in English, Spanish, French, Dutch, German and Italian.</p></div>
+        <div class="faq-body"><p>The modules are in English. You can switch on subtitles in English, Spanish, French, Dutch, German or Italian.</p></div>
       </details>
       <details class="faq-item">
         <summary>How is it assessed?</summary>
         <div class="faq-body"><p>A short multiple-choice test after each module, and a tutor-assessed assignment that checks it's landed. You're awarded a certificate when you reach the 75% pass grade.</p></div>
+      </details>
+      <details class="faq-item">
+        <summary>How does it sit with my coaching licence?</summary>
+        <div class="faq-body"><p>You hold it as a professional certificate next to your UEFA, FA or federation licence. &quot;Masters&quot; names the level of the course. <a href="https://www.isspf.com/accreditations/" target="_blank" rel="noopener">See which football associations and universities recognise ISSPF courses</a></p></div>
+      </details>
+      <details class="faq-item">
+        <summary>What if it isn't right for me?</summary>
+        <div class="faq-body"><p>You're covered by a 30-day money-back guarantee. See the refund terms.</p></div>
       </details>
     </div>
   </div>
