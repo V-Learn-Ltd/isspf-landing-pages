@@ -55,385 +55,640 @@ src="https://www.facebook.com/tr?id=856256648998431&ev=PageView&noscript=1"
 /></noscript>
 <!-- End Meta Pixel + CAPI Code -->
 
+<script>document.documentElement.classList.add('js');</script>
+
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
-
+<link rel="preload" as="image" href="https://learn.isspf.com/wp-content/uploads/2020/04/GK-youth-level-1.jpg" />
 
 <style>
   :root {
-    --bg-white: #ffffff;
-    --bg-stone: #f4f4f4;
-    --bg-dark: #0a0a0a;
-    --bg-dark-2: #141414;
-    --text-dark: #111111;
-    --text-muted-dark: #6b6b6b;
-    --text-cream: #ffffff;
-    --text-muted-light: #b8b8b8;
-    --accent-red: #ED1C24;
-    --accent-red-hover: #c8161d;
-    --rule-dark: rgba(255, 255, 255, 0.10);
-    --rule-light: rgba(0, 0, 0, 0.10);
+    --red: #ED1C24;
+    --red-deep: #c8161d;
+    --red-dark: #951217;
+    --ink: #0d0d0f;
+    --ink-2: #16161a;
+    --ink-3: #1f1f24;
+    --paper: #ffffff;
+    --stone: #f5f5f3;
+    --stone-2: #ececea;
+    --text: #141416;
+    --muted: #5f6066;
+    --muted-light: #b3b4ba;
+    --line: rgba(13, 13, 15, 0.09);
+    --line-strong: rgba(13, 13, 15, 0.16);
+    --line-dark: rgba(255, 255, 255, 0.10);
+    --radius-s: 8px;
+    --radius: 14px;
+    --radius-l: 22px;
+    --shadow-s: 0 1px 2px rgba(13,13,15,.05), 0 2px 8px rgba(13,13,15,.04);
+    --shadow-m: 0 2px 4px rgba(13,13,15,.04), 0 12px 32px rgba(13,13,15,.08);
+    --shadow-l: 0 8px 16px rgba(13,13,15,.08), 0 32px 72px rgba(13,13,15,.18);
+    --sec-pad: clamp(64px, 9vw, 112px);
+    --gutter: 20px;
+    --check: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='22' height='22' viewBox='0 0 22 22'><circle cx='11' cy='11' r='11' fill='%23ED1C24'/><path d='M6.5 11.5l3 3 6-6.5' stroke='white' stroke-width='2.3' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>");
   }
 
   * { box-sizing: border-box; }
   html, body { margin: 0; padding: 0; }
-  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
   body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    font-weight: 400;
-    color: var(--text-dark);
-    background: var(--bg-white);
-    line-height: 1.55;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    overflow-x: hidden;
-    overflow-x: clip;
+    font-weight: 400; color: var(--text); background: var(--paper);
+    line-height: 1.6; font-size: 16px;
+    -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden; overflow-x: clip;
+    text-rendering: optimizeLegibility;
   }
   img { max-width: 100%; }
   a { overflow-wrap: anywhere; }
 
-  .wrap { max-width: 880px; margin: 0 auto; padding: 0 20px; }
-  .wrap-wide { max-width: 1180px; margin: 0 auto; padding: 0 20px; }
+  .wrap { max-width: 920px; margin: 0 auto; padding: 0 var(--gutter); }
+  .wrap-wide { max-width: 1200px; margin: 0 auto; padding: 0 var(--gutter); }
+  @media (min-width: 768px) { :root { --gutter: 32px; } }
 
   h2 {
-    font-family: 'Anton', 'Inter', sans-serif;
-    font-weight: 400;
-    font-size: clamp(32px, 5.4vw, 56px);
-    line-height: 1.02;
-    letter-spacing: 0.005em;
-    text-transform: uppercase;
-    margin: 0 0 28px;
-    color: var(--text-dark);
+    font-family: 'Anton', 'Inter', sans-serif; font-weight: 400;
+    font-size: clamp(34px, 5.2vw, 60px); line-height: 1.02; letter-spacing: 0.004em;
+    text-transform: uppercase; margin: 0 0 clamp(28px, 4vw, 44px); color: var(--text);
   }
-  section { scroll-margin-top: 84px; }
+  h2::after {
+    content: ""; display: block; width: 56px; height: 4px; background: var(--red);
+    margin-top: 20px; border-radius: 2px;
+  }
+  section { scroll-margin-top: 84px; position: relative; }
 
   /* ---------- HEADER ---------- */
-  header { background: var(--bg-white); border-bottom: 1px solid var(--rule-light); padding: 14px 0; position: sticky; top: 0; z-index: 90; box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06); }
+  header {
+    background: rgba(255,255,255,.94); border-bottom: 1px solid var(--line);
+    padding: 12px 0; position: sticky; top: 0; z-index: 90;
+    -webkit-backdrop-filter: saturate(160%) blur(10px); backdrop-filter: saturate(160%) blur(10px);
+  }
   header .wrap-wide { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
-  .logo { display: flex; align-items: center; flex-shrink: 0; }
-  .logo-img { height: 44px; width: auto; display: block; }
+  .logo { display: flex; align-items: center; flex-shrink: 0; min-height: 44px; }
+  .logo-img { height: 42px; width: auto; display: block; }
   .logo-img.missing { display: none; }
-  .logo-text { display: none; font-weight: 900; font-size: 18px; letter-spacing: 0.04em; color: var(--text-dark); }
+  .logo-text { display: none; font-weight: 900; font-size: 18px; letter-spacing: 0.04em; color: var(--text); }
   .logo-img.missing + .logo-text { display: inline; }
-  .header-right { display: flex; align-items: center; gap: 20px; min-width: 0; }
+  .header-right { display: flex; align-items: center; gap: 22px; min-width: 0; }
   .header-meta {
-    font-size: 12px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase;
-    color: var(--accent-red); text-align: right; line-height: 1.35;
+    font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--muted); text-align: right; line-height: 1.45; max-width: 380px;
+    padding-right: 22px; border-right: 1px solid var(--line-strong);
   }
 
   /* ---------- BUTTONS ---------- */
   .cta-button {
-    display: inline-block;
-    background: var(--accent-red);
-    color: var(--text-cream);
-    font-family: 'Inter', sans-serif;
-    font-weight: 800;
-    font-size: 15px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    border: none;
-    padding: 18px 32px;
-    border-radius: 4px;
-    cursor: pointer;
-    text-decoration: none;
-    text-align: center;
-    transition: background 0.15s ease;
+    display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+    min-height: 44px; background: var(--red); color: #fff;
+    font-family: 'Inter', sans-serif; font-weight: 800; font-size: 15px; letter-spacing: 0.12em;
+    text-transform: uppercase; border: none; padding: 18px 32px; border-radius: 999px;
+    cursor: pointer; text-decoration: none; text-align: center;
+    box-shadow: 0 1px 0 rgba(255,255,255,.25) inset, 0 8px 20px rgba(237, 28, 36, 0.28);
+    transition: background .18s ease, transform .18s ease, box-shadow .18s ease;
   }
-  .cta-button:hover { background: var(--accent-red-hover); }
-  .cta-button:focus-visible, .tab-btn:focus-visible, summary:focus-visible { outline: 3px solid var(--accent-red); outline-offset: 3px; }
-  .cta-button.large { font-size: 16px; padding: 22px 36px; box-shadow: 0 12px 28px rgba(237, 28, 36, 0.35); }
-  .header-cta { padding: 12px 20px; font-size: 13px; flex-shrink: 0; }
+  .cta-button:hover { background: var(--red-deep); transform: translateY(-1px); box-shadow: 0 1px 0 rgba(255,255,255,.25) inset, 0 12px 28px rgba(237, 28, 36, 0.36); }
+  .cta-button:active { transform: translateY(0); }
+  .cta-button:focus-visible, .tab-btn:focus-visible, summary:focus-visible, .exit-modal-close:focus-visible, .exit-modal-nothanks:focus-visible {
+    outline: 3px solid var(--red); outline-offset: 3px;
+  }
+  .cta-button.large { font-size: 16px; padding: 22px 40px; }
+  .header-cta { padding: 11px 24px; font-size: 13px; flex-shrink: 0; box-shadow: 0 4px 12px rgba(237,28,36,.22); }
 
   /* ---------- 1. HERO ---------- */
-  .hero { background: var(--bg-dark); color: var(--text-cream); padding: 64px 0 72px; }
+  .hero {
+    background: var(--ink); color: #fff; overflow: hidden; isolation: isolate;
+    padding: clamp(210px, 58vw, 300px) 0 clamp(56px, 8vw, 96px);
+  }
+  .hero-image { position: absolute; z-index: -2; top: 0; left: -34%; width: 150%; pointer-events: none; }
+  .hero-image img {
+    display: block; width: 100%; height: auto; opacity: .85;
+    -webkit-mask-image: linear-gradient(to bottom, #000 30%, transparent 56%);
+            mask-image: linear-gradient(to bottom, #000 30%, transparent 56%);
+  }
+  .hero::before {
+    content: ""; position: absolute; inset: 0; z-index: -1;
+    background:
+      radial-gradient(60% 50% at 85% 0%, rgba(237,28,36,.22), transparent 70%),
+      linear-gradient(180deg, rgba(13,13,15,.1) 0%, rgba(13,13,15,.25) 18%, var(--ink) 42%);
+  }
+  .hero::after {
+    content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 4px; z-index: 1;
+    background: linear-gradient(90deg, var(--red) 0%, var(--red) 40%, rgba(237,28,36,0) 100%);
+  }
+  @media (min-width: 900px) {
+    .hero { padding: clamp(88px, 9vw, 128px) 0 clamp(80px, 8vw, 112px); min-height: 640px; }
+    .hero-image { left: auto; right: -2vw; width: min(74vw, 1280px); }
+    .hero-image img {
+      opacity: .9;
+      -webkit-mask-image: linear-gradient(to bottom, #000 28%, transparent 62%), linear-gradient(to right, transparent 0%, #000 42%);
+      -webkit-mask-composite: source-in;
+              mask-image: linear-gradient(to bottom, #000 28%, transparent 62%), linear-gradient(to right, transparent 0%, #000 42%);
+              mask-composite: intersect;
+    }
+    .hero::before {
+      background:
+        radial-gradient(45% 60% at 80% 10%, rgba(237,28,36,.18), transparent 70%),
+        linear-gradient(90deg, var(--ink) 0%, rgba(13,13,15,.9) 34%, rgba(13,13,15,.25) 60%, rgba(13,13,15,0) 100%);
+    }
+    .hero-inner { max-width: 760px; }
+  }
   .eyebrow {
-    display: block; font-size: 12px; font-weight: 700; letter-spacing: 0.16em;
-    text-transform: uppercase; color: var(--accent-red); margin: 0 0 22px; line-height: 1.5;
+    display: flex; align-items: flex-start; gap: 14px;
+    font-size: 12px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase;
+    color: #f1f1f3; margin: 0 0 26px; line-height: 1.6; max-width: 62ch;
+  }
+  .eyebrow::before {
+    content: ""; width: 32px; height: 3px; border-radius: 2px; background: var(--red);
+    flex-shrink: 0; margin-top: .72em;
   }
   .hammer {
-    font-family: 'Anton', 'Inter', sans-serif;
-    font-weight: 400;
-    font-size: clamp(34px, 5.6vw, 64px);
-    line-height: 1.02;
-    letter-spacing: 0.005em;
-    text-transform: uppercase;
-    color: var(--text-cream);
-    margin: 0 0 24px;
-    max-width: 960px;
+    font-family: 'Anton', 'Inter', sans-serif; font-weight: 400;
+    font-size: clamp(40px, 6vw, 76px); line-height: 1.0; letter-spacing: 0.004em;
+    text-transform: uppercase; color: #fff; margin: 0 0 26px; max-width: 19ch;
+    text-wrap: balance;
   }
-  .subhead { font-size: clamp(17px, 2.2vw, 20px); line-height: 1.55; color: var(--text-muted-light); max-width: 760px; margin: 0 0 32px; }
-  .badges {
-    list-style: none; padding: 0; margin: 0 0 36px;
-    display: grid; grid-template-columns: 1fr; gap: 12px; max-width: 900px;
+  .subhead {
+    font-size: clamp(18px, 2vw, 21px); line-height: 1.6; color: #d4d5da;
+    max-width: 58ch; margin: 0 0 34px; font-weight: 400;
   }
-  @media (min-width: 640px) { .badges { grid-template-columns: repeat(2, 1fr); } }
-  @media (min-width: 1000px) { .badges { grid-template-columns: repeat(4, 1fr); } }
+  .badges { list-style: none; padding: 0; margin: 0 0 36px; display: flex; flex-wrap: wrap; gap: 10px; }
   .badges li {
-    position: relative; padding: 14px 16px 14px 46px;
-    background: rgba(255, 255, 255, 0.04); border: 1px solid var(--rule-dark); border-radius: 6px;
-    font-size: 14px; font-weight: 600; line-height: 1.4; color: var(--text-cream);
+    display: inline-flex; align-items: center; gap: 10px; min-height: 44px;
+    padding: 10px 18px 10px 12px; border-radius: 999px;
+    background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.14);
+    font-size: 14px; font-weight: 600; line-height: 1.35; color: #fff;
   }
   .badges li::before, .enables li::before, .included-list li::before {
-    content: ""; position: absolute; left: 16px; top: 15px; width: 18px; height: 18px;
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 18 18'><circle cx='9' cy='9' r='9' fill='%23ED1C24'/><path d='M5 9.5L7.5 12L13 6.5' stroke='white' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/></svg>");
-    background-size: contain; background-repeat: no-repeat;
+    content: ""; flex-shrink: 0; width: 22px; height: 22px;
+    background-image: var(--check); background-size: contain; background-repeat: no-repeat;
   }
-  .faculty-line { font-size: 14px; line-height: 1.6; color: var(--text-muted-light); max-width: 720px; margin: 24px 0 0; }
+  .faculty-line {
+    position: relative; font-size: 15px; line-height: 1.6; color: #e6e6ea; max-width: 62ch;
+    margin: 0; padding: 18px 20px 18px 66px; border-radius: var(--radius);
+    background: linear-gradient(90deg, rgba(237,28,36,.16), rgba(255,255,255,.04));
+    border: 1px solid rgba(255,255,255,.10); border-left: 3px solid var(--red);
+  }
+  .faculty-line::before {
+    content: ""; position: absolute; left: 18px; top: 50%; transform: translateY(-50%);
+    width: 32px; height: 32px;
+    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ED1C24' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'><path d='M12 3 2 8l10 5 10-5-10-5Z'/><path d='M6 10.2V15c0 1.6 2.7 3 6 3s6-1.4 6-3v-4.8'/><path d='M22 8v6'/></svg>") center/contain no-repeat;
+  }
 
   /* ---------- 2. QUICK FACTS ---------- */
-  .facts { background: var(--bg-stone); padding: 40px 0; border-bottom: 1px solid var(--rule-light); }
-  .facts-grid { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: 1fr; gap: 12px; }
-  @media (min-width: 600px) { .facts-grid { grid-template-columns: repeat(2, 1fr); } }
-  @media (min-width: 960px) { .facts-grid { grid-template-columns: repeat(3, 1fr); } }
-  .facts-grid li {
-    background: var(--bg-white); border: 1px solid var(--rule-light); border-top: 3px solid var(--accent-red);
-    border-radius: 4px; padding: 16px 18px; font-size: 15px; line-height: 1.45; color: var(--text-muted-dark);
+  .facts { background: var(--stone); padding: 0 0 clamp(48px, 6vw, 72px); }
+  .facts-grid {
+    list-style: none; padding: 0; margin: 0; position: relative; top: -28px; margin-bottom: -28px;
+    display: grid; grid-template-columns: 1fr; gap: 1px;
+    background: var(--line); border: 1px solid var(--line); border-radius: var(--radius-l);
+    overflow: hidden; box-shadow: var(--shadow-m);
   }
-  .facts-grid li { display: flex; align-items: flex-start; gap: 14px; }
+  @media (min-width: 600px) { .facts-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 980px) { .facts-grid { grid-template-columns: repeat(3, 1fr); } }
+  .facts-grid li {
+    background: var(--paper); padding: 22px 22px; font-size: 15px; line-height: 1.5; color: var(--muted);
+    display: flex; align-items: flex-start; gap: 16px; transition: background .2s ease;
+  }
+  .facts-grid li:hover { background: #fcfcfb; }
   .fact-ico {
-    flex-shrink: 0; width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
-    background: rgba(237, 28, 36, 0.09); color: var(--accent-red);
+    flex-shrink: 0; width: 46px; height: 46px; border-radius: 12px; display: flex; align-items: center; justify-content: center;
+    background: linear-gradient(145deg, rgba(237,28,36,.12), rgba(237,28,36,.04)); color: var(--red);
+    border: 1px solid rgba(237,28,36,.16);
   }
   .facts-grid li strong {
-    display: block; font-size: 12px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase;
-    color: var(--text-dark); margin-bottom: 4px;
+    display: block; font-size: 12px; font-weight: 800; letter-spacing: 0.13em; text-transform: uppercase;
+    color: var(--text); margin: 2px 0 5px;
+  }
+
+  /* ---------- 2b. WHY DO I NEED THIS? ---------- */
+  .why-sec { padding: var(--sec-pad) 0; background: var(--paper); }
+  .why-sec .wrap { max-width: 1200px; }
+  .why-head { max-width: 760px; }
+  .why-intro { font-size: clamp(18px, 2vw, 21px); line-height: 1.65; margin: 0 0 clamp(36px, 5vw, 52px); max-width: 60ch; color: #2a2a2e; }
+  .why-list { list-style: none; padding: 0; margin: 0 0 clamp(36px, 5vw, 52px); display: grid; gap: 16px; grid-template-columns: 1fr; counter-reset: why; }
+  @media (min-width: 700px) { .why-list { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1020px) {
+    .why-list { grid-template-columns: repeat(6, 1fr); gap: 20px; }
+    .why-list li { grid-column: span 2; }
+    .why-list li:nth-child(n+4) { grid-column: span 3; }
+  }
+  @media (min-width: 700px) and (max-width: 1019px) { .why-list li:last-child { grid-column: 1 / -1; } }
+  .why-list li {
+    counter-increment: why; position: relative;
+    padding: 26px 26px 28px; font-size: 16px; line-height: 1.6; color: #3a3a40;
+    background: var(--stone); border: 1px solid var(--line); border-radius: var(--radius);
+    transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+  }
+  .why-list li:hover { transform: translateY(-3px); box-shadow: var(--shadow-m); border-color: rgba(237,28,36,.25); background: var(--paper); }
+  .why-list li::before {
+    content: counter(why, decimal-leading-zero);
+    display: block; font-family: 'Anton', sans-serif; font-size: 40px; line-height: 1; color: var(--red);
+    margin: 0 0 18px; letter-spacing: .02em;
+  }
+  .why-list li strong { display: block; font-size: 18px; font-weight: 800; line-height: 1.35; color: var(--text); margin-bottom: 8px; letter-spacing: -.005em; }
+  .why-close {
+    position: relative; margin: 0; max-width: none;
+    font-size: clamp(19px, 2.3vw, 26px); line-height: 1.5; font-weight: 700; color: #fff;
+    background: var(--ink); border-radius: var(--radius-l); overflow: hidden;
+    padding: clamp(28px, 4vw, 48px) clamp(24px, 5vw, 64px) clamp(28px, 4vw, 48px) clamp(28px, 5vw, 72px);
+    box-shadow: var(--shadow-l);
+  }
+  .why-close::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 6px; background: var(--red); }
+  .why-close::after {
+    content: ""; position: absolute; right: -80px; top: -80px; width: 280px; height: 280px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(237,28,36,.35), transparent 70%); pointer-events: none;
   }
 
   /* ---------- 3. ENABLES ---------- */
-  .enables-sec { padding: 80px 0; background: var(--bg-white); }
-  .enables { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: 1fr; gap: 0 40px; }
-  @media (min-width: 760px) { .enables { grid-template-columns: 1fr 1fr; } }
-  .enables li {
-    position: relative; padding: 14px 0 14px 32px; font-size: 16px; line-height: 1.5;
-    border-bottom: 1px solid var(--rule-light);
+  .enables-sec { padding: var(--sec-pad) 0; background: var(--ink); color: #fff; overflow: hidden; }
+  .enables-sec::before {
+    content: ""; position: absolute; inset: 0; pointer-events: none;
+    background:
+      radial-gradient(40% 50% at 100% 0%, rgba(237,28,36,.16), transparent 70%),
+      repeating-linear-gradient(90deg, rgba(255,255,255,.025) 0 1px, transparent 1px 120px);
   }
-  .enables li::before { left: 0; top: 17px; }
+  .enables-sec .wrap-wide { position: relative; }
+  .enables-sec h2 { color: #fff; }
+  .enables { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: 1fr; gap: 12px; }
+  @media (min-width: 800px) { .enables { grid-template-columns: 1fr 1fr; gap: 14px 18px; } }
+  .enables li {
+    display: flex; gap: 16px; align-items: flex-start;
+    padding: 20px 22px; font-size: 16.5px; line-height: 1.55; color: #ececef; font-weight: 500;
+    background: rgba(255,255,255,.04); border: 1px solid var(--line-dark); border-radius: var(--radius);
+    transition: background .2s ease, border-color .2s ease;
+  }
+  .enables li:hover { background: rgba(255,255,255,.07); border-color: rgba(237,28,36,.4); }
+  .enables li::before { margin-top: 1px; }
 
   /* ---------- 4/5. DETAILS TABS + SHORT FAQ ---------- */
-  .details { background: var(--bg-stone); padding: 80px 0; }
-  .tablist { display: none; flex-wrap: wrap; gap: 6px; margin: 0 0 0; border-bottom: 2px solid var(--rule-light); }
-  .js-tabs .tablist { display: flex; }
-  .tab-btn {
-    font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 700; letter-spacing: 0.06em;
-    text-transform: uppercase; color: var(--text-muted-dark); background: transparent;
-    border: 0; border-bottom: 3px solid transparent; margin-bottom: -2px; padding: 14px 14px; cursor: pointer;
+  .details { background: var(--stone); padding: var(--sec-pad) 0; }
+  .tablist {
+    display: none; gap: 4px; margin: 0 0 16px; padding: 5px;
+    background: var(--paper); border: 1px solid var(--line); border-radius: 999px; box-shadow: var(--shadow-s);
   }
-  .tab-btn[aria-selected="true"] { color: var(--accent-red); border-bottom-color: var(--accent-red); }
-  .tab-panel { background: var(--bg-white); border: 1px solid var(--rule-light); border-radius: 4px; padding: 28px 28px 20px; margin: 0 0 16px; }
-  .js-tabs .tab-panel { border-top: 0; border-radius: 0 0 4px 4px; }
+  .js-tabs .tablist { display: grid; grid-template-columns: repeat(2, 1fr); border-radius: 18px; }
+  @media (min-width: 640px) { .js-tabs .tablist { display: inline-grid; grid-template-columns: repeat(4, auto); border-radius: 999px; } }
+  .tab-btn {
+    font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--muted); background: transparent; min-height: 44px;
+    border: 0; border-radius: 999px; padding: 12px 22px; cursor: pointer; white-space: nowrap;
+    transition: background .2s ease, color .2s ease;
+  }
+  .tab-btn:hover { color: var(--text); background: var(--stone); }
+  .tab-btn[aria-selected="true"] { color: #fff; background: var(--ink); box-shadow: 0 4px 12px rgba(13,13,15,.18); }
+  .tab-btn[aria-selected="true"]::before { content: ""; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--red); margin-right: 8px; vertical-align: middle; transform: translateY(-1px); }
+  .tab-panel {
+    background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius-l);
+    padding: clamp(24px, 4vw, 44px); margin: 0 0 16px; box-shadow: var(--shadow-m);
+  }
   .js-tabs .tab-panel[hidden] { display: none; }
+  @media (prefers-reduced-motion: no-preference) { .js-tabs .tab-panel:not([hidden]) { animation: panelIn .35s ease both; } }
+  @keyframes panelIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
   .panel-heading {
-    font-family: 'Anton', sans-serif; font-weight: 400; font-size: 22px; text-transform: uppercase;
-    letter-spacing: 0.01em; color: var(--accent-red); margin: 0 0 16px;
+    font-family: 'Anton', sans-serif; font-weight: 400; font-size: 24px; text-transform: uppercase;
+    letter-spacing: 0.01em; color: var(--red); margin: 0 0 18px;
   }
   .js-tabs .panel-heading { display: none; }
-  .tab-panel p { font-size: 16px; line-height: 1.7; margin: 0 0 16px; }
-  .tab-panel ul { margin: 0 0 16px; padding-left: 20px; }
-  .tab-panel li { font-size: 16px; line-height: 1.6; margin: 0 0 12px; }
-  .tab-panel a, .accred-sec a, .faq-body a, .guarantee a, footer a.inline { color: var(--accent-red); font-weight: 600; }
-  .brand-line {
-    font-family: 'Anton', sans-serif; font-weight: 400; font-size: clamp(22px, 3.4vw, 30px) !important;
-    line-height: 1.15 !important; text-transform: uppercase; color: var(--accent-red);
-    border-top: 2px solid var(--accent-red); padding-top: 18px; margin-top: 24px !important;
+  .tab-panel p { font-size: 17px; line-height: 1.7; margin: 0 0 18px; max-width: 68ch; color: #2a2a2e; }
+  .tab-panel ul { margin: 0 0 18px; padding: 0; list-style: none; max-width: 68ch; }
+  .tab-panel li {
+    position: relative; font-size: 17px; line-height: 1.65; margin: 0 0 14px; padding-left: 26px; color: #2a2a2e;
   }
-  .short-faq { margin-top: 40px; }
+  .tab-panel li::before { content: ""; position: absolute; left: 2px; top: 10px; width: 9px; height: 9px; border-radius: 2px; background: var(--red); transform: rotate(45deg); }
+  .tab-panel li strong { color: var(--text); }
+  .tab-panel a, .accred-sec a, .faq-body a, .guarantee a, footer a.inline { color: var(--red); font-weight: 600; text-underline-offset: 3px; }
+  .brand-line {
+    font-family: 'Anton', sans-serif; font-weight: 400; font-size: clamp(24px, 3.4vw, 34px) !important;
+    line-height: 1.12 !important; text-transform: uppercase; color: var(--red) !important;
+    border-top: 1px solid var(--line); padding-top: 24px; margin: 30px 0 4px !important; max-width: none !important;
+  }
+  .short-faq { margin-top: clamp(32px, 5vw, 48px); }
 
   /* FAQ accordion (both FAQs) */
-  .faq-item { border-bottom: 1px solid var(--rule-light); }
-  .faq-list .faq-item:first-child { border-top: 1px solid var(--rule-light); }
+  .faq-list { display: grid; gap: 10px; }
+  .faq-item {
+    background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius);
+    transition: box-shadow .2s ease, border-color .2s ease;
+  }
+  .faq-item:hover { border-color: var(--line-strong); }
+  .faq-item[open] { box-shadow: var(--shadow-m); border-color: rgba(237,28,36,.28); }
   .faq-item summary {
-    list-style: none; cursor: pointer; padding: 20px 0; font-weight: 700; font-size: 17px; line-height: 1.4;
-    color: var(--text-dark); display: grid; grid-template-columns: 1fr auto; gap: 16px; align-items: start;
+    list-style: none; cursor: pointer; padding: 20px 22px; min-height: 44px; font-weight: 700; font-size: 17px; line-height: 1.4;
+    color: var(--text); display: grid; grid-template-columns: 1fr 32px; gap: 16px; align-items: center; border-radius: var(--radius);
   }
   .faq-item summary::-webkit-details-marker { display: none; }
-  .faq-item summary::after { content: "+"; font-weight: 400; font-size: 24px; line-height: 1; color: var(--accent-red); }
-  .faq-item[open] summary::after { content: "\2212"; }
-  .faq-item summary:hover { color: var(--accent-red); }
-  .faq-body { padding: 0 0 22px; font-size: 16px; line-height: 1.65; color: var(--text-dark); }
-  .faq-body p { margin: 0; }
+  .faq-item summary::after {
+    content: ""; width: 32px; height: 32px; border-radius: 50%; background-color: var(--stone);
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 14 14'><path d='M7 1v12M1 7h12' stroke='%23ED1C24' stroke-width='2' stroke-linecap='round'/></svg>");
+    background-repeat: no-repeat; background-position: center; transition: transform .25s ease, background-color .2s ease;
+  }
+  .faq-item[open] summary::after {
+    transform: rotate(45deg); background-color: var(--red);
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 14 14'><path d='M7 1v12M1 7h12' stroke='white' stroke-width='2' stroke-linecap='round'/></svg>");
+  }
+  .faq-item summary:hover { color: var(--red); }
+  .faq-body { padding: 0 22px 22px; font-size: 16px; line-height: 1.7; color: #3a3a40; }
+  .faq-body p { margin: 0; max-width: 68ch; }
   .faq-body p + p { margin-top: 12px; }
 
-  /* ---------- 6. ACCREDITATION ---------- */
-  .accred-sec { padding: 72px 0; background: var(--bg-white); border-bottom: 1px solid var(--rule-light); }
-  .accred-sec p { font-size: 17px; line-height: 1.7; margin: 0; }
-  .partners h2 { text-align: center; }
-  .partner-grid { list-style: none; padding: 0; margin: 32px 0 0; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 28px 40px; }
-  .partner-grid li { display: flex; align-items: center; justify-content: center; }
-  .partner-grid img { height: 72px; width: auto; max-width: 110px; object-fit: contain; }
-  @media (max-width: 600px) { .partner-grid { gap: 20px 24px; } .partner-grid img { height: 52px; max-width: 96px; } }
-
   /* ---------- 7. MODULES ---------- */
-  .modules { background: var(--bg-stone); padding: 80px 0; }
-  .modules .intro { font-size: 17px; line-height: 1.65; color: var(--text-muted-dark); margin: 0 0 32px; }
-  .module {
-    background: var(--bg-white); border: 1px solid var(--rule-light); border-left: 4px solid var(--accent-red);
-    border-radius: 4px; padding: 22px 24px; margin: 0 0 12px;
+  .modules { background: var(--paper); padding: var(--sec-pad) 0; }
+  .modules .wrap { max-width: 1000px; }
+  .modules .intro {
+    display: inline-flex; align-items: center; gap: 12px;
+    font-size: 17px; line-height: 1.55; color: var(--muted); font-weight: 500; margin: 0 0 clamp(32px, 5vw, 52px);
   }
-  .mod-num { color: var(--accent-red); font-weight: 800; }
-  .mod-title { font-size: 18px; font-weight: 700; line-height: 1.35; margin: 0 0 14px; color: var(--text-dark); }
-  .mod-coach { display: flex; align-items: center; gap: 14px; margin: 0 0 14px; }
-  .mod-coach img {
+  .mod-list { position: relative; counter-reset: mod; display: grid; gap: 16px; }
+  .module {
+    counter-increment: mod; position: relative;
+    background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius-l);
+    padding: 24px 22px 22px; display: flex; flex-direction: column;
+    box-shadow: var(--shadow-s); transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+  }
+  .module:hover { transform: translateY(-2px); box-shadow: var(--shadow-m); border-color: rgba(237,28,36,.25); }
+  .module::before {
+    content: counter(mod, decimal-leading-zero);
+    font-family: 'Anton', sans-serif; font-size: 44px; line-height: 1; color: var(--red); letter-spacing: .01em;
+    margin: 0 0 14px;
+  }
+  .mod-title { order: 1; font-size: clamp(19px, 2.2vw, 22px); font-weight: 800; line-height: 1.3; margin: 0 0 12px; color: var(--text); letter-spacing: -.01em; }
+  .mod-num {
+    display: block; color: var(--red); font-weight: 800; font-size: 12px; letter-spacing: .16em; text-transform: uppercase; margin: 0 0 8px;
+  }
+  .mod-desc { order: 2; font-size: 16px; line-height: 1.65; margin: 0 0 20px; color: #3a3a40; max-width: 68ch; }
+  .mod-coach {
+    order: 3; display: flex; align-items: center; gap: 14px; margin: 0; padding-top: 18px; border-top: 1px solid var(--line);
+  }
+  .mod-coach img, .mod-coach:not(:has(img))::before {
     width: 56px; height: 56px; border-radius: 50%; object-fit: cover; flex-shrink: 0;
-    border: 2px solid var(--rule-light); background: var(--bg-stone);
+    background: var(--stone); box-shadow: 0 0 0 2px var(--paper), 0 0 0 4px rgba(237,28,36,.85);
+  }
+  .mod-coach:not(:has(img))::before {
+    content: "";
+    background: var(--stone-2) url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%239a9ba1'><circle cx='12' cy='9' r='4'/><path d='M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7'/></svg>") center 60%/60% no-repeat;
   }
   .mod-coach .who { min-width: 0; }
-  .mod-coach .name { display: block; font-size: 14px; font-weight: 700; color: var(--accent-red); letter-spacing: 0.04em; text-transform: uppercase; }
-  .mod-coach .role { display: block; font-size: 14px; line-height: 1.45; color: var(--text-muted-dark); }
-  .mod-desc { font-size: 16px; line-height: 1.65; margin: 0; }
-  .modules .gloss { font-size: 14px; color: var(--text-muted-dark); margin: 24px 0 0; font-style: italic; }
+  .mod-coach .name { display: block; font-size: 15px; font-weight: 800; color: var(--text); letter-spacing: 0; }
+  .mod-coach .role { display: block; font-size: 14px; line-height: 1.45; color: var(--muted); margin-top: 2px; }
+  .modules .gloss { font-size: 14px; color: var(--muted); margin: 28px 0 0; font-style: italic; padding-left: 16px; border-left: 2px solid var(--line-strong); }
+
+  @media (min-width: 760px) {
+    .mod-list::before {
+      content: ""; position: absolute; z-index: 0; left: 47px; top: 28px; bottom: 28px; width: 2px;
+      background: linear-gradient(to bottom, var(--red), rgba(237,28,36,.15));
+    }
+    .module {
+      display: grid; grid-template-columns: 96px 1fr; column-gap: 28px;
+      padding: 30px 34px 28px 0; background: transparent; border-color: transparent; box-shadow: none;
+    }
+    .module:hover { transform: none; box-shadow: none; border-color: transparent; }
+    .module::before {
+      grid-column: 1; grid-row: 1 / span 3; align-self: start; justify-self: center;
+      width: 96px; height: 96px; margin: 0; display: flex; align-items: center; justify-content: center;
+      font-size: 42px; background: var(--paper); border-radius: 50%; position: relative; z-index: 1;
+      box-shadow: 0 0 0 1px var(--line), 0 0 0 8px var(--paper);
+      transition: background .25s ease, color .25s ease;
+    }
+    .module:hover::before { background: var(--red); color: #fff; }
+    .mod-title, .mod-desc, .mod-coach { grid-column: 2; }
+    .mod-title { grid-row: 1; }
+    .mod-desc { grid-row: 2; }
+    .mod-coach { grid-row: 3; }
+    .mod-list .module > * { position: relative; }
+    .module::after {
+      content: ""; grid-column: 2; grid-row: 1 / span 3; margin: -22px -30px -22px -30px;
+      background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius-l);
+      box-shadow: var(--shadow-s); z-index: 0; transition: box-shadow .25s ease, border-color .25s ease;
+    }
+    .module:hover::after { box-shadow: var(--shadow-m); border-color: rgba(237,28,36,.28); }
+    .mod-title, .mod-desc, .mod-coach { z-index: 1; }
+    .module { margin-left: 0; z-index: 1; }
+  }
 
   /* ---------- 8/9. PRICE + WHAT YOU GET ---------- */
-  .pricing { background: var(--bg-white); padding: 80px 0; }
-  .pricing h2 { text-align: center; }
-  .certificate-visual { text-align: center; margin: 0 auto 36px; max-width: 480px; }
-  .certificate-visual img {
-    display: block; width: 180px; height: auto; margin: 0 auto 12px; border-radius: 6px;
-    box-shadow: 0 18px 36px rgba(0, 0, 0, 0.15), 0 4px 10px rgba(0, 0, 0, 0.06);
+  .pricing { background: var(--ink); color: #fff; padding: var(--sec-pad) 0; overflow: hidden; isolation: isolate; }
+  .pricing::before {
+    content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+    background:
+      radial-gradient(50% 40% at 50% 38%, rgba(237,28,36,.28), transparent 70%),
+      radial-gradient(30% 30% at 10% 90%, rgba(237,28,36,.10), transparent 70%);
   }
-  .cert-cap { font-family: 'Anton', sans-serif; font-weight: 400; font-size: 18px; line-height: 1.25; color: var(--text-dark); margin: 0; }
+  .pricing h2 { text-align: center; color: #fff; max-width: 18ch; margin-left: auto; margin-right: auto; }
+  .pricing h2::after { margin-left: auto; margin-right: auto; }
+  .certificate-visual { text-align: center; margin: 0 auto 28px; max-width: 520px; }
+  .cert-cap {
+    display: inline-flex; align-items: center; gap: 12px; text-align: left;
+    font-family: 'Inter', sans-serif; font-weight: 600; font-size: 14px; line-height: 1.4; letter-spacing: .02em;
+    color: var(--muted-light); margin: 0;
+  }
+  .cert-cap::before {
+    content: ""; flex-shrink: 0; width: 34px; height: 34px;
+    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ED1C24' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='9' r='6'/><path d='M8.5 14 7 22l5-3 5 3-1.5-8'/></svg>") center/contain no-repeat;
+  }
   .price-card {
-    max-width: 500px; margin: 0 auto; background: var(--bg-white); border-radius: 10px; overflow: hidden;
-    border: 1px solid var(--rule-light); box-shadow: 0 24px 48px rgba(0, 0, 0, 0.08), 0 4px 12px rgba(0, 0, 0, 0.04);
+    position: relative; max-width: 540px; margin: 0 auto; background: var(--paper); color: var(--text);
+    border-radius: 24px; overflow: hidden;
+    box-shadow: 0 0 0 1px rgba(255,255,255,.08), 0 0 0 8px rgba(237,28,36,.10), 0 40px 90px rgba(0,0,0,.55);
   }
   .price-card-banner {
-    background: var(--accent-red); color: var(--text-cream); text-align: center; padding: 12px 20px;
-    font-size: 11px; font-weight: 800; letter-spacing: 0.2em; text-transform: uppercase;
+    background: var(--red); color: #fff; text-align: center; padding: 14px 20px;
+    font-size: 12px; font-weight: 800; letter-spacing: 0.28em; text-transform: uppercase;
+    background-image: repeating-linear-gradient(135deg, rgba(255,255,255,.07) 0 10px, transparent 10px 20px);
   }
-  .price-card-body { padding: 32px 28px 28px; }
+  .price-card-body { padding: clamp(28px, 5vw, 44px) clamp(22px, 5vw, 44px) clamp(26px, 4vw, 36px); }
   .price-card-name {
-    font-family: 'Anton', sans-serif; font-weight: 400; font-size: clamp(20px, 3.4vw, 26px); line-height: 1.15;
-    text-transform: uppercase; text-align: center; margin: 0 0 24px; padding-bottom: 22px; border-bottom: 1px solid var(--rule-light);
+    font-family: 'Anton', sans-serif; font-weight: 400; font-size: clamp(22px, 3.2vw, 28px); line-height: 1.15;
+    text-transform: uppercase; text-align: center; margin: 0 0 26px; padding-bottom: 24px; border-bottom: 1px solid var(--line);
+    text-wrap: balance;
   }
-  .price-was { text-align: center; font-size: 16px; color: var(--text-muted-dark); margin: 0 0 18px; }
-  .price-was .priceFull { font-weight: 700; color: var(--text-dark); white-space: nowrap; }
-  .price-code-label { text-align: center; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted-dark); margin: 0 0 6px; }
-  .price-display { text-align: center; margin: 0 0 18px; }
+  .price-code-label { text-align: center; font-size: 12px; font-weight: 800; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); margin: 0 0 10px; }
+  .price-display { text-align: center; margin: 0 0 20px; }
   .price-display .priceFull, .price-display .priceCode {
-    font-family: 'Anton', sans-serif; font-weight: 400; font-size: clamp(52px, 8.5vw, 80px); line-height: 1;
-    color: var(--accent-red); display: block;
+    font-family: 'Anton', sans-serif; font-weight: 400; font-size: clamp(72px, 13vw, 112px); line-height: .95;
+    color: var(--text); display: block; letter-spacing: -.005em;
   }
-  .price-display .off { display: block; font-size: 14px; font-weight: 600; color: var(--text-muted-dark); margin-top: 8px; }
-  .geo-fallback { display: none; text-align: center; font-size: 14px; line-height: 1.5; color: var(--text-muted-dark); margin: 0 0 18px; }
+  .price-display .off { display: block; font-size: 14px; font-weight: 600; color: var(--muted); margin-top: 8px; }
+  .geo-fallback { display: none; text-align: center; font-size: 14px; line-height: 1.5; color: var(--muted); margin: 0 0 18px; }
   .geo-fallback.show { display: block; }
-  .code-line, .pay-line {
-    text-align: center; font-size: 14px; line-height: 1.55; color: var(--text-muted-dark); margin: 0 0 18px;
+  .code-line, .pay-line { text-align: center; font-size: 14.5px; line-height: 1.6; color: var(--muted); margin: 0 auto 24px; max-width: 40ch; }
+  .code-line { padding-bottom: 18px; border-bottom: 1px solid var(--line); }
+  .price-card .cta-button { display: flex; width: 100%; }
+  .price-card .cta-button::after {
+    content: ""; width: 18px; height: 18px; flex-shrink: 0;
+    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><path d='M5 12h14M13 6l6 6-6 6'/></svg>") center/contain no-repeat;
+    transition: transform .2s ease;
   }
-  .code-line { padding-bottom: 18px; border-bottom: 1px solid var(--rule-light); }
-  .price-card .cta-button { display: block; width: 100%; }
+  .price-card .cta-button:hover::after { transform: translateX(3px); }
   .guarantee {
-    margin-top: 20px; padding: 16px 18px; background: var(--bg-stone); border-radius: 6px;
-    font-size: 13px; line-height: 1.55; color: var(--text-muted-dark); text-align: center;
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    margin: 20px 0 0; padding: 14px 18px; background: var(--stone); border-radius: 12px;
+    font-size: 13px; line-height: 1.55; color: var(--muted); text-align: center;
   }
-  .guarantee strong { color: var(--text-dark); font-size: 14px; }
-  .what-you-get { max-width: 500px; margin: 44px auto 0; }
+  .guarantee::before {
+    content: ""; width: 22px; height: 22px; flex-shrink: 0;
+    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ED1C24' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6z'/><path d='m9 12 2 2 4-4'/></svg>") center/contain no-repeat;
+  }
+  .guarantee strong { color: var(--text); font-size: 14px; }
+  .what-you-get {
+    max-width: 540px; margin: 28px auto 0; padding: clamp(24px, 4vw, 34px);
+    background: rgba(255,255,255,.04); border: 1px solid var(--line-dark); border-radius: 20px;
+  }
   .what-you-get h3 {
-    font-family: 'Anton', sans-serif; font-weight: 400; font-size: 24px; text-transform: uppercase;
-    line-height: 1.1; margin: 0 0 16px;
+    font-family: 'Anton', sans-serif; font-weight: 400; font-size: 22px; text-transform: uppercase;
+    line-height: 1.15; margin: 0 0 14px; color: #fff; letter-spacing: .01em;
   }
   .included-list { list-style: none; padding: 0; margin: 0; }
-  .included-list li { position: relative; padding: 12px 0 12px 32px; font-size: 15px; line-height: 1.5; border-bottom: 1px solid var(--rule-light); }
-  .included-list li::before { left: 0; top: 14px; }
+  .included-list li {
+    display: flex; gap: 14px; align-items: flex-start;
+    padding: 14px 0; font-size: 15.5px; line-height: 1.55; color: #e2e3e7; border-bottom: 1px solid var(--line-dark);
+  }
+  .included-list li:last-child { border-bottom: 0; padding-bottom: 0; }
+
+  /* ---------- 6. PARTNERS ---------- */
+  .accred-sec { padding: var(--sec-pad) 0; background: var(--paper); }
+  .accred-sec p { font-size: 17px; line-height: 1.7; margin: 0; }
+  .partners h2 { text-align: center; }
+  .partners h2::after { margin-left: auto; margin-right: auto; }
+  .partner-grid {
+    list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; justify-content: center;
+    --cols: 3; --gap: 12px; gap: var(--gap);
+  }
+  @media (min-width: 640px) { .partner-grid { --cols: 4; --gap: 14px; } }
+  @media (min-width: 980px) { .partner-grid { --cols: 7; --gap: 16px; } }
+  .partner-grid li { flex: 0 0 calc((100% - (var(--cols) - 1) * var(--gap)) / var(--cols)); }
+  .partner-grid li {
+    display: flex; align-items: center; justify-content: center; aspect-ratio: 4 / 3;
+    background: var(--stone); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px;
+    transition: background .25s ease, box-shadow .25s ease, transform .25s ease;
+  }
+  .partner-grid img { mix-blend-mode: multiply; max-height: 64px; width: auto; max-width: 100%; object-fit: contain; transition: filter .3s ease, opacity .3s ease; }
+  @media (hover: hover) {
+    .partner-grid img { filter: grayscale(1) contrast(1.05); opacity: .72; }
+    .partner-grid li:hover { background: var(--paper); box-shadow: var(--shadow-m); transform: translateY(-2px); }
+    .partner-grid li:hover img { filter: none; opacity: 1; }
+  }
+  @media (max-width: 600px) { .partner-grid img { max-height: 48px; } .partner-grid li { padding: 10px; } }
 
   /* ---------- 10. FAQ ---------- */
-  .faq { padding: 80px 0; background: var(--bg-stone); }
+  .faq { padding: var(--sec-pad) 0; background: var(--stone); }
 
   /* ---------- 11. TESTIMONIALS ---------- */
-  .testimonials { background: var(--bg-dark); color: var(--text-cream); padding: 80px 0; border-top: 4px solid var(--accent-red); }
-  .testimonials h2 { color: var(--text-cream); }
-  .review-grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
-  @media (min-width: 760px) { .review-grid { grid-template-columns: 1fr 1fr; } }
-  .review {
-    margin: 0; padding: 24px 26px; border-left: 4px solid var(--accent-red);
-    background: rgba(255, 255, 255, 0.04); border-radius: 4px;
+  .testimonials { background: var(--ink); color: #fff; padding: var(--sec-pad) 0; overflow: hidden; }
+  .testimonials::before {
+    content: ""; position: absolute; inset: 0; pointer-events: none;
+    background: radial-gradient(40% 50% at 0% 100%, rgba(237,28,36,.14), transparent 70%);
   }
-  .review p { color: var(--text-cream); font-size: 17px; line-height: 1.6; margin: 0 0 12px; }
-  .review cite { font-style: normal; font-size: 13px; color: var(--text-muted-light); }
+  .testimonials .wrap { max-width: 1100px; position: relative; }
+  .testimonials h2 { color: #fff; max-width: 20ch; }
+  .review-grid { display: grid; grid-template-columns: 1fr; gap: 18px; }
+  @media (min-width: 760px) { .review-grid { grid-template-columns: 1fr 1fr; gap: 22px; } }
+  .review {
+    position: relative; margin: 0; padding: 34px 30px 28px; border-top: 3px solid var(--red) !important; display: flex; flex-direction: column; justify-content: space-between;
+    background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.025));
+    border: 1px solid var(--line-dark); border-radius: var(--radius-l);
+    transition: border-color .25s ease, transform .25s ease;
+  }
+  .review:hover { border-color: rgba(237,28,36,.45); transform: translateY(-2px); }
+  .review::before {
+    content: "\201C"; position: absolute; top: 6px; right: 22px;
+    font-family: Georgia, 'Times New Roman', serif; font-size: 120px; line-height: 1; color: var(--red); opacity: .22;
+  }
+  .review p { color: #fff; font-size: clamp(17px, 1.8vw, 19px); line-height: 1.6; margin: 0 0 22px; font-weight: 500; }
+  .review cite {
+    font-style: normal; font-size: 13px; line-height: 1.5; color: var(--muted-light);
+    padding-top: 16px; border-top: 1px solid var(--line-dark);
+  }
 
   /* ---------- FOOTER ---------- */
-  footer { background: var(--bg-dark-2); color: var(--text-muted-light); padding: 36px 0 44px; font-size: 12px; border-top: 1px solid var(--rule-dark); }
-  footer .wrap { display: flex; flex-direction: column; gap: 14px; align-items: center; text-align: center; }
-  footer .accred { color: var(--text-cream); font-weight: 600; }
-  footer a { color: var(--text-muted-light); }
-  footer a:hover { color: var(--text-cream); }
-  footer .links { display: flex; gap: 18px; flex-wrap: wrap; justify-content: center; }
-  footer .links a { text-decoration: none; }
+  footer { background: #08080a; color: var(--muted-light); padding: 44px 0 52px; font-size: 13px; line-height: 1.6; border-top: 1px solid var(--line-dark); }
+  footer .wrap { display: flex; flex-direction: column; gap: 16px; align-items: center; text-align: center; }
+  footer .accred { color: #fff; font-weight: 700; letter-spacing: .04em; }
+  footer a { color: var(--muted-light); }
+  footer a:hover { color: #fff; }
+  footer .links { display: flex; gap: 6px 8px; flex-wrap: wrap; justify-content: center; }
+  footer .links a { text-decoration: none; display: inline-flex; align-items: center; min-height: 44px; padding: 0 12px; }
 
   /* ---------- EXIT POPUP ---------- */
   .exit-modal-overlay {
-    position: fixed; inset: 0; background: rgba(0, 0, 0, 0.78); z-index: 9000;
+    position: fixed; inset: 0; background: rgba(8, 8, 10, 0.78); z-index: 9000;
     display: none; align-items: center; justify-content: center; padding: 20px;
+    -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
   }
   .exit-modal-overlay.visible { display: flex; animation: exitFade 0.25s ease-out; }
   @keyframes exitFade { from { opacity: 0 } to { opacity: 1 } }
   .exit-modal {
-    background: var(--bg-white); border-radius: 12px; max-width: 540px; width: 100%;
-    padding: 52px 28px 36px; position: relative; text-align: center;
-    box-shadow: 0 32px 64px rgba(0, 0, 0, 0.4); border-top: 6px solid var(--accent-red);
+    background: var(--paper); border-radius: 24px; max-width: 540px; width: 100%;
+    padding: 56px 30px 34px; position: relative; text-align: center; overflow: hidden;
+    box-shadow: 0 40px 90px rgba(0, 0, 0, 0.5);
   }
+  .exit-modal::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 6px; background: var(--red); }
   .exit-modal-close {
-    position: absolute; top: 10px; right: 12px; background: none; border: 0; font-size: 30px; line-height: 1;
-    color: var(--text-muted-dark); cursor: pointer; padding: 8px 12px; font-family: 'Inter', sans-serif;
+    position: absolute; top: 12px; right: 12px; background: var(--stone); border: 0; font-size: 26px; line-height: 1;
+    color: var(--muted); cursor: pointer; width: 44px; height: 44px; border-radius: 50%; font-family: 'Inter', sans-serif;
   }
+  .exit-modal-close:hover { color: var(--text); background: var(--stone-2); }
   .exit-modal h2 { font-size: clamp(30px, 5.5vw, 48px); margin: 0 0 18px; }
-  .exit-modal p { font-size: 16px; line-height: 1.55; margin: 0 auto 18px; max-width: 420px; }
+  .exit-modal h2::after { margin-left: auto; margin-right: auto; }
+  .exit-modal p { font-size: 16px; line-height: 1.6; margin: 0 auto 20px; max-width: 420px; color: #3a3a40; }
   .exit-code {
-    display: inline-block; font-family: 'Anton', sans-serif; font-size: clamp(26px, 4.5vw, 34px); letter-spacing: 0.06em;
-    color: var(--accent-red); margin: 4px 0 24px; padding: 10px 22px; border: 2px dashed var(--accent-red); border-radius: 6px;
+    display: inline-block; font-family: 'Anton', sans-serif; font-size: clamp(26px, 4.5vw, 34px); letter-spacing: 0.08em;
+    color: var(--red); margin: 4px 0 26px; padding: 12px 26px; border: 2px dashed var(--red); border-radius: 12px;
+    background: rgba(237,28,36,.05);
   }
-  .exit-modal .cta-button { display: inline-block; width: 100%; max-width: 360px; padding: 16px 20px; font-size: 15px; }
+  .exit-modal .cta-button { display: flex; width: 100%; max-width: 380px; margin: 0 auto; padding: 18px 20px; font-size: 15px; }
   .exit-modal-nothanks {
-    display: block; margin: 14px auto 0; background: none; border: 0; font-family: 'Inter', sans-serif;
-    font-size: 13px; color: var(--text-muted-dark); text-decoration: underline; cursor: pointer;
+    display: block; margin: 10px auto 0; background: none; border: 0; font-family: 'Inter', sans-serif; min-height: 44px; padding: 0 16px;
+    font-size: 13px; color: var(--muted); text-decoration: underline; text-underline-offset: 3px; cursor: pointer;
   }
 
   /* ---------- STICKY BAR ---------- */
   .sticky-cta {
-    position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg-dark); border-top: 4px solid var(--accent-red);
-    padding: 12px 20px; z-index: 100; transform: translateY(110%); transition: transform 0.25s ease;
-    box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.35);
+    position: fixed; bottom: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(13,13,15,.92); border-top: 1px solid rgba(255,255,255,.08);
+    -webkit-backdrop-filter: saturate(160%) blur(12px); backdrop-filter: saturate(160%) blur(12px);
+    padding: 12px var(--gutter); transform: translateY(110%); transition: transform 0.3s ease;
+    box-shadow: 0 -12px 36px rgba(0, 0, 0, 0.3);
   }
+  .sticky-cta::before { content: ""; position: absolute; left: 0; right: 0; top: -3px; height: 3px; background: var(--red); }
   .sticky-cta.visible { transform: translateY(0); }
-  .sticky-cta-inner { max-width: 1180px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 14px; }
-  .sticky-cta-text { font-weight: 700; color: var(--text-cream); font-size: 14px; }
-  .sticky-cta .cta-button { padding: 12px 22px; font-size: 13px; flex-shrink: 0; }
-  body.sticky-active { padding-bottom: 72px; }
+  .sticky-cta-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 14px; }
+  .sticky-cta-text { font-weight: 700; color: #fff; font-size: 15px; line-height: 1.35; }
+  .sticky-cta .cta-button { padding: 12px 26px; font-size: 13px; flex-shrink: 0; }
+  body.sticky-active { padding-bottom: 76px; }
 
-  /* ---------- 2b. WHY DO I NEED THIS? ---------- */
-  .why-sec { padding: 80px 0 72px; background: var(--bg-white); border-bottom: 1px solid var(--rule-light); }
-  .why-intro { font-size: 18px; line-height: 1.65; margin: 0 0 28px; max-width: 760px; }
-  .why-list { list-style: none; padding: 0; margin: 0 0 28px; display: grid; gap: 12px; }
-  .why-list li {
-    position: relative; padding: 16px 20px 16px 48px; font-size: 16px; line-height: 1.6;
-    background: var(--bg-stone); border-left: 4px solid var(--accent-red); border-radius: 4px;
+  /* ---------- REVEAL MOTION (JS + motion-OK only; content is visible otherwise) ---------- */
+  @media (prefers-reduced-motion: no-preference) {
+    .js .reveal { opacity: 0; transform: translateY(18px); transition: opacity .7s cubic-bezier(.2,.7,.2,1), transform .7s cubic-bezier(.2,.7,.2,1); }
+    .js .reveal.in { opacity: 1; transform: none; }
+    .js .hero .reveal { transition-duration: .9s; }
   }
-  .why-list li::before {
-    content: ""; position: absolute; left: 18px; top: 22px; width: 14px; height: 14px; border-radius: 50%;
-    background: var(--accent-red); box-shadow: 0 0 0 4px rgba(237, 28, 36, 0.15);
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
   }
-  .why-list li strong { display: block; font-size: 17px; font-weight: 800; color: var(--text-dark); margin-bottom: 2px; }
-  .why-close { font-size: 18px; line-height: 1.6; font-weight: 700; margin: 0; padding-top: 20px; border-top: 2px solid var(--accent-red); max-width: 760px; }
 
   /* ---------- MOBILE ---------- */
   @media (max-width: 600px) {
-    .hero { padding: 44px 0 52px; }
-    .enables-sec, .details, .modules, .pricing, .faq, .testimonials, .why-sec { padding: 56px 0; }
-    .why-list li { padding: 14px 16px 14px 42px; }
-    .why-list li::before { left: 15px; top: 20px; }
-    .why-intro, .why-close { font-size: 17px; }
-    .accred-sec { padding: 52px 0; }
-    .logo-img { height: 36px; }
+    .logo-img { height: 34px; }
     .header-meta { display: none; }
-    .header-cta { padding: 10px 14px; font-size: 12px; }
-    .hero .cta-button { display: block; width: 100%; }
-    .tab-panel { padding: 22px 18px 12px; }
-    .tab-btn { font-size: 12px; padding: 12px 10px; }
-    .module { padding: 18px 16px; }
-    .price-card-body { padding: 26px 18px 22px; }
+    .header-cta { padding: 10px 20px; font-size: 12px; }
+    .eyebrow { font-size: 11px; letter-spacing: .12em; }
+    .badges li { font-size: 13.5px; }
+    .faculty-line { padding: 16px 16px 16px 58px; font-size: 14.5px; }
+    .faculty-line::before { left: 16px; width: 28px; height: 28px; }
+    .why-list li { padding: 22px 20px 24px; }
+    .why-list li::before { font-size: 34px; margin-bottom: 14px; }
+    .enables li { padding: 16px 18px; font-size: 16px; }
+    .faq-item summary { padding: 18px 18px; font-size: 16px; }
+    .faq-body { padding: 0 18px 20px; }
+    .module { padding: 22px 18px 20px; }
+    .module::before { font-size: 40px; }
+    .review { padding: 28px 22px 24px; }
+    .review::before { right: 16px; font-size: 96px; }
     .sticky-cta { padding: 10px 14px; }
-    .sticky-cta-text { font-size: 12px; }
-    .sticky-cta .cta-button { padding: 10px 14px; font-size: 12px; }
-    body.sticky-active { padding-bottom: 64px; }
+    .sticky-cta-text { font-size: 13px; }
+    .sticky-cta .cta-button { padding: 10px 16px; font-size: 12px; }
+    body.sticky-active { padding-bottom: 68px; }
   }
   .pay-line-below { margin-top: 14px !important; margin-bottom: 16px !important; }
 </style>
@@ -445,7 +700,7 @@ src="https://www.facebook.com/tr?id=856256648998431&ev=PageView&noscript=1"
 <header>
   <div class="wrap-wide">
     <a class="logo" href="https://www.isspf.com" target="_blank" rel="noopener noreferrer" aria-label="ISSPF home (opens in new tab)">
-      <img class="logo-img" src="logo.jpg" alt="ISSPF" onerror="this.classList.add('missing');" />
+      <img class="logo-img" src="/pro-youth-goalkeeper-coaching/logo.jpg" alt="ISSPF" onerror="this.classList.add('missing');" />
       <span class="logo-text">ISSPF</span>
     </a>
     <div class="header-right">
@@ -457,25 +712,27 @@ src="https://www.facebook.com/tr?id=856256648998431&ev=PageView&noscript=1"
 
 <!-- 1. HERO -->
 <section class="hero">
+  <div class="hero-image"><img src="https://learn.isspf.com/wp-content/uploads/2020/04/GK-youth-level-1.jpg" alt="Young goalkeeper in training" loading="eager" fetchpriority="high" width="2190" height="1443" /></div>
   <div class="wrap-wide">
-    <p class="eyebrow">Professional certificate · For anyone who coaches young goalkeepers, at any level</p>
-    <h1 class="hammer">Develop every young goalkeeper you coach, and build skills that show up in matches.</h1>
-    <p class="subhead">Know what each keeper needs next and how to get them there. Ten modules cover how skills are learned and progressed, playing out, pressure, analysis and nutrition.</p>
-    <ul class="badges">
+  <div class="hero-inner">
+    <p class="eyebrow reveal">Professional certificate · For anyone who coaches young goalkeepers, at any level</p>
+    <h1 class="hammer reveal">Develop every young goalkeeper you coach, and build skills that show up in matches.</h1>
+    <p class="subhead reveal">Know what each keeper needs next and how to get them there. Ten modules cover how skills are learned and progressed, playing out, pressure, analysis and nutrition.</p>
+    <ul class="badges reveal">
       <li>A clear plan for every keeper you coach</li>
       <li>Online and self-paced</li>
       <li>Subtitles in six languages</li>
       <li>Certificate of Achievement</li>
     </ul>
-    <p class="faculty-line">Taught by professional goalkeeping coaches and performance specialists from the academies of FC Barcelona, Chelsea, Brentford, Birmingham City and Dinamo Zagreb.</p>
-    <div class="hero-image" style="margin:28px 0 8px"><img src="https://learn.isspf.com/wp-content/uploads/2020/04/GK-youth-level-1.jpg" alt="Young goalkeeper in training" loading="eager" style="display:block;width:100%;max-width:760px;height:auto;border-radius:8px" /></div>
+    <p class="faculty-line reveal">Taught by professional goalkeeping coaches and performance specialists from the academies of FC Barcelona, Chelsea, Brentford, Birmingham City and Dinamo Zagreb.</p>
+  </div>
   </div>
 </section>
 
 <!-- 2. QUICK FACTS -->
 <section class="facts">
   <div class="wrap-wide">
-    <ul class="facts-grid">
+    <ul class="facts-grid reveal">
       <li><span class="fact-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg></span><div><strong>Online</strong>Study around your fixtures</div></li>
       <li><span class="fact-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span><div><strong>Self-paced</strong>Work at your own pace, on your own schedule</div></li>
       <li><span class="fact-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg></span><div><strong>Language</strong>Taught in English, with subtitles in six languages</div></li>
@@ -491,14 +748,14 @@ src="https://www.facebook.com/tr?id=856256648998431&ev=PageView&noscript=1"
   <div class="wrap">
     <h2>Why do I need this?</h2>
     <p class="why-intro">If you coach goalkeepers, you've probably pieced your coaching together yourself. There's no shortage of drills. What's missing is a clear path for developing a young keeper that shows up in your next game.</p>
-    <ul class="why-list">
+    <ul class="why-list reveal">
       <li><strong>Drills come without the why.</strong> Clips, reels and session-plan sites show you a drill, but rarely what it's building towards.</li>
       <li><strong>Most coaching courses cover the whole team.</strong> On a general youth course, the keeper is one position among many, so there's little time on how to develop a goalkeeper.</li>
       <li><strong>The keeper in front of you doesn't fit the plan.</strong> When your keeper's sharp in training but not on match day, or a skill won't stick, it's hard to know what to change.</li>
       <li><strong>Someone always asks why.</strong> A parent or head coach asks why your keeper's doing that work. Responding with "it's a good drill" doesn't answer it.</li>
       <li><strong>The cost shows up late.</strong> A keeper can do the wrong work for seasons and still look fine. By the time it shows, they've moved up the age groups, and it's too late to trace where it went wrong.</li>
     </ul>
-    <p class="why-close">This course gives you the whole path: drills and sessions from professional goalkeeping coaches, with the why behind them, so you know what each keeper needs next and can explain it to anyone who asks.</p>
+    <p class="why-close reveal">This course gives you the whole path: drills and sessions from professional goalkeeping coaches, with the why behind them, so you know what each keeper needs next and can explain it to anyone who asks.</p>
   </div>
 </section>
 
@@ -506,7 +763,7 @@ src="https://www.facebook.com/tr?id=856256648998431&ev=PageView&noscript=1"
 <section class="enables-sec">
   <div class="wrap-wide">
     <h2>This course enables you to:</h2>
-    <ul class="enables">
+    <ul class="enables reveal">
       <li>Plan what each young keeper you coach should be working on now</li>
       <li>Coach the decisions a keeper makes before the save: reading the situation, choosing a position and picking the action, not just the technique of the stop</li>
       <li>Take each skill from the basics to the finer detail and into the game, developing your keeper further as they get it right more often</li>
@@ -526,7 +783,7 @@ src="https://www.facebook.com/tr?id=856256648998431&ev=PageView&noscript=1"
      No JS: all four panels show, each with its own heading. With JS: tab buttons appear, headings hide. -->
 <section class="details">
   <div class="wrap">
-    <div class="tabs" id="courseTabs">
+    <div class="tabs reveal" id="courseTabs">
       <div class="tablist" role="tablist" aria-label="Course details">
         <button class="tab-btn" type="button" role="tab" id="tab-overview" aria-controls="panel-overview" aria-selected="true">Overview</button>
         <button class="tab-btn" type="button" role="tab" id="tab-who" aria-controls="panel-who" aria-selected="false" tabindex="-1">Who it's for</button>
@@ -602,7 +859,8 @@ src="https://www.facebook.com/tr?id=856256648998431&ev=PageView&noscript=1"
     <h2>Course modules</h2>
     <p class="intro">Taught by seven professional goalkeeping coaches and two performance specialists.</p>
 
-    <article class="module">
+    <div class="mod-list">
+    <article class="module reveal">
       <h3 class="mod-title"><span class="mod-num">Module 1:</span> The role of the goalkeeper coach</h3>
       <div class="mod-coach">
         <div class="who"><span class="name">Fraser Stewart</span><span class="role">Has been head of goalkeeping at Kilmarnock and worked in coach education at the Scottish FA</span></div>
@@ -610,7 +868,7 @@ src="https://www.facebook.com/tr?id=856256648998431&ev=PageView&noscript=1"
       <p class="mod-desc">You'll learn what it means to be a specialist goalkeeping coach, and what to weigh up for your keeper in training and on match day.</p>
     </article>
 
-    <article class="module">
+    <article class="module reveal">
       <h3 class="mod-title"><span class="mod-num">Module 2:</span> Training Design &amp; Application in Youth Development (LTAD)</h3>
       <div class="mod-coach">
         <img src="https://learn.isspf.com/wp-content/uploads/2020/09/AlexSegovia_thumbnail.jpg" alt="Alex Segovia Vilchez" loading="lazy" width="56" height="56" />
@@ -619,7 +877,7 @@ src="https://www.facebook.com/tr?id=856256648998431&ev=PageView&noscript=1"
       <p class="mod-desc">You'll learn a model for developing physical qualities, where mechanical and functional activities fit, and how exercise progresses through youth development.</p>
     </article>
 
-    <article class="module">
+    <article class="module reveal">
       <h3 class="mod-title"><span class="mod-num">Module 3:</span> Individual development of the goalkeeper within a team environment</h3>
       <div class="mod-coach">
         <img src="https://learn.isspf.com/wp-content/uploads/2022/02/IvanKovcic_thumbnail.jpg" alt="Ivan Kovčić" loading="lazy" width="56" height="56" />
@@ -628,7 +886,7 @@ src="https://www.facebook.com/tr?id=856256648998431&ev=PageView&noscript=1"
       <p class="mod-desc">You'll learn when a keeper should train alone and when with the team, and how to spot their problems in football situations. You'll also get a simple test for what to work on: what keeps happening, not a one-off.</p>
     </article>
 
-    <article class="module">
+    <article class="module reveal">
       <h3 class="mod-title"><span class="mod-num">Module 4:</span> Nutritional Support for the Youth Soccer Player: Maturation Status &amp; LTAD</h3>
       <div class="mod-coach">
         <img src="https://learn.isspf.com/wp-content/uploads/2020/07/JackChristopher_thumbnail.jpg" alt="Jack Christopher" loading="lazy" width="56" height="56" />
@@ -637,7 +895,7 @@ src="https://www.facebook.com/tr?id=856256648998431&ev=PageView&noscript=1"
       <p class="mod-desc">You'll learn how nutrition supports a young player through each phase of their development, as they grow and mature.</p>
     </article>
 
-    <article class="module">
+    <article class="module reveal">
       <h3 class="mod-title"><span class="mod-num">Module 5:</span> Youth Goalkeeper Development: Long Term Development</h3>
       <div class="mod-coach">
         <img src="https://learn.isspf.com/wp-content/uploads/2022/02/EduardoCachulo_thumbnail.jpg" alt="Eduardo Cachulo" loading="lazy" width="56" height="56" />
@@ -646,7 +904,7 @@ src="https://www.facebook.com/tr?id=856256648998431&ev=PageView&noscript=1"
       <p class="mod-desc">You'll learn where the goalkeeper coach fits in a club's technical department, what marks success in the position, and how a young keeper makes the move from youth to senior football.</p>
     </article>
 
-    <article class="module">
+    <article class="module reveal">
       <h3 class="mod-title"><span class="mod-num">Module 6:</span> Goalkeeping Expectations: Roles of the GK within the function of the game</h3>
       <div class="mod-coach">
         <img src="https://learn.isspf.com/wp-content/uploads/2020/12/JeffR_thumbnail.jpg" alt="Jeff Richardson" loading="lazy" width="56" height="56" />
@@ -655,7 +913,7 @@ src="https://www.facebook.com/tr?id=856256648998431&ev=PageView&noscript=1"
       <p class="mod-desc">You'll learn how to coach the keeper's job when the team attacks, defends and transitions, including communication and the key situations they have to deal with.</p>
     </article>
 
-    <article class="module">
+    <article class="module reveal">
       <h3 class="mod-title"><span class="mod-num">Module 7:</span> Skill Acquisition in Goalkeeping: Developing technical proficiency for situational effectiveness</h3>
       <div class="mod-coach">
         <img src="https://learn.isspf.com/wp-content/uploads/2022/03/DanielTB_thumb.jpg" alt="Daniel Tumelty-Bevan" loading="lazy" width="56" height="56" />
@@ -664,7 +922,7 @@ src="https://www.facebook.com/tr?id=856256648998431&ev=PageView&noscript=1"
       <p class="mod-desc">You'll learn how a keeper learns a new skill, and when to use repetition or practice that looks like the game. How often they get it right becomes your signal to take them to the next step.</p>
     </article>
 
-    <article class="module">
+    <article class="module reveal">
       <h3 class="mod-title"><span class="mod-num">Module 8:</span> Goalkeeper Coaching Analysis: Developmental Approach to Goalkeeping</h3>
       <div class="mod-coach">
         <img src="https://learn.isspf.com/wp-content/uploads/2022/02/GraemeSmith_thumbnail.jpg" alt="Graeme Smith" loading="lazy" width="56" height="56" />
@@ -673,7 +931,7 @@ src="https://www.facebook.com/tr?id=856256648998431&ev=PageView&noscript=1"
       <p class="mod-desc">You'll learn which types of goalkeeper analysis are used in youth football, and how they shape a goalkeeping curriculum. In one example, a goal that looks like a lost header turns out to come from the keeper's positioning and judgement of the cross.</p>
     </article>
 
-    <article class="module">
+    <article class="module reveal">
       <h3 class="mod-title"><span class="mod-num">Module 9:</span> Managing Pressure: Emotion, Anxiety and Coping, Part A</h3>
       <div class="mod-coach">
         <img src="https://learn.isspf.com/wp-content/uploads/2020/12/JeffR_thumbnail.jpg" alt="Jeff Richardson" loading="lazy" width="56" height="56" />
@@ -682,7 +940,7 @@ src="https://www.facebook.com/tr?id=856256648998431&ev=PageView&noscript=1"
       <p class="mod-desc">You'll learn how emotion and anxiety affect a keeper, how they see a big moment, and how to prepare them mentally before a game. It's for the keeper who's sharp in training and different on match day.</p>
     </article>
 
-    <article class="module">
+    <article class="module reveal">
       <h3 class="mod-title"><span class="mod-num">Module 10:</span> Goalkeeper Distribution in Academy Practice and Game Situations: FC Barcelona</h3>
       <div class="mod-coach">
         <img src="https://learn.isspf.com/wp-content/uploads/2022/03/Dani_ortiz.jpg" alt="Dani Ortiz" loading="lazy" width="56" height="56" />
@@ -690,6 +948,7 @@ src="https://www.facebook.com/tr?id=856256648998431&ev=PageView&noscript=1"
       </div>
       <p class="mod-desc">You'll learn how FC Barcelona's academy builds distribution: the keeper and outfielders beating a high press together, the weaker foot as a real option, and keepers rating their own passes like a traffic light. You'll see one skill built step by step, from the basics into the game.</p>
     </article>
+    </div>
 
     <p class="gloss">LTAD stands for long-term athletic development: how a young player's training builds over the years.</p>
   </div>
@@ -705,7 +964,7 @@ src="https://www.facebook.com/tr?id=856256648998431&ev=PageView&noscript=1"
       <p class="cert-cap">Professional Certificate in Goalkeeper Coaching Science (Pro-Youth Level)</p>
     </div>
 
-    <div class="price-card">
+    <div class="price-card reveal">
       <div class="price-card-banner">PRO-YOUTH LEVEL</div>
       <div class="price-card-body">
         <h3 class="price-card-name">Professional Certificate in Goalkeeper Coaching Science (Pro-Youth Level)</h3>
@@ -726,7 +985,7 @@ src="https://www.facebook.com/tr?id=856256648998431&ev=PageView&noscript=1"
       </div>
     </div>
 
-    <div class="what-you-get">
+    <div class="what-you-get reveal">
       <h3>What you get with your enrolment:</h3>
       <ul class="included-list">
         <li>Ten modules taught by seven goalkeeping coaches and two performance specialists, with subtitles in six languages</li>
@@ -742,26 +1001,26 @@ src="https://www.facebook.com/tr?id=856256648998431&ev=PageView&noscript=1"
 <section class="accred-sec partners">
   <div class="wrap-wide">
     <h2>Academic &amp; club partners</h2>
-    <ul class="partner-grid">
-      <li><img src="logos/east-tennessee-state-university.webp" alt="East Tennessee State University" loading="lazy" /></li>
-      <li><img src="logos/kks-lech-poznan.webp" alt="KKS Lech Poznan" loading="lazy" /></li>
-      <li><img src="logos/la-galaxy.webp" alt="LA Galaxy" loading="lazy" /></li>
-      <li><img src="logos/gnk-dinamo-zagreb.webp" alt="GNK Dinamo Zagreb" loading="lazy" /></li>
-      <li><img src="logos/bournemouth-university.webp" alt="Bournemouth University" loading="lazy" /></li>
-      <li><img src="logos/latvian-football-federation.webp" alt="Latvian Football Federation" loading="lazy" /></li>
-      <li><img src="logos/cosafa-council-of-southern-africa-footba.webp" alt="COSAFA - Council of Southern Africa Football Associations" loading="lazy" /></li>
-      <li><img src="logos/football-association-of-slovenia.webp" alt="Football Association of Slovenia" loading="lazy" /></li>
-      <li><img src="logos/lithuanian-football-federation.webp" alt="Lithuanian Football Federation" loading="lazy" /></li>
-      <li><img src="logos/football-association-of-finland.png" alt="Football Association of Finland" loading="lazy" /></li>
-      <li><img src="logos/wrexham-university.webp" alt="Wrexham University" loading="lazy" /></li>
-      <li><img src="logos/football-association-of-iceland.png" alt="Football Association of Iceland" loading="lazy" /></li>
-      <li><img src="logos/cr-vasco-da-gama.webp" alt="CR Vasco da Gama" loading="lazy" /></li>
-      <li><img src="logos/amazulu-fc.webp" alt="AmaZulu FC" loading="lazy" /></li>
-      <li><img src="logos/lasell-university.webp" alt="Lasell University" loading="lazy" /></li>
-      <li><img src="logos/al-jazira-club.png" alt="Al Jazira Club" loading="lazy" /></li>
-      <li><img src="logos/ofi-crete.png" alt="OFI Crete" loading="lazy" /></li>
-      <li><img src="logos/sporting-fc-costa-rica.png" alt="Sporting FC, Costa Rica" loading="lazy" /></li>
-      <li><img src="logos/estonian-football-association.png" alt="Estonian Football Association" loading="lazy" /></li>
+    <ul class="partner-grid reveal">
+      <li><img src="/pro-youth-goalkeeper-coaching/logos/east-tennessee-state-university.webp" alt="East Tennessee State University" loading="lazy" /></li>
+      <li><img src="/pro-youth-goalkeeper-coaching/logos/kks-lech-poznan.webp" alt="KKS Lech Poznan" loading="lazy" /></li>
+      <li><img src="/pro-youth-goalkeeper-coaching/logos/la-galaxy.webp" alt="LA Galaxy" loading="lazy" /></li>
+      <li><img src="/pro-youth-goalkeeper-coaching/logos/gnk-dinamo-zagreb.webp" alt="GNK Dinamo Zagreb" loading="lazy" /></li>
+      <li><img src="/pro-youth-goalkeeper-coaching/logos/bournemouth-university.webp" alt="Bournemouth University" loading="lazy" /></li>
+      <li><img src="/pro-youth-goalkeeper-coaching/logos/latvian-football-federation.webp" alt="Latvian Football Federation" loading="lazy" /></li>
+      <li><img src="/pro-youth-goalkeeper-coaching/logos/cosafa-council-of-southern-africa-footba.webp" alt="COSAFA - Council of Southern Africa Football Associations" loading="lazy" /></li>
+      <li><img src="/pro-youth-goalkeeper-coaching/logos/football-association-of-slovenia.webp" alt="Football Association of Slovenia" loading="lazy" /></li>
+      <li><img src="/pro-youth-goalkeeper-coaching/logos/lithuanian-football-federation.webp" alt="Lithuanian Football Federation" loading="lazy" /></li>
+      <li><img src="/pro-youth-goalkeeper-coaching/logos/football-association-of-finland.png" alt="Football Association of Finland" loading="lazy" /></li>
+      <li><img src="/pro-youth-goalkeeper-coaching/logos/wrexham-university.webp" alt="Wrexham University" loading="lazy" /></li>
+      <li><img src="/pro-youth-goalkeeper-coaching/logos/football-association-of-iceland.png" alt="Football Association of Iceland" loading="lazy" /></li>
+      <li><img src="/pro-youth-goalkeeper-coaching/logos/cr-vasco-da-gama.webp" alt="CR Vasco da Gama" loading="lazy" /></li>
+      <li><img src="/pro-youth-goalkeeper-coaching/logos/amazulu-fc.webp" alt="AmaZulu FC" loading="lazy" /></li>
+      <li><img src="/pro-youth-goalkeeper-coaching/logos/lasell-university.webp" alt="Lasell University" loading="lazy" /></li>
+      <li><img src="/pro-youth-goalkeeper-coaching/logos/al-jazira-club.png" alt="Al Jazira Club" loading="lazy" /></li>
+      <li><img src="/pro-youth-goalkeeper-coaching/logos/ofi-crete.png" alt="OFI Crete" loading="lazy" /></li>
+      <li><img src="/pro-youth-goalkeeper-coaching/logos/sporting-fc-costa-rica.png" alt="Sporting FC, Costa Rica" loading="lazy" /></li>
+      <li><img src="/pro-youth-goalkeeper-coaching/logos/estonian-football-association.png" alt="Estonian Football Association" loading="lazy" /></li>
     </ul>
   </div>
 </section>
@@ -803,7 +1062,7 @@ src="https://www.facebook.com/tr?id=856256648998431&ev=PageView&noscript=1"
 <section class="testimonials">
   <div class="wrap">
     <h2>What coaches say about ISSPF courses</h2>
-    <div class="review-grid">
+    <div class="review-grid reveal">
       <blockquote class="review">
         <p>"I know exactly what to do. I'm going to the ground with confidence because I'm in control now."</p>
         <cite>Trustpilot review, Soccer Training and Football Methodology</cite>
@@ -1093,6 +1352,19 @@ src="https://www.facebook.com/tr?id=856256648998431&ev=PageView&noscript=1"
     window.addEventListener('scroll', update, { passive: true });
     window.addEventListener('resize', update);
     update();
+  }());
+</script>
+
+<script>
+  // Preview design: subtle reveal-on-scroll. CSS only hides .reveal elements when JS is on and the
+  // visitor has not asked for reduced motion; if IntersectionObserver is missing, everything shows.
+  (function () {
+    var els = Array.prototype.slice.call(document.querySelectorAll('.reveal'));
+    if (!('IntersectionObserver' in window)) { els.forEach(function (el) { el.classList.add('in'); }); return; }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) { if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); } });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+    els.forEach(function (el) { io.observe(el); });
   }());
 </script>
 
