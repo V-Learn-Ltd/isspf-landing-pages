@@ -691,6 +691,34 @@ src="https://www.facebook.com/tr?id=856256648998431&ev=PageView&noscript=1"
     body.sticky-active { padding-bottom: 68px; }
   }
   .pay-line-below { margin-top: 14px !important; margin-bottom: 16px !important; }
+
+  /* ---------- 30 Sep (Neil): subtle football pitch behind the dark sections, matching the hero ---------- */
+  .enables-sec::before {
+    background:
+      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1050 680' preserveAspectRatio='xMidYMid meet'><g fill='none' stroke='white' stroke-opacity='.11' stroke-width='3'><rect x='20' y='20' width='1010' height='640'/><line x1='525' y1='20' x2='525' y2='660'/><circle cx='525' cy='340' r='91.5'/><rect x='20' y='138.5' width='165' height='403'/><rect x='865' y='138.5' width='165' height='403'/><rect x='20' y='248.5' width='55' height='183'/><rect x='975' y='248.5' width='55' height='183'/><path d='M185 267 A91.5 91.5 0 0 1 185 413'/><path d='M865 267 A91.5 91.5 0 0 0 865 413'/></g><g fill='white' fill-opacity='.11'><circle cx='525' cy='340' r='4'/><circle cx='130' cy='340' r='3.5'/><circle cx='920' cy='340' r='3.5'/></g></svg>") right -8% center / auto 118% no-repeat,
+      radial-gradient(60% 70% at 100% 50%, rgba(31,74,48,.55), transparent 75%),
+      radial-gradient(40% 50% at 100% 0%, rgba(237,28,36,.07), transparent 70%);
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 45%);
+            mask-image: linear-gradient(to right, transparent 0%, #000 45%);
+  }
+  .pricing::before {
+    background:
+      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1050 680' preserveAspectRatio='xMidYMid meet'><g fill='none' stroke='white' stroke-opacity='.13' stroke-width='3'><rect x='20' y='20' width='1010' height='640'/><line x1='525' y1='20' x2='525' y2='660'/><circle cx='525' cy='340' r='91.5'/><rect x='20' y='138.5' width='165' height='403'/><rect x='865' y='138.5' width='165' height='403'/><rect x='20' y='248.5' width='55' height='183'/><rect x='975' y='248.5' width='55' height='183'/><path d='M185 267 A91.5 91.5 0 0 1 185 413'/><path d='M865 267 A91.5 91.5 0 0 0 865 413'/></g><g fill='white' fill-opacity='.13'><circle cx='525' cy='340' r='4'/><circle cx='130' cy='340' r='3.5'/><circle cx='920' cy='340' r='3.5'/></g></svg>") left -30% center / auto 112% no-repeat,
+      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1050 680' preserveAspectRatio='xMidYMid meet'><g fill='none' stroke='white' stroke-opacity='.13' stroke-width='3'><rect x='20' y='20' width='1010' height='640'/><line x1='525' y1='20' x2='525' y2='660'/><circle cx='525' cy='340' r='91.5'/><rect x='20' y='138.5' width='165' height='403'/><rect x='865' y='138.5' width='165' height='403'/><rect x='20' y='248.5' width='55' height='183'/><rect x='975' y='248.5' width='55' height='183'/><path d='M185 267 A91.5 91.5 0 0 1 185 413'/><path d='M865 267 A91.5 91.5 0 0 0 865 413'/></g><g fill='white' fill-opacity='.13'><circle cx='525' cy='340' r='4'/><circle cx='130' cy='340' r='3.5'/><circle cx='920' cy='340' r='3.5'/></g></svg>") right -30% center / auto 112% no-repeat,
+      radial-gradient(35% 60% at 0% 50%, rgba(31,74,48,.45), transparent 75%),
+      radial-gradient(35% 60% at 100% 50%, rgba(31,74,48,.45), transparent 75%),
+      radial-gradient(50% 40% at 50% 38%, rgba(237,28,36,.08), transparent 70%);
+    /* pitch sits at the sides only, so no line runs behind the price card or the What-you-get box */
+    -webkit-mask-image: linear-gradient(to right, #000 0%, transparent 28%, transparent 72%, #000 100%);
+            mask-image: linear-gradient(to right, #000 0%, transparent 28%, transparent 72%, #000 100%);
+  }
+  .testimonials::before {
+    background:
+      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1050 680' preserveAspectRatio='xMidYMid meet'><g fill='none' stroke='white' stroke-opacity='.13' stroke-width='3'><rect x='20' y='20' width='1010' height='640'/><line x1='525' y1='20' x2='525' y2='660'/><circle cx='525' cy='340' r='91.5'/><rect x='20' y='138.5' width='165' height='403'/><rect x='865' y='138.5' width='165' height='403'/><rect x='20' y='248.5' width='55' height='183'/><rect x='975' y='248.5' width='55' height='183'/><path d='M185 267 A91.5 91.5 0 0 1 185 413'/><path d='M865 267 A91.5 91.5 0 0 0 865 413'/></g><g fill='white' fill-opacity='.13'><circle cx='525' cy='340' r='4'/><circle cx='130' cy='340' r='3.5'/><circle cx='920' cy='340' r='3.5'/></g></svg>") left -8% center / auto 118% no-repeat,
+      radial-gradient(60% 70% at 0% 50%, rgba(31,74,48,.5), transparent 75%);
+    -webkit-mask-image: linear-gradient(to left, transparent 0%, #000 50%);
+            mask-image: linear-gradient(to left, transparent 0%, #000 50%);
+  }
 </style>
 </head>
 
