@@ -29,7 +29,7 @@
 #       --slug gk-science-report \
 #       --title "The Goalkeeper Science Report" \
 #       --subtitle "ISSPF · Free 23-page report" \
-#       --pdf-url "https://www.isspf.com/wp-content/uploads/2026/04/GK_Science_Report_.pdf" \
+#       --pdf-url "https://isspf.s3.us-east-1.amazonaws.com/guidebook/GK_Science_Report_.pdf" \
 #       --cta-text "See The Goalkeeper Courses" \
 #       --cta-url  "https://go.isspf.com/smm/pro-youth-checkout/"
 #
