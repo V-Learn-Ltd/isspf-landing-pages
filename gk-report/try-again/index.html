@@ -256,6 +256,18 @@ src="https://www.facebook.com/tr?id=856256648998431&ev=PageView&noscript=1"
     .hero { padding: 40px 0 56px; }
     .why-note-section { padding: 36px 0; }
   }
+
+  /* 2026-09-30: youth / senior split. Radios sit outside the arpReach submission (form="no-submit"). */
+  .gk-track { border: 0; padding: 0; margin: 0 0 12px; flex-basis: 100%; color: inherit; }
+  .gk-track legend { font-size: 13px; font-weight: 700; margin-bottom: 6px; padding: 0; color: inherit; }
+  .gk-track .gk-opts { display: flex; gap: 16px; flex-wrap: wrap; }
+  .gk-track label { display: inline-flex !important; align-items: center; gap: 6px; font-size: 15px !important;
+    font-weight: 500 !important; letter-spacing: 0 !important; text-transform: none !important; margin: 0 !important;
+    cursor: pointer; color: inherit !important; }
+  .gk-track input { width: 18px; height: 18px; accent-color: #ED1C24; margin: 0; }
+  .gk-track .gk-err { display: none; color: #ED1C24; font-size: 13px; font-weight: 600; margin-top: 6px; }
+  .gk-track.show-err .gk-err { display: block; }
+  .opt-in-inline { flex-wrap: wrap; }
 </style>
 </head>
 
@@ -290,6 +302,15 @@ src="https://www.facebook.com/tr?id=856256648998431&ev=PageView&noscript=1"
 
     <!-- subscription_form_71jczx (try-again instance) -->
     <form class="opt-in-inline" id="subscription_form_71jczx_retry" method="post" action="https://email.isspf.com/a.php/sub/5f/71jczx">
+<fieldset class="gk-track">
+  <legend>Who do you coach?</legend>
+  <div class="gk-opts">
+    <label><input type="radio" form="no-submit" name="gk_track_retry" value="youth" data-gk-track> Young keepers</label>
+    <label><input type="radio" form="no-submit" name="gk_track_retry" value="senior" data-gk-track> Adult keepers</label>
+  </div>
+  <div class="gk-err" role="alert">Please choose who you coach.</div>
+</fieldset>
+
       <label class="sr-only" for="email_address_retry">Your email address</label>
       <input type="email" id="email_address_retry" name="email_address" placeholder="Your email address" required autocomplete="email" autofocus />
       <button type="submit">Send Me The Free Report</button>
@@ -331,5 +352,25 @@ src="https://www.facebook.com/tr?id=856256648998431&ev=PageView&noscript=1"
   document.getElementById('copyright-year').textContent = new Date().getFullYear();
 </script>
 
+
+<script>
+  // 2026-09-30 (Neil): report sign-ups split by who they coach. Youth -> arpReach list vjmwl7,
+  // adults -> 71jczx (Senior). Without JS the form keeps its default action (Senior).
+  // Also fires a custom pixel event so Meta can build separate Youth and Senior retargeting audiences.
+  (function () {
+    var URLS = { youth: "https://email.isspf.com/a.php/sub/63/vjmwl7", senior: "https://email.isspf.com/a.php/sub/5f/71jczx" };
+    document.querySelectorAll('form[action*="email.isspf.com/a.php/sub/"]').forEach(function (f) {
+      var fs = f.querySelector('.gk-track');
+      if (!fs) return;
+      fs.addEventListener('change', function () { fs.classList.remove('show-err'); });
+      f.addEventListener('submit', function (e) {
+        var c = f.querySelector('input[data-gk-track]:checked');
+        if (!c) { e.preventDefault(); fs.classList.add('show-err'); return; }
+        f.action = URLS[c.value];
+        try { fbq('trackCustom', 'GKReportTrack', { track: c.value }); } catch (err) {}
+      });
+    });
+  })();
+</script>
 </body>
 </html>
