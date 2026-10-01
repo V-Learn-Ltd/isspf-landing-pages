@@ -174,7 +174,7 @@ Pushing to `main` triggers a Cloudflare Pages deploy automatically. The Worker (
 
 ## Forms
 
-All three forms on `gk-report` post to arpReach at `https://email.isspf.com/a.php/sub/5f/71jczx`. The list captures email only (no first name yet).
+Every form on `gk-report` asks who the reader coaches. A script then posts to arpReach: young keepers go to `https://email.isspf.com/a.php/sub/61/5wcypm` (GK Youth Follow Up, autoresponder 90) and adult keepers to `https://email.isspf.com/a.php/sub/60/ctfdr9` (GK Senior Follow Up, 89). Without JavaScript, the form falls back to the Senior form. Routing changed 1 Oct 2026; before that, both choices went to autoresponder 88. The list captures email only (no first name yet).
 
 Migration to **SignalFlux** is planned — when it happens, every `<form action>` URL needs updating across all variants.
 
