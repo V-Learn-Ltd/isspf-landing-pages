@@ -20,6 +20,16 @@
 <link rel="stylesheet" href="../_lib/flipbook.css?v=31e2879a33" />
 
 <link rel="preload" as="image" href="pages/p-001.webp" />
+<style>
+  /* GK report only (1 Oct 2026): a bigger Download PDF button and two course buttons. */
+  .fb-btn-pdf { font-size: 14px; padding: 10px 18px; }
+  .fb-btn-course { border-color: rgba(255,255,255,0.35); }
+  @media (max-width: 720px) {
+    .fb-bar-actions { flex-wrap: wrap; gap: 8px; }
+    .fb-bar-actions .fb-btn-pdf { flex: 1 1 100%; text-align: center; font-size: 14px; padding: 11px 12px; }
+    .fb-bar-actions .fb-btn-course { flex: 1 1 0; text-align: center; }
+  }
+</style>
 </head>
 <body>
 
@@ -30,8 +40,11 @@
   </div>
   <div class="fb-bar-actions">
     
-    <a class="fb-btn" href="https://isspf.s3.us-east-1.amazonaws.com/guidebook/GK_Science_Report_.pdf" target="_blank" rel="noopener">&#8595; PDF</a>
-    <a class="fb-btn fb-btn-primary" href="https://go.isspf.com/smm/pro-youth-checkout/">See The Goalkeeper Courses &#8594;</a>
+    <!-- Hand-edited 1 Oct 2026 (Neil): Download PDF is the main action, and both courses are linked.
+         build-flipbook.sh only writes one CTA, so re-apply this block if the book is ever rebuilt. -->
+    <a class="fb-btn fb-btn-primary fb-btn-pdf" href="https://isspf.s3.us-east-1.amazonaws.com/guidebook/GK_Science_Report_.pdf" target="_blank" rel="noopener">&#8595; Download PDF</a>
+    <a class="fb-btn fb-btn-course" href="https://go.isspf.com/pro-youth-goalkeeper-coaching/">Youth course &#8594;</a>
+    <a class="fb-btn fb-btn-course" href="https://go.isspf.com/pro-masters-goalkeeper-coaching/">Senior course &#8594;</a>
   </div>
 </header>
 
