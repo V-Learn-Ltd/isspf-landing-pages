@@ -46,7 +46,7 @@ const VARIANT_COOKIE_MAX_AGE = 60 * 60 * 24 * 90; // 90 days
 
 
 export default {
-  async fetch(request, env) {
+  async fetch(request, env, ctx) {
     const url = new URL(request.url);
     const path = url.pathname.replace(/\/$/, '');
     const cookies = parseCookies(request.headers.get('cookie') || '');
@@ -138,6 +138,24 @@ export default {
     // ── /api/affwp-convert-sale — Affiliate sale conversion (post-purchase) ──
     if (url.pathname === '/api/affwp-convert-sale' && request.method === 'POST') {
       return await handleAffwpConvertSale(request, env, cookies);
+    }
+
+    // ── /api/fb-click — Meta click-id capture ───────────────
+    // The Conversions API can only attribute a sale if it can recognise the person. Hashed
+    // email alone matches weakly, so Meta credits fewer conversions than really happened and
+    // under-bids the audiences that are working. The strong signal is `fbc`, derived from the
+    // fbclid Meta appends to every ad click.
+    //
+    // The ISSPF dashboard has held the ingest endpoint, the fb_click_ids table and the email
+    // join all along. Nothing here ever posted to it: on 2026-10-19 the dashboard reported
+    // totalClickIds 0 and 0 of 2 buyers linked to a click, while Urban Sketch — which has the
+    // identical mechanism and this same route — reported 38,483 and 83.4%. Every ISSPF
+    // Purchase event has gone to Meta on hashed email alone.
+    if (url.pathname === '/api/fb-click' && request.method === 'POST') {
+      return await relayFbClick(request, env, ctx);
+    }
+    if (url.pathname === '/api/fb-click' && request.method === 'OPTIONS') {
+      return new Response(null, { status: 204 });
     }
 
     // ── LEGACY CHECKOUT SLUG REDIRECTS ──
@@ -1550,5 +1568,92 @@ async function handleAffwpConvertSale(request, env, cookies) {
     return jsonResponse({ ok: true, amount: amount });
   } catch (err) {
     return jsonResponse({ ok: false, error: 'request-failed', message: err.message }, 502);
+  }
+}
+
+
+// ─────────────────────────────────────────────────────────────
+// META CLICK-ID RELAY
+// ─────────────────────────────────────────────────────────────
+
+/**
+ * Relay a click-id capture from shared/fb-click.js to the ISSPF ads dashboard.
+ *
+ * Ported from urban-sketch-landing-pages/_worker.js:relayFbClick. Three things matter:
+ *
+ * 1. X-Client-IP and X-Client-UA. Behind this worker the dashboard sees the WORKER's ip and
+ *    the worker's fetch user-agent. Sending those to Meta as the buyer's details would
+ *    actively DAMAGE match quality, which is the opposite of the point. The dashboard's
+ *    server/index.js reads these two headers for exactly this reason, so the real values are
+ *    forwarded here.
+ *
+ * 2. The response is 204 whatever happens downstream, and the relay is fire-and-forget via
+ *    waitUntil. An ad-tracking call must never be the reason a landing page stalls, and the
+ *    opt-in capture fires while the page is already navigating away. The x-fb-click response
+ *    header says what happened, so a failure is still diagnosable in DevTools.
+ *
+ * 3. NO HARDCODED KEY. The dashboard's POST /api/fb-click is NOT open: server/index.js
+ *    requires X-API-Key to equal VARIANT_INGEST_KEY (which falls back to FB_REFRESH_API_KEY)
+ *    for any non-loopback request. Urban Sketch carries its key as a literal fallback in
+ *    _worker.js, which is tolerable only because that repository is private. THIS
+ *    REPOSITORY IS PUBLIC, so the key is read from an encrypted Cloudflare variable and
+ *    there is no fallback. Set it once:
+ *
+ *      Cloudflare dashboard → Workers & Pages → isspf-landing-pages → Settings →
+ *      Variables and Secrets → Add → FB_CLICK_INGEST_KEY → Encrypt → paste the value of
+ *      FB_REFRESH_API_KEY from the isspf-ads-dashboard Railway service → Save → redeploy.
+ *
+ *    Until that is set every relay is dropped with x-fb-click: no-key and the dashboard will
+ *    keep reporting totalClickIds 0. That is the whole deployment, so verify it rather than
+ *    assuming it.
+ */
+async function relayFbClick(request, env, ctx) {
+  try {
+    const body = await request.json().catch(() => null);
+    // fbclid is the whole point; without it there is nothing to record.
+    if (!body || !body.fbclid) {
+      return new Response(JSON.stringify({ ok: false }), {
+        status: 400, headers: { 'Content-Type': 'application/json' },
+      });
+    }
+
+    const key = env.FB_CLICK_INGEST_KEY || env.VARIANT_INGEST_KEY || '';
+    if (!key) {
+      console.error('[fb-click] FB_CLICK_INGEST_KEY is not set — capture is dropped');
+      return new Response(null, { status: 204, headers: { 'x-fb-click': 'no-key' } });
+    }
+
+    const target = env.FB_CLICK_INGEST_URL
+      || 'https://isspf-ads-dashboard-production.up.railway.app/api/fb-click';
+
+    // Caps mirror the dashboard's server/fb-click.js so nothing is truncated differently at
+    // each end.
+    const payload = JSON.stringify({
+      fbclid:  String(body.fbclid || '').slice(0, 512),
+      fbc:     String(body.fbc || '').slice(0, 256),
+      fbp:     String(body.fbp || '').slice(0, 128),
+      email:   String(body.email || '').slice(0, 254),
+      url:     String(body.url || '').slice(0, 500),
+      funnel:  String(body.funnel || '').slice(0, 64),
+      variant: String(body.variant || '').slice(0, 32),
+    });
+
+    const relay = fetch(target, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-API-Key': key,
+        'X-Client-IP': request.headers.get('CF-Connecting-IP') || '',
+        'X-Client-UA': request.headers.get('User-Agent') || '',
+      },
+      body: payload,
+    }).catch(() => {});
+    if (ctx && typeof ctx.waitUntil === 'function') ctx.waitUntil(relay);
+
+    return new Response(null, { status: 204, headers: { 'x-fb-click': 'relayed' } });
+  } catch (e) {
+    return new Response(JSON.stringify({ ok: false }), {
+      status: 400, headers: { 'Content-Type': 'application/json' },
+    });
   }
 }
