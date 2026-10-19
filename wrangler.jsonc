@@ -34,6 +34,23 @@
     //     Test Events; remove once verified to stop test-bucketing live events.
     "META_PIXEL_ID": "856256648998431",
 
+    // ── META CLICK-ID CAPTURE (added 2026-10-19) ──────────────────────
+    // shared/fb-click.js posts the fbclid to /api/fb-click, and _worker.js relays it to the
+    // ISSPF ads dashboard so a sale can be matched to the ad on more than hashed email.
+    //
+    // Required SECRET (set in Cloudflare dashboard → Variables and Secrets → Encrypt).
+    // It is deliberately NOT in this file: this repository is PUBLIC and the same key
+    // guards the dashboard's protected endpoints.
+    //   FB_CLICK_INGEST_KEY — the value of FB_REFRESH_API_KEY on the
+    //                         isspf-ads-dashboard Railway service
+    //
+    // Until it is set, every capture is dropped (response header x-fb-click: no-key) and
+    // GET /api/fb-click/stats on the dashboard keeps reporting totalClickIds 0.
+    //
+    // Optional var, only if the dashboard ever moves host:
+    //   FB_CLICK_INGEST_URL — defaults to
+    //     https://isspf-ads-dashboard-production.up.railway.app/api/fb-click
+
     // ── CHECKOUT SYSTEM (added 2026-05-20) ────────────────────────────
     // Stripe Checkout + WishlistMember auto-enrolment. See CHECKOUT-SETUP.md.
     //

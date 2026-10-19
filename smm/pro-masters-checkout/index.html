@@ -342,6 +342,9 @@ metaCapi('InitiateCheckout',{content_name:'Senior Pro Masters Goalkeeper Coachin
         y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
     })(window, document, "clarity", "script", "yxlj5hhdkk");
 </script>
+<!-- Meta click-id capture. Posts fbclid to /api/fb-click so a sale can be matched
+     back to the ad on more than hashed email alone. See shared/fb-click.js. -->
+<script src="/shared/fb-click.js" defer></script>
 </head>
 <body>
 
@@ -600,6 +603,11 @@ metaCapi('InitiateCheckout',{content_name:'Senior Pro Masters Goalkeeper Coachin
           alert('Please enter your first name and email before paying with PayPal.');
           throw new Error('missing-contact');
         }
+        /* Join this buyer's email to their stored Meta click id. PayPal submits no form, so
+           the submit listener in shared/fb-click.js never fires on this path — Urban Sketch
+           lost every PayPal buyer's click id to exactly that. No-op when fb-click.js is
+           absent or when this visitor did not arrive from an ad. */
+        try { if (typeof window.vlJoinClick === 'function') window.vlJoinClick(email); } catch (e) {}
         const r = await fetch('/api/paypal-create-order', {
           method: 'POST', headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -728,6 +736,12 @@ metaCapi('InitiateCheckout',{content_name:'Senior Pro Masters Goalkeeper Coachin
     const lastName = document.getElementById('last-name').value.trim();
     if (!email || !firstName) { alert('Please enter your first name and email.'); return; }
     if (!stripe || !cardElement) { alert('Payment system not ready. Please refresh.'); return; }
+
+    /* Join this buyer's email to their stored Meta click id. The card path is a click
+       handler driving Stripe Elements and submits no form, so the submit listener in
+       shared/fb-click.js never fires here either. Fired before the payment, not after, so
+       the join still happens if the card is declined and retried. */
+    try { if (typeof window.vlJoinClick === 'function') window.vlJoinClick(email); } catch (e) {}
 
     btn.disabled = true;
     btn.textContent = 'Processing payment…';
