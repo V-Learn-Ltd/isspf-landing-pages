@@ -669,7 +669,7 @@ const COURSE_CONFIG = {
       // currency: amount in smallest unit (pence/cents). Coupon (e.g. GKSCIENCE25)
       // discounts this server-side before sending to Stripe.
       gbp: 24900,
-      usd: 32900,
+      usd: 29900,
       eur: 29900,
       aud: 47900,
       cad: 47900,

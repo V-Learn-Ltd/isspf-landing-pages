@@ -486,7 +486,7 @@ metaCapi('InitiateCheckout',{content_name:'Pro-Youth Goalkeeper Coaching Science
   const PRICING = {
     // Youth workbook prices confirmed against WLM Edit Forms 2026-05-20.
     GBP: { currency: 'gbp', symbol: '£',   price: 249,  workbook: 39.99, locale: 'en-GB' },
-    USD: { currency: 'usd', symbol: '$',   price: 329,  workbook: 49.99, locale: 'en-US' },
+    USD: { currency: 'usd', symbol: '$',   price: 299,  workbook: 49.99, locale: 'en-US' },
     EUR: { currency: 'eur', symbol: '€',   price: 299,  workbook: 44.99, locale: 'en-IE' },
     AUD: { currency: 'aud', symbol: 'AU$', price: 479,  workbook: 74.99, locale: 'en-AU' },
     CAD: { currency: 'cad', symbol: 'CA$', price: 479,  workbook: 74.99, locale: 'en-CA' },
@@ -525,12 +525,12 @@ metaCapi('InitiateCheckout',{content_name:'Pro-Youth Goalkeeper Coaching Science
     return activePricing.symbol + n.toLocaleString(activePricing.locale, isWhole ? { maximumFractionDigits: 0 } : { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   }
   function getCurrentTotal() {
-    const afterCoupon = couponPercent > 0 ? Math.round(activePricing.price * (1 - couponPercent / 100)) : activePricing.price;
+    const afterCoupon = couponPercent > 0 ? Math.round(activePricing.price * (100 - couponPercent)) / 100 : activePricing.price;
     return bumpChecked ? afterCoupon + activePricing.workbook : afterCoupon;
   }
   function recompute() {
     const basePrice = activePricing.price;
-    const afterCoupon = couponPercent > 0 ? Math.round(basePrice * (1 - couponPercent / 100)) : basePrice;
+    const afterCoupon = couponPercent > 0 ? Math.round(basePrice * (100 - couponPercent)) / 100 : basePrice;
     const couponActive = couponPercent > 0;
     document.querySelectorAll('.priceFull').forEach(el => el.textContent = fmt(basePrice));
     document.querySelectorAll('.priceDiscount').forEach(el => el.textContent = fmt(afterCoupon));
