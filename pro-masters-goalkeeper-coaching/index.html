@@ -1287,7 +1287,7 @@ src="https://www.facebook.com/tr?id=856256648998431&ev=PageView&noscript=1"
   </div>
 </div>
 
-<!-- STICKY BAR: shows from midway through Course modules, hides over the price card. No timer. -->
+<!-- STICKY BAR: shows from 30% down the page, hides over the price card. No timer. -->
 <div class="sticky-cta" id="stickyCta" aria-hidden="true">
   <div class="sticky-cta-inner">
     <span class="sticky-cta-text">Send your keeper out ready · Use code GKSCIENCE25 for 25% off</span>
@@ -1472,21 +1472,23 @@ src="https://www.facebook.com/tr?id=856256648998431&ev=PageView&noscript=1"
     });
   }());
 
-  // Sticky bar: show from midway through Course modules, hide while the price card is on screen.
+  // Sticky bar: show from 30% down the page, hide while the price card is on screen.
   (function () {
     var sticky = document.getElementById('stickyCta');
-    var modulesEl = document.getElementById('modules');
     var pricing = document.getElementById('enrol');
     var body = document.body;
-    if (!sticky || !modulesEl || !pricing) return;
+    if (!sticky || !pricing) return;
     var link = sticky.querySelector('a');
+    var SHOW_AT = 0.3;
     function update() {
       var card = pricing.querySelector('.price-card') || pricing;
       var r = card.getBoundingClientRect();
       var overCard = r.top < window.innerHeight && r.bottom > 0;
-      var m = modulesEl.getBoundingClientRect();
-      var midModules = m.top + m.height / 2 < window.innerHeight / 2;
-      var shouldShow = midModules && !overCard;
+      // Leave out the body padding the bar itself adds, so showing it can't move the threshold.
+      var padding = parseFloat(window.getComputedStyle(body).paddingBottom) || 0;
+      var scrollable = document.documentElement.scrollHeight - padding - window.innerHeight;
+      var pastThreshold = scrollable > 0 && window.scrollY / scrollable >= SHOW_AT;
+      var shouldShow = pastThreshold && !overCard;
       sticky.classList.toggle('visible', shouldShow);
       body.classList.toggle('sticky-active', shouldShow);
       sticky.setAttribute('aria-hidden', shouldShow ? 'false' : 'true');
