@@ -333,6 +333,31 @@ metaCapi('InitiateCheckout',{content_name:'Senior Pro Masters Goalkeeper Coachin
   footer a { color: #b8b8b8; text-decoration: none; margin: 0 8px; }
   footer a:hover { color: white; }
   footer .tagline { color: var(--accent-red); font-style: italic; margin-top: 8px; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; }
+  /* DISCOUNT BAR */
+  .sticky-cta {
+    position: fixed; bottom: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(13,13,15,.96); padding: 12px 24px;
+    box-shadow: 0 -12px 36px rgba(0, 0, 0, 0.3);
+  }
+  .sticky-cta::before { content: ""; position: absolute; left: 0; right: 0; top: -3px; height: 3px; background: var(--accent-red); }
+  .sticky-cta-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 14px; }
+  .sticky-cta-text { font-weight: 700; color: #fff; font-size: 16px; line-height: 1.5; }
+  .sticky-cta-text mark { background: #FFE500; color: #0D0D0F; font-weight: 800; padding: 2px 7px; border-radius: 4px; white-space: nowrap; }
+  .sticky-cta-apply {
+    flex-shrink: 0; background: var(--accent-red); color: #fff; border: none; border-radius: 999px;
+    padding: 12px 26px; font: inherit; font-size: 13px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; cursor: pointer;
+  }
+  .sticky-cta-apply:hover { background: var(--accent-red-hover); }
+  .sticky-cta-apply:disabled { background: var(--accent-green); cursor: default; }
+  body { padding-bottom: 76px; }
+  @media (max-width: 600px) {
+    .sticky-cta { padding: 10px 14px; }
+    .sticky-cta-text { font-size: 14px; line-height: 1.7; }
+    .sticky-cta-text mark { padding: 2px 5px; }
+    .sticky-cta-desktop { display: none; }
+    .sticky-cta-apply { padding: 10px 16px; font-size: 12px; }
+    body { padding-bottom: 72px; }
+  }
 </style>
 <!-- Microsoft Clarity -->
 <script type="text/javascript">
@@ -347,6 +372,14 @@ metaCapi('InitiateCheckout',{content_name:'Senior Pro Masters Goalkeeper Coachin
 <script src="/shared/fb-click.js" defer></script>
 </head>
 <body>
+
+<!-- DISCOUNT BAR: same offer as the sales page, always on screen. No timer. -->
+<div class="sticky-cta" id="stickyCta">
+  <div class="sticky-cta-inner">
+    <span class="sticky-cta-text"><span class="sticky-cta-desktop">Send your keeper out ready · </span>Use code <mark>GKSCIENCE25</mark> for <mark>25% off</mark></span>
+    <button type="button" class="sticky-cta-apply" id="barApply">Apply code</button>
+  </div>
+</div>
 
 <!-- CONTACT BAR -->
 <div class="contact-bar">
@@ -532,6 +565,9 @@ metaCapi('InitiateCheckout',{content_name:'Senior Pro Masters Goalkeeper Coachin
     const basePrice = activePricing.price;
     const afterCoupon = couponPercent > 0 ? Math.round(basePrice * (1 - couponPercent / 100)) : basePrice;
     const couponActive = couponPercent > 0;
+    const barApply = document.getElementById('barApply');
+    barApply.disabled = couponActive;
+    barApply.textContent = couponActive ? 'Applied' : 'Apply code';
     document.querySelectorAll('.priceFull').forEach(el => el.textContent = fmt(basePrice));
     document.querySelectorAll('.priceDiscount').forEach(el => el.textContent = fmt(afterCoupon));
     document.querySelectorAll('.priceSavings').forEach(el => el.textContent = fmt(basePrice - afterCoupon));
@@ -726,6 +762,14 @@ metaCapi('InitiateCheckout',{content_name:'Senior Pro Masters Goalkeeper Coachin
       appliedCoupon = null; couponPercent = 0;
       errored.textContent = 'Could not validate code. Try again.'; errored.style.display = 'block';
     }
+  });
+
+  /* DISCOUNT BAR */
+  document.getElementById('barApply').addEventListener('click', () => {
+    const input = document.getElementById('coupon-input');
+    input.classList.add('shown');
+    input.value = 'GKSCIENCE25';
+    input.dispatchEvent(new Event('change'));
   });
 
   /* PAY */
