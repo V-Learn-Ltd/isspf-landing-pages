@@ -558,12 +558,12 @@ metaCapi('InitiateCheckout',{content_name:'Senior Pro Masters Goalkeeper Coachin
     return activePricing.symbol + n.toLocaleString(activePricing.locale, isWhole ? { maximumFractionDigits: 0 } : { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   }
   function getCurrentTotal() {
-    const afterCoupon = couponPercent > 0 ? Math.round(activePricing.price * (1 - couponPercent / 100)) : activePricing.price;
+    const afterCoupon = couponPercent > 0 ? Math.round(activePricing.price * (100 - couponPercent)) / 100 : activePricing.price;
     return bumpChecked ? afterCoupon + activePricing.workbook : afterCoupon;
   }
   function recompute() {
     const basePrice = activePricing.price;
-    const afterCoupon = couponPercent > 0 ? Math.round(basePrice * (1 - couponPercent / 100)) : basePrice;
+    const afterCoupon = couponPercent > 0 ? Math.round(basePrice * (100 - couponPercent)) / 100 : basePrice;
     const couponActive = couponPercent > 0;
     const barApply = document.getElementById('barApply');
     barApply.disabled = couponActive;
