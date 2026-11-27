@@ -721,8 +721,18 @@ const COUPONS = {
   // GKSCIENCE25 — 25% off both courses. Used in the email sequence.
   // Add an 'expires' ISO date if you want it to auto-disable.
   'GKSCIENCE25': { percent: 25, applies_to: 'all' },
-  'GKSCIENCE35': { percent: 35, applies_to: 'all' }
+  'GKSCIENCE35': { percent: 35, applies_to: 'all' },
+  // GKBLACK50: Black Friday 2026, 50% off both GK courses. Ends midnight Monday
+  // 30 Nov in the latest time zone (UTC-10), i.e. 10:00 UTC Tuesday 1 Dec.
+  'GKBLACK50': { percent: 50, applies_to: 'all', expires: '2026-12-01T10:00:00Z' }
 };
+
+// True when a coupon has an 'expires' date that has passed. Checked everywhere a
+// coupon is applied (not only in /api/validate-coupon), so an expired code can't
+// be used by posting straight to the checkout endpoints.
+function couponExpired(coupon) {
+  return !!(coupon && coupon.expires && Date.now() > new Date(coupon.expires).getTime());
+}
 
 
 // ─────────────────────────────────────────────────────────────
@@ -749,7 +759,7 @@ async function handleCreateCheckoutSession(request, env) {
   let appliedCoupon = null;
   if (couponCode) {
     const coupon = COUPONS[couponCode];
-    if (coupon && (coupon.applies_to === 'all' || (Array.isArray(coupon.applies_to) && coupon.applies_to.includes(courseId)))) {
+    if (coupon && !couponExpired(coupon) && (coupon.applies_to === 'all' || (Array.isArray(coupon.applies_to) && coupon.applies_to.includes(courseId)))) {
       unitAmount = Math.round(unitAmount * (1 - coupon.percent / 100));
       appliedCoupon = couponCode;
     }
@@ -900,7 +910,7 @@ async function handleCreatePaymentIntent(request, env) {
   let appliedCoupon = null;
   if (couponCode) {
     const coupon = COUPONS[couponCode];
-    if (coupon && (coupon.applies_to === 'all' || (Array.isArray(coupon.applies_to) && coupon.applies_to.includes(courseId)))) {
+    if (coupon && !couponExpired(coupon) && (coupon.applies_to === 'all' || (Array.isArray(coupon.applies_to) && coupon.applies_to.includes(courseId)))) {
       unitAmount = Math.round(unitAmount * (1 - coupon.percent / 100));
       appliedCoupon = couponCode;
     }
@@ -1040,7 +1050,7 @@ async function handlePaypalCreateOrder(request, env) {
   let appliedCoupon = null;
   if (couponCode) {
     const coupon = COUPONS[couponCode];
-    if (coupon && (coupon.applies_to === 'all' || (Array.isArray(coupon.applies_to) && coupon.applies_to.includes(courseId)))) {
+    if (coupon && !couponExpired(coupon) && (coupon.applies_to === 'all' || (Array.isArray(coupon.applies_to) && coupon.applies_to.includes(courseId)))) {
       unitAmount = Math.round(unitAmount * (1 - coupon.percent / 100));
       appliedCoupon = couponCode;
     }
@@ -1198,10 +1208,7 @@ async function handleValidateCoupon(request, env) {
   if (!code) return jsonResponse({ ok: false, message: 'No code provided' }, 400);
   const coupon = COUPONS[code];
   if (!coupon) return jsonResponse({ ok: false, message: 'Code not recognised' });
-  if (coupon.expires) {
-    const expiresAt = new Date(coupon.expires).getTime();
-    if (Date.now() > expiresAt) return jsonResponse({ ok: false, message: 'This code has expired' });
-  }
+  if (couponExpired(coupon)) return jsonResponse({ ok: false, message: 'This code has expired' });
   if (coupon.applies_to !== 'all') {
     const list = Array.isArray(coupon.applies_to) ? coupon.applies_to : [coupon.applies_to];
     if (!list.includes(courseId)) return jsonResponse({ ok: false, message: 'Code not valid for this course' });

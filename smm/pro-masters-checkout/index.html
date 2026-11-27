@@ -373,10 +373,10 @@ metaCapi('InitiateCheckout',{content_name:'Senior Pro Masters Goalkeeper Coachin
 </head>
 <body>
 
-<!-- DISCOUNT BAR: same offer as the sales page, always on screen. No timer. -->
+<!-- DISCOUNT BAR: same offer as the sales page, always on screen. No timer. GKBLACK50 ends midnight Monday 30 Nov 2026. -->
 <div class="sticky-cta" id="stickyCta">
   <div class="sticky-cta-inner">
-    <span class="sticky-cta-text"><span class="sticky-cta-desktop">Send your keeper out ready · </span>Use code <mark>GKSCIENCE25</mark> for <mark>25% off</mark></span>
+    <span class="sticky-cta-text"><span class="sticky-cta-desktop">Send your keeper out ready · </span>Use code <mark>GKBLACK50</mark> for <mark>50% off</mark><span class="sticky-cta-desktop"> until midnight on Monday</span></span>
     <button type="button" class="sticky-cta-apply" id="barApply">Apply code</button>
   </div>
 </div>
@@ -408,7 +408,7 @@ metaCapi('InitiateCheckout',{content_name:'Senior Pro Masters Goalkeeper Coachin
             Only: <span class="price-amount"><span class="priceDiscount">£329</span></span>
             <span class="price-anchor" id="line-anchor" style="display:none;"><span class="priceFull">£329</span></span>
           </div>
-          <div class="price-saving" id="line-savings">You save <span class="priceSavings">£82</span> with code GKSCIENCE25</div>
+          <div class="price-saving" id="line-savings">You save <span class="priceSavings">£82</span> with code <span class="savingsCode">GKBLACK50</span></div>
 
           <!-- PAYMENT INSTRUCTION -->
           <p class="pay-help">Pay securely with <strong>Credit Card</strong> or choose <strong>PayPal Pay Later</strong> to spread the cost in monthly instalments:</p>
@@ -574,6 +574,7 @@ metaCapi('InitiateCheckout',{content_name:'Senior Pro Masters Goalkeeper Coachin
     document.querySelectorAll('.workbookPrice').forEach(el => el.textContent = fmt(activePricing.workbook));
     document.getElementById('line-anchor').style.display = couponActive ? 'inline-block' : 'none';
     document.getElementById('line-savings').classList.toggle('shown', couponActive);
+    document.querySelectorAll('.savingsCode').forEach(el => el.textContent = appliedCoupon || '');
     document.getElementById('pay-btn').textContent = 'Pay ' + fmt(getCurrentTotal()) + ' · Enrol now';
   }
 
@@ -768,7 +769,7 @@ metaCapi('InitiateCheckout',{content_name:'Senior Pro Masters Goalkeeper Coachin
   document.getElementById('barApply').addEventListener('click', () => {
     const input = document.getElementById('coupon-input');
     input.classList.add('shown');
-    input.value = 'GKSCIENCE25';
+    input.value = 'GKBLACK50';
     input.dispatchEvent(new Event('change'));
   });
 
